@@ -102,7 +102,7 @@ export async function getExportLayers(req: Request, res: Response) {
  */
 export async function exportLayoutHandler(req: Request, res: Response) {
   try {
-    const { projectId } = req.params;
+    const { projectId: _projectId } = req.params;
     const {
       format = ExportFormat.GEOJSON,
       layers,

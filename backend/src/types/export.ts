@@ -4,7 +4,7 @@
  * Type definitions for KMZ and GeoJSON export functionality.
  */
 
-import type { Polygon, MultiPolygon, LineString, Point, Feature, FeatureCollection } from 'geojson';
+import type { Polygon, MultiPolygon, LineString, Point } from 'geojson';
 
 /**
  * Export format options

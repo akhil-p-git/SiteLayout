@@ -4,7 +4,6 @@
  * Service for exporting layout data to GeoJSON and KMZ formats.
  */
 
-import * as turf from '@turf/turf';
 import archiver from 'archiver';
 import { Writable } from 'stream';
 import type { Feature, FeatureCollection, Geometry, Polygon, LineString, Point } from 'geojson';
@@ -14,9 +13,6 @@ import {
   ExportOptions,
   ExportResult,
   LayoutExportData,
-  ExportAsset,
-  ExportRoadNetwork,
-  ExportExclusionZone,
   KMLStyle,
   DEFAULT_KML_STYLES,
   ASSET_KML_COLORS,
@@ -178,6 +174,7 @@ export function exportToGeoJSON(
 /**
  * Convert hex color to KML AABBGGRR format
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function hexToKMLColor(hex: string, alpha: number = 255): string {
   // Remove # if present
   hex = hex.replace('#', '');

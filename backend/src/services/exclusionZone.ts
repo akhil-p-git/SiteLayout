@@ -7,7 +7,7 @@
 
 import crypto from 'crypto';
 import * as turf from '@turf/turf';
-import type { Feature, Polygon, MultiPolygon, FeatureCollection, GeoJsonProperties } from 'geojson';
+import type { Feature, Polygon, MultiPolygon, FeatureCollection } from 'geojson';
 import type {
   ExclusionZone,
   CreateExclusionZoneInput,
@@ -21,7 +21,6 @@ import type {
 import {
   ExclusionZoneType,
   DEFAULT_BUFFER_DISTANCES,
-  ZONE_TYPE_COLORS,
 } from '../types/exclusionZone';
 
 // In-memory storage (replace with database in production)

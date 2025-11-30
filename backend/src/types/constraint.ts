@@ -5,7 +5,7 @@
  * against site boundaries, exclusion zones, slopes, and other requirements.
  */
 
-import type { Polygon, MultiPolygon, Point, Feature } from 'geojson';
+import type { Polygon, MultiPolygon, Point } from 'geojson';
 
 /**
  * Types of constraints that can be applied

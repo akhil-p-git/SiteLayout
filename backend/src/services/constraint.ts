@@ -6,7 +6,7 @@
  */
 
 import * as turf from '@turf/turf';
-import type { Feature, Polygon, MultiPolygon, Point, FeatureCollection } from 'geojson';
+import type { Feature, Polygon, MultiPolygon } from 'geojson';
 import {
   type Constraint,
   type ConstraintSet,
@@ -24,7 +24,6 @@ import {
   type AspectRangeParams,
   type InterAssetBufferParams,
   type AccessRequirementParams,
-  type TerrainSuitabilityParams,
   type BoundaryViolationDetails,
   type ExclusionZoneViolationDetails,
   type SlopeViolationDetails,
@@ -511,7 +510,7 @@ function validateSlopeLimit(
   }
 
   // Convert if needed
-  let maxSlope = params.maxSlope;
+  const maxSlope = params.maxSlope;
   if (params.slopeUnit === 'percentage') {
     // Convert check value from degrees to percentage for comparison
     checkValue = Math.tan(checkValue * Math.PI / 180) * 100;
@@ -766,9 +765,9 @@ function validateAccessRequirement(
  * Validate terrain suitability constraint
  */
 function validateTerrainSuitability(
-  asset: AssetPlacement,
-  constraint: Constraint,
-  context: ValidationContext
+  _asset: AssetPlacement,
+  _constraint: Constraint,
+  _context: ValidationContext
 ): ConstraintViolation | null {
   // This would require DEM data to check elevation variation within footprint
   // For now, return null (pass)

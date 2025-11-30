@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import jwt, { type SignOptions } from 'jsonwebtoken';
 import crypto from 'crypto';
 import type { JwtPayload, RefreshTokenPayload, TokenPair, AuthenticatedUser } from '../types/auth';
 
@@ -6,8 +6,10 @@ import type { JwtPayload, RefreshTokenPayload, TokenPair, AuthenticatedUser } fr
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-jwt-secret-change-in-production';
 const JWT_REFRESH_SECRET =
   process.env.JWT_REFRESH_SECRET || 'dev-refresh-secret-change-in-production';
-const ACCESS_TOKEN_EXPIRY = process.env.ACCESS_TOKEN_EXPIRY || '15m';
-const REFRESH_TOKEN_EXPIRY = process.env.REFRESH_TOKEN_EXPIRY || '7d';
+const ACCESS_TOKEN_EXPIRY: SignOptions['expiresIn'] = (process.env.ACCESS_TOKEN_EXPIRY ||
+  '15m') as SignOptions['expiresIn'];
+const REFRESH_TOKEN_EXPIRY: SignOptions['expiresIn'] = (process.env.REFRESH_TOKEN_EXPIRY ||
+  '7d') as SignOptions['expiresIn'];
 
 // Token expiry in seconds for client
 const ACCESS_TOKEN_EXPIRY_SECONDS = 15 * 60; // 15 minutes

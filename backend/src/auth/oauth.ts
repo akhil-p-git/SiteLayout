@@ -106,7 +106,11 @@ export async function exchangeCodeForTokens(
       return null;
     }
 
-    const tokens = await response.json();
+    const tokens = (await response.json()) as {
+      access_token: string;
+      id_token: string;
+      refresh_token: string;
+    };
     return {
       accessToken: tokens.access_token,
       idToken: tokens.id_token,
@@ -148,7 +152,10 @@ export async function refreshAuth0Tokens(
       return null;
     }
 
-    const tokens = await response.json();
+    const tokens = (await response.json()) as {
+      access_token: string;
+      id_token: string;
+    };
     return {
       accessToken: tokens.access_token,
       idToken: tokens.id_token,

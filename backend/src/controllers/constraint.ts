@@ -26,6 +26,11 @@ import {
 } from '../types/constraint';
 import * as turf from '@turf/turf';
 
+// Extend Express Request to include user
+interface AuthenticatedRequest extends Request {
+  user?: { id: string };
+}
+
 /**
  * Get available constraint types
  */
@@ -58,16 +63,17 @@ export async function getAssetTypes(req: Request, res: Response) {
 /**
  * Get default constraints for an asset type
  */
-export async function getDefaultConstraints(req: Request, res: Response) {
+export async function getDefaultConstraints(req: Request, res: Response): Promise<void> {
   const { assetType } = req.params;
 
   if (!Object.values(AssetType).includes(assetType as AssetType)) {
-    return res.status(400).json({
+    res.status(400).json({
       error: {
         code: 'INVALID_ASSET_TYPE',
         message: `Invalid asset type: ${assetType}`,
       },
     });
+    return;
   }
 
   const defaults = DEFAULT_ASSET_CONSTRAINTS[assetType as AssetType] || [];
@@ -84,8 +90,11 @@ export async function getDefaultConstraints(req: Request, res: Response) {
 /**
  * Get constraint sets for a project
  */
-export async function getProjectConstraints(req: Request, res: Response) {
-  const { projectId } = req.params;
+export async function getProjectConstraints(
+  req: AuthenticatedRequest,
+  res: Response
+): Promise<void> {
+  const projectId = req.params.projectId!;
 
   let constraintSets = getConstraintSets(projectId);
 
@@ -102,18 +111,19 @@ export async function getProjectConstraints(req: Request, res: Response) {
 /**
  * Get a specific constraint set
  */
-export async function getConstraintSetById(req: Request, res: Response) {
-  const { constraintSetId } = req.params;
+export async function getConstraintSetById(req: Request, res: Response): Promise<void> {
+  const constraintSetId = req.params.constraintSetId!;
 
   const constraintSet = getConstraintSet(constraintSetId);
 
   if (!constraintSet) {
-    return res.status(404).json({
+    res.status(404).json({
       error: {
         code: 'NOT_FOUND',
         message: 'Constraint set not found',
       },
     });
+    return;
   }
 
   res.json({ constraintSet });
@@ -122,17 +132,18 @@ export async function getConstraintSetById(req: Request, res: Response) {
 /**
  * Validate a single asset placement
  */
-export async function validateAsset(req: Request, res: Response) {
-  const { projectId } = req.params;
+export async function validateAsset(req: AuthenticatedRequest, res: Response): Promise<void> {
+  const projectId = req.params.projectId!;
   const { asset, siteId, siteBoundary } = req.body;
 
   if (!asset) {
-    return res.status(400).json({
+    res.status(400).json({
       error: {
         code: 'MISSING_ASSET',
         message: 'Asset placement is required',
       },
     });
+    return;
   }
 
   // Get constraint set
@@ -142,7 +153,7 @@ export async function validateAsset(req: Request, res: Response) {
     constraintSets = [createDefaultConstraintSet(projectId, userId)];
   }
 
-  const activeConstraintSet = constraintSets.find((cs) => cs.isDefault) || constraintSets[0];
+  const activeConstraintSet = constraintSets.find((cs) => cs.isDefault) ?? constraintSets[0];
 
   // Build validation context
   const context: ValidationContext = {};
@@ -169,17 +180,18 @@ export async function validateAsset(req: Request, res: Response) {
 /**
  * Validate multiple assets in batch
  */
-export async function validateAssets(req: Request, res: Response) {
-  const { projectId } = req.params;
+export async function validateAssets(req: AuthenticatedRequest, res: Response): Promise<void> {
+  const projectId = req.params.projectId!;
   const { assets, siteId, siteBoundary } = req.body;
 
   if (!assets || !Array.isArray(assets) || assets.length === 0) {
-    return res.status(400).json({
+    res.status(400).json({
       error: {
         code: 'MISSING_ASSETS',
         message: 'Asset placements array is required',
       },
     });
+    return;
   }
 
   // Get constraint set
@@ -189,7 +201,7 @@ export async function validateAssets(req: Request, res: Response) {
     constraintSets = [createDefaultConstraintSet(projectId, userId)];
   }
 
-  const activeConstraintSet = constraintSets.find((cs) => cs.isDefault) || constraintSets[0];
+  const activeConstraintSet = constraintSets.find((cs) => cs.isDefault) ?? constraintSets[0];
 
   // Build validation context
   const context: ValidationContext = {};
@@ -227,26 +239,31 @@ export async function validateAssets(req: Request, res: Response) {
 /**
  * Find valid placement areas for an asset type
  */
-export async function getValidPlacementAreas(req: Request, res: Response) {
-  const { projectId } = req.params;
+export async function getValidPlacementAreas(
+  req: AuthenticatedRequest,
+  res: Response
+): Promise<void> {
+  const projectId = req.params.projectId!;
   const { assetType, siteId, siteBoundary } = req.body;
 
   if (!assetType) {
-    return res.status(400).json({
+    res.status(400).json({
       error: {
         code: 'MISSING_ASSET_TYPE',
         message: 'Asset type is required',
       },
     });
+    return;
   }
 
   if (!siteBoundary) {
-    return res.status(400).json({
+    res.status(400).json({
       error: {
         code: 'MISSING_BOUNDARY',
         message: 'Site boundary is required',
       },
     });
+    return;
   }
 
   // Get constraint set
@@ -256,7 +273,7 @@ export async function getValidPlacementAreas(req: Request, res: Response) {
     constraintSets = [createDefaultConstraintSet(projectId, userId)];
   }
 
-  const activeConstraintSet = constraintSets.find((cs) => cs.isDefault) || constraintSets[0];
+  const activeConstraintSet = constraintSets.find((cs) => cs.isDefault) ?? constraintSets[0];
 
   // Build validation context
   const context: ValidationContext = {
@@ -280,12 +297,13 @@ export async function getValidPlacementAreas(req: Request, res: Response) {
   );
 
   if (!validArea) {
-    return res.status(400).json({
+    res.status(400).json({
       error: {
         code: 'NO_VALID_AREA',
         message: 'Could not calculate valid placement areas',
       },
     });
+    return;
   }
 
   // Calculate statistics

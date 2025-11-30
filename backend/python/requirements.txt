@@ -1,7 +1,9 @@
 # MVP+ Site Layouts - Geospatial Processing Dependencies
 
 # Core geospatial libraries
-gdal>=3.6.0
+# Note: GDAL Python bindings should match system GDAL version
+# Install with: pip install gdal==$(gdal-config --version)
+# Or skip GDAL in CI and rely on system GDAL
 geopandas>=0.14.0
 shapely>=2.0.0
 fiona>=1.9.0

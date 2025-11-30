@@ -341,10 +341,11 @@ function validateBoundarySetback(
     // Calculate actual distance to boundary
     const boundary = turf.feature(context.siteBoundary);
     const centroid = turf.centroid(assetFeature);
-    const nearestPoint = turf.nearestPointOnLine(
-      turf.polygonToLine(boundary as Feature<Polygon>),
-      centroid
-    );
+    const polygonLine = turf.polygonToLine(boundary as Feature<Polygon>);
+    // Handle both Feature and FeatureCollection returns
+    const lineFeature =
+      polygonLine.type === 'FeatureCollection' ? polygonLine.features[0] : polygonLine;
+    const nearestPoint = turf.nearestPointOnLine(lineFeature, centroid);
     const distance = turf.distance(centroid, nearestPoint, { units: 'meters' });
 
     const details: BoundaryViolationDetails = {

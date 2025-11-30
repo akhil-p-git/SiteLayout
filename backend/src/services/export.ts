@@ -34,15 +34,21 @@ function roundCoordinates(coords: number[], precision: number): number[] {
  */
 function roundGeometryCoordinates(geometry: Geometry, precision: number): Geometry {
   const roundCoords = (coords: unknown): unknown => {
-    if (typeof coords[0] === 'number') {
+    if (typeof (coords as number[])[0] === 'number') {
       return roundCoordinates(coords as number[], precision);
     }
     return (coords as unknown[]).map(roundCoords);
   };
 
+  // Handle GeometryCollection separately
+  if (geometry.type === 'GeometryCollection') {
+    return geometry;
+  }
+
+  const geomWithCoords = geometry as Geometry & { coordinates: unknown };
   return {
     ...geometry,
-    coordinates: roundCoords(geometry.coordinates) as typeof geometry.coordinates,
+    coordinates: roundCoords(geomWithCoords.coordinates) as typeof geomWithCoords.coordinates,
   } as Geometry;
 }
 

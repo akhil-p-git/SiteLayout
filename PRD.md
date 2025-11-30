@@ -1,4 +1,5 @@
 # MVP+ Site Layouts
+
 ## Product Requirements Document
 
 **Organization:** Pacifico Energy Group
@@ -44,17 +45,18 @@ The **MVP+ Site Layouts** platform is an intelligent geospatial analysis tool de
 
 ### 1.3 Key Value Propositions
 
-| Stakeholder | Value Delivered |
-|-------------|-----------------|
-| **Site Planners** | 50% reduction in layout generation time |
-| **Engineers** | 30% decrease in manual analysis hours |
-| **Project Managers** | 2x increase in sites evaluated per quarter |
-| **Finance Teams** | Accurate cut/fill cost estimates within 15% variance |
-| **Executives** | Data-driven go/no-go decisions in hours, not weeks |
+| Stakeholder          | Value Delivered                                      |
+| -------------------- | ---------------------------------------------------- |
+| **Site Planners**    | 50% reduction in layout generation time              |
+| **Engineers**        | 30% decrease in manual analysis hours                |
+| **Project Managers** | 2x increase in sites evaluated per quarter           |
+| **Finance Teams**    | Accurate cut/fill cost estimates within 15% variance |
+| **Executives**       | Data-driven go/no-go decisions in hours, not weeks   |
 
 ### 1.4 Scope Boundaries
 
 **In Scope:**
+
 - Geospatial data ingestion (KMZ/KML, GeoJSON, Shapefiles)
 - Terrain analysis and visualization
 - Constraint-aware asset placement optimization
@@ -63,6 +65,7 @@ The **MVP+ Site Layouts** platform is an intelligent geospatial analysis tool de
 - Report generation (PDF, KMZ, GeoJSON)
 
 **Out of Scope:**
+
 - Real-time collaboration features
 - Mobile application development
 - Integration with proprietary CAD systems
@@ -93,13 +96,13 @@ The existing site evaluation workflow at Pacifico Energy Group involves:
 
 ### 2.2 Pain Points Identified
 
-| Category | Pain Point | Impact |
-|----------|-----------|--------|
-| **Time** | Manual layout generation takes 5-7 days | Missed opportunities, delayed decisions |
-| **Cost** | Senior engineer hours consumed on repetitive tasks | $150-200/hour resource cost |
-| **Quality** | Subjective placement leads to suboptimal layouts | 15-20% efficiency loss |
-| **Scalability** | Limited capacity to evaluate multiple sites | Competitive disadvantage |
-| **Accuracy** | Manual cut/fill estimates vary by 30-50% | Budget overruns, project risk |
+| Category        | Pain Point                                         | Impact                                  |
+| --------------- | -------------------------------------------------- | --------------------------------------- |
+| **Time**        | Manual layout generation takes 5-7 days            | Missed opportunities, delayed decisions |
+| **Cost**        | Senior engineer hours consumed on repetitive tasks | $150-200/hour resource cost             |
+| **Quality**     | Subjective placement leads to suboptimal layouts   | 15-20% efficiency loss                  |
+| **Scalability** | Limited capacity to evaluate multiple sites        | Competitive disadvantage                |
+| **Accuracy**    | Manual cut/fill estimates vary by 30-50%           | Budget overruns, project risk           |
 
 ### 2.3 Market Opportunity
 
@@ -114,12 +117,12 @@ Organizations that can evaluate and secure sites faster gain significant competi
 
 ### 2.4 Competitive Landscape
 
-| Solution | Strengths | Weaknesses |
-|----------|-----------|------------|
-| **Manual Process** | Flexibility, institutional knowledge | Slow, expensive, error-prone |
-| **Generic CAD** | Precision, industry standard | No optimization, steep learning curve |
-| **GIS Platforms** | Data visualization, analysis | No layout generation, complex |
-| **MVP+ Site Layouts** | Automated, optimized, fast | New product, learning curve |
+| Solution              | Strengths                            | Weaknesses                            |
+| --------------------- | ------------------------------------ | ------------------------------------- |
+| **Manual Process**    | Flexibility, institutional knowledge | Slow, expensive, error-prone          |
+| **Generic CAD**       | Precision, industry standard         | No optimization, steep learning curve |
+| **GIS Platforms**     | Data visualization, analysis         | No layout generation, complex         |
+| **MVP+ Site Layouts** | Automated, optimized, fast           | New product, learning curve           |
 
 ---
 
@@ -143,13 +146,13 @@ Organizations that can evaluate and secure sites faster gain significant competi
 
 ### 3.3 Success Criteria
 
-| Metric | Current State | Target State | Measurement Method |
-|--------|---------------|--------------|-------------------|
-| Layout Generation Time | 5-7 days | 2-4 hours | System logs |
-| Sites Evaluated/Quarter | 15-20 | 40-50 | Project tracking |
-| Cut/Fill Estimate Accuracy | ±40% | ±15% | Post-construction audit |
-| User Adoption Rate | N/A | 80% of target users | Usage analytics |
-| Layout Revision Rate | 25% | <10% | QA tracking |
+| Metric                     | Current State | Target State        | Measurement Method      |
+| -------------------------- | ------------- | ------------------- | ----------------------- |
+| Layout Generation Time     | 5-7 days      | 2-4 hours           | System logs             |
+| Sites Evaluated/Quarter    | 15-20         | 40-50               | Project tracking        |
+| Cut/Fill Estimate Accuracy | ±40%          | ±15%                | Post-construction audit |
+| User Adoption Rate         | N/A           | 80% of target users | Usage analytics         |
+| Layout Revision Rate       | 25%           | <10%                | QA tracking             |
 
 ---
 
@@ -241,109 +244,109 @@ Organizations that can evaluate and secure sites faster gain significant competi
 
 ### 5.1 Epic Overview
 
-| Epic ID | Epic Name | Description |
-|---------|-----------|-------------|
-| E1 | Data Ingestion | Import and validate geospatial data |
-| E2 | Terrain Analysis | Compute and visualize terrain metrics |
-| E3 | Asset Placement | Optimize infrastructure positioning |
-| E4 | Road Generation | Create access road networks |
-| E5 | Volume Estimation | Calculate cut/fill volumes |
-| E6 | Report Generation | Export layouts and analysis |
-| E7 | Project Management | Organize and compare sites |
-| E8 | Sustainability & ESG | Environmental impact and carbon analysis |
-| E9 | Portfolio Analytics | Cross-site comparison and executive dashboards |
+| Epic ID | Epic Name            | Description                                    |
+| ------- | -------------------- | ---------------------------------------------- |
+| E1      | Data Ingestion       | Import and validate geospatial data            |
+| E2      | Terrain Analysis     | Compute and visualize terrain metrics          |
+| E3      | Asset Placement      | Optimize infrastructure positioning            |
+| E4      | Road Generation      | Create access road networks                    |
+| E5      | Volume Estimation    | Calculate cut/fill volumes                     |
+| E6      | Report Generation    | Export layouts and analysis                    |
+| E7      | Project Management   | Organize and compare sites                     |
+| E8      | Sustainability & ESG | Environmental impact and carbon analysis       |
+| E9      | Portfolio Analytics  | Cross-site comparison and executive dashboards |
 
 ### 5.2 User Stories by Epic
 
 #### Epic 1: Data Ingestion (E1)
 
-| ID | User Story | Priority | Acceptance Criteria |
-|----|------------|----------|---------------------|
-| E1-US1 | As a Site Planner, I want to upload KMZ/KML files so that I can define property boundaries | P0 | File validated, boundary extracted, preview displayed |
-| E1-US2 | As a Site Planner, I want to import topographic contour data so that I can analyze terrain | P0 | Elevation data parsed, DEM generated, resolution validated |
-| E1-US3 | As a Site Planner, I want to define exclusion zones so that assets avoid restricted areas | P0 | Zones drawn/imported, validated against boundary |
-| E1-US4 | As a Site Planner, I want to import existing infrastructure so that layouts account for constraints | P1 | Features imported, buffers applied |
-| E1-US5 | As a GIS Specialist, I want to import GeoJSON and Shapefiles so that I can use standard formats | P1 | All common projections supported, auto-reprojection |
+| ID     | User Story                                                                                          | Priority | Acceptance Criteria                                        |
+| ------ | --------------------------------------------------------------------------------------------------- | -------- | ---------------------------------------------------------- |
+| E1-US1 | As a Site Planner, I want to upload KMZ/KML files so that I can define property boundaries          | P0       | File validated, boundary extracted, preview displayed      |
+| E1-US2 | As a Site Planner, I want to import topographic contour data so that I can analyze terrain          | P0       | Elevation data parsed, DEM generated, resolution validated |
+| E1-US3 | As a Site Planner, I want to define exclusion zones so that assets avoid restricted areas           | P0       | Zones drawn/imported, validated against boundary           |
+| E1-US4 | As a Site Planner, I want to import existing infrastructure so that layouts account for constraints | P1       | Features imported, buffers applied                         |
+| E1-US5 | As a GIS Specialist, I want to import GeoJSON and Shapefiles so that I can use standard formats     | P1       | All common projections supported, auto-reprojection        |
 
 #### Epic 2: Terrain Analysis (E2)
 
-| ID | User Story | Priority | Acceptance Criteria |
-|----|------------|----------|---------------------|
-| E2-US1 | As a Civil Engineer, I want to view slope analysis so that I can identify buildable areas | P0 | Slope calculated, color-coded visualization |
-| E2-US2 | As a Civil Engineer, I want to see aspect analysis so that I can optimize solar orientation | P0 | Aspect computed, cardinal direction display |
-| E2-US3 | As a Site Planner, I want elevation profiles along transects so that I can understand terrain | P0 | Interactive profile tool, exportable data |
-| E2-US4 | As a Civil Engineer, I want drainage analysis so that I can identify water flow patterns | P1 | Flow accumulation computed, watershed delineation |
-| E2-US5 | As a Site Planner, I want buildability scoring so that I can prioritize areas | P1 | Composite score based on configurable weights |
+| ID     | User Story                                                                                    | Priority | Acceptance Criteria                               |
+| ------ | --------------------------------------------------------------------------------------------- | -------- | ------------------------------------------------- |
+| E2-US1 | As a Civil Engineer, I want to view slope analysis so that I can identify buildable areas     | P0       | Slope calculated, color-coded visualization       |
+| E2-US2 | As a Civil Engineer, I want to see aspect analysis so that I can optimize solar orientation   | P0       | Aspect computed, cardinal direction display       |
+| E2-US3 | As a Site Planner, I want elevation profiles along transects so that I can understand terrain | P0       | Interactive profile tool, exportable data         |
+| E2-US4 | As a Civil Engineer, I want drainage analysis so that I can identify water flow patterns      | P1       | Flow accumulation computed, watershed delineation |
+| E2-US5 | As a Site Planner, I want buildability scoring so that I can prioritize areas                 | P1       | Composite score based on configurable weights     |
 
 #### Epic 3: Asset Placement (E3)
 
-| ID | User Story | Priority | Acceptance Criteria |
-|----|------------|----------|---------------------|
-| E3-US1 | As a Site Planner, I want to auto-place BESS units so that they're optimally positioned | P0 | Placement respects constraints, maximizes efficiency |
-| E3-US2 | As a Site Planner, I want to position substation areas so that they meet access requirements | P0 | Located near entry, minimum setbacks maintained |
-| E3-US3 | As a Site Planner, I want to define O&M facilities so that operational needs are met | P0 | Parking, buildings, laydown areas positioned |
-| E3-US4 | As a Site Planner, I want to manually adjust placements so that I can refine the layout | P0 | Drag-and-drop with constraint validation |
-| E3-US5 | As a Civil Engineer, I want to compare placement alternatives so that I can select optimal layout | P1 | Side-by-side comparison with metrics |
+| ID     | User Story                                                                                        | Priority | Acceptance Criteria                                  |
+| ------ | ------------------------------------------------------------------------------------------------- | -------- | ---------------------------------------------------- |
+| E3-US1 | As a Site Planner, I want to auto-place BESS units so that they're optimally positioned           | P0       | Placement respects constraints, maximizes efficiency |
+| E3-US2 | As a Site Planner, I want to position substation areas so that they meet access requirements      | P0       | Located near entry, minimum setbacks maintained      |
+| E3-US3 | As a Site Planner, I want to define O&M facilities so that operational needs are met              | P0       | Parking, buildings, laydown areas positioned         |
+| E3-US4 | As a Site Planner, I want to manually adjust placements so that I can refine the layout           | P0       | Drag-and-drop with constraint validation             |
+| E3-US5 | As a Civil Engineer, I want to compare placement alternatives so that I can select optimal layout | P1       | Side-by-side comparison with metrics                 |
 
 #### Epic 4: Road Generation (E4)
 
-| ID | User Story | Priority | Acceptance Criteria |
-|----|------------|----------|---------------------|
-| E4-US1 | As a Site Planner, I want auto-generated access roads so that all assets are reachable | P0 | Roads connect entry to all major assets |
-| E4-US2 | As a Civil Engineer, I want roads to follow terrain so that grading is minimized | P0 | Pathfinding considers slope constraints |
-| E4-US3 | As a Site Planner, I want to specify road width requirements so that equipment access is ensured | P0 | Configurable width, turning radii |
-| E4-US4 | As a Civil Engineer, I want road gradient analysis so that I can validate constructability | P1 | Max grade highlighted, alternatives suggested |
+| ID     | User Story                                                                                       | Priority | Acceptance Criteria                           |
+| ------ | ------------------------------------------------------------------------------------------------ | -------- | --------------------------------------------- |
+| E4-US1 | As a Site Planner, I want auto-generated access roads so that all assets are reachable           | P0       | Roads connect entry to all major assets       |
+| E4-US2 | As a Civil Engineer, I want roads to follow terrain so that grading is minimized                 | P0       | Pathfinding considers slope constraints       |
+| E4-US3 | As a Site Planner, I want to specify road width requirements so that equipment access is ensured | P0       | Configurable width, turning radii             |
+| E4-US4 | As a Civil Engineer, I want road gradient analysis so that I can validate constructability       | P1       | Max grade highlighted, alternatives suggested |
 
 #### Epic 5: Volume Estimation (E5)
 
-| ID | User Story | Priority | Acceptance Criteria |
-|----|------------|----------|---------------------|
-| E5-US1 | As a Civil Engineer, I want cut/fill volume estimates so that I can forecast costs | P0 | Volumes calculated for each asset pad |
-| E5-US2 | As a Civil Engineer, I want to see net balance (cut vs fill) so that I can optimize hauling | P0 | Balance displayed, haul distance estimated |
-| E5-US3 | As a Project Manager, I want cost estimates based on volumes so that I can budget | P0 | Configurable unit costs applied |
-| E5-US4 | As a Civil Engineer, I want sensitivity analysis so that I can understand cost drivers | P1 | Impact of grade changes on volumes shown |
+| ID     | User Story                                                                                  | Priority | Acceptance Criteria                        |
+| ------ | ------------------------------------------------------------------------------------------- | -------- | ------------------------------------------ |
+| E5-US1 | As a Civil Engineer, I want cut/fill volume estimates so that I can forecast costs          | P0       | Volumes calculated for each asset pad      |
+| E5-US2 | As a Civil Engineer, I want to see net balance (cut vs fill) so that I can optimize hauling | P0       | Balance displayed, haul distance estimated |
+| E5-US3 | As a Project Manager, I want cost estimates based on volumes so that I can budget           | P0       | Configurable unit costs applied            |
+| E5-US4 | As a Civil Engineer, I want sensitivity analysis so that I can understand cost drivers      | P1       | Impact of grade changes on volumes shown   |
 
 #### Epic 6: Report Generation (E6)
 
-| ID | User Story | Priority | Acceptance Criteria |
-|----|------------|----------|---------------------|
-| E6-US1 | As a Project Manager, I want PDF reports so that I can share with stakeholders | P0 | Professional formatting, key metrics included |
-| E6-US2 | As a GIS Specialist, I want KMZ export so that I can view in Google Earth | P0 | All layers included, styled appropriately |
-| E6-US3 | As a Civil Engineer, I want GeoJSON export so that I can import into CAD | P0 | Accurate coordinates, metadata preserved |
-| E6-US4 | As a Site Planner, I want layout comparison reports so that I can present alternatives | P1 | Multi-layout comparison with pros/cons |
+| ID     | User Story                                                                             | Priority | Acceptance Criteria                           |
+| ------ | -------------------------------------------------------------------------------------- | -------- | --------------------------------------------- |
+| E6-US1 | As a Project Manager, I want PDF reports so that I can share with stakeholders         | P0       | Professional formatting, key metrics included |
+| E6-US2 | As a GIS Specialist, I want KMZ export so that I can view in Google Earth              | P0       | All layers included, styled appropriately     |
+| E6-US3 | As a Civil Engineer, I want GeoJSON export so that I can import into CAD               | P0       | Accurate coordinates, metadata preserved      |
+| E6-US4 | As a Site Planner, I want layout comparison reports so that I can present alternatives | P1       | Multi-layout comparison with pros/cons        |
 
 #### Epic 7: Project Management (E7)
 
-| ID | User Story | Priority | Acceptance Criteria |
-|----|------------|----------|---------------------|
-| E7-US1 | As a Project Manager, I want to organize sites into projects so that I can manage portfolios | P1 | Folder structure, search, filtering |
-| E7-US2 | As a Site Planner, I want to save layout versions so that I can track iterations | P1 | Version history, restore capability |
-| E7-US3 | As an Executive, I want portfolio dashboards so that I can see pipeline status | P2 | Aggregate metrics, status visualization |
+| ID     | User Story                                                                                   | Priority | Acceptance Criteria                     |
+| ------ | -------------------------------------------------------------------------------------------- | -------- | --------------------------------------- |
+| E7-US1 | As a Project Manager, I want to organize sites into projects so that I can manage portfolios | P1       | Folder structure, search, filtering     |
+| E7-US2 | As a Site Planner, I want to save layout versions so that I can track iterations             | P1       | Version history, restore capability     |
+| E7-US3 | As an Executive, I want portfolio dashboards so that I can see pipeline status               | P2       | Aggregate metrics, status visualization |
 
 #### Epic 8: Sustainability & ESG (E8)
 
-| ID | User Story | Priority | Acceptance Criteria |
-|----|------------|----------|---------------------|
-| E8-US1 | As a Project Manager, I want to see the carbon footprint of construction so that I can report to stakeholders | P1 | CO2 estimate based on earthwork, displayed in report |
-| E8-US2 | As an Executive, I want to see net carbon impact over project lifetime so that I can communicate ESG value | P1 | 25-year projection, comparison to grid baseline |
-| E8-US3 | As a Site Planner, I want to see endangered species habitat overlays so that I can avoid sensitive areas | P1 | USFWS data displayed, buffer zones highlighted |
-| E8-US4 | As a Site Planner, I want to see wetland boundaries so that I can identify permit requirements | P1 | NWI data overlay, wetland type classification |
-| E8-US5 | As a Civil Engineer, I want habitat impact scores so that I can optimize layouts for minimal disturbance | P1 | Composite score, breakdown by species/habitat type |
-| E8-US6 | As a Project Manager, I want auto-generated environmental permit checklists so that I can plan timelines | P1 | Required permits listed based on overlaps |
-| E8-US7 | As an Executive, I want ESG summaries in stakeholder reports so that I can demonstrate sustainability commitment | P1 | Professional formatting, key metrics highlighted |
+| ID     | User Story                                                                                                       | Priority | Acceptance Criteria                                  |
+| ------ | ---------------------------------------------------------------------------------------------------------------- | -------- | ---------------------------------------------------- |
+| E8-US1 | As a Project Manager, I want to see the carbon footprint of construction so that I can report to stakeholders    | P1       | CO2 estimate based on earthwork, displayed in report |
+| E8-US2 | As an Executive, I want to see net carbon impact over project lifetime so that I can communicate ESG value       | P1       | 25-year projection, comparison to grid baseline      |
+| E8-US3 | As a Site Planner, I want to see endangered species habitat overlays so that I can avoid sensitive areas         | P1       | USFWS data displayed, buffer zones highlighted       |
+| E8-US4 | As a Site Planner, I want to see wetland boundaries so that I can identify permit requirements                   | P1       | NWI data overlay, wetland type classification        |
+| E8-US5 | As a Civil Engineer, I want habitat impact scores so that I can optimize layouts for minimal disturbance         | P1       | Composite score, breakdown by species/habitat type   |
+| E8-US6 | As a Project Manager, I want auto-generated environmental permit checklists so that I can plan timelines         | P1       | Required permits listed based on overlaps            |
+| E8-US7 | As an Executive, I want ESG summaries in stakeholder reports so that I can demonstrate sustainability commitment | P1       | Professional formatting, key metrics highlighted     |
 
 #### Epic 9: Portfolio Analytics (E9)
 
-| ID | User Story | Priority | Acceptance Criteria |
-|----|------------|----------|---------------------|
-| E9-US1 | As an Executive, I want a cross-site comparison dashboard so that I can prioritize investments | P1 | Sortable table, configurable metrics |
-| E9-US2 | As a Project Manager, I want to rank sites by composite score so that I can focus on best opportunities | P1 | Weighted scoring, customizable weights |
-| E9-US3 | As an Executive, I want a portfolio map view so that I can see geographic distribution | P1 | Interactive map, site status indicators |
-| E9-US4 | As a Project Manager, I want portfolio-level statistics so that I can report aggregate metrics | P1 | Total capacity, avg cost, pipeline value |
-| E9-US5 | As an Executive, I want pipeline funnel visualization so that I can track deal flow | P1 | Stage-based view, conversion metrics |
-| E9-US6 | As a Site Planner, I want to tag and filter sites so that I can organize by custom criteria | P1 | Custom tags, multi-filter support |
-| E9-US7 | As an Executive, I want risk-adjusted site scores so that I can account for uncertainty | P1 | Risk factors configurable, impact on ranking |
-| E9-US8 | As a Project Manager, I want to export portfolio reports so that I can share with stakeholders | P1 | PDF and Excel formats, customizable sections |
+| ID     | User Story                                                                                              | Priority | Acceptance Criteria                          |
+| ------ | ------------------------------------------------------------------------------------------------------- | -------- | -------------------------------------------- |
+| E9-US1 | As an Executive, I want a cross-site comparison dashboard so that I can prioritize investments          | P1       | Sortable table, configurable metrics         |
+| E9-US2 | As a Project Manager, I want to rank sites by composite score so that I can focus on best opportunities | P1       | Weighted scoring, customizable weights       |
+| E9-US3 | As an Executive, I want a portfolio map view so that I can see geographic distribution                  | P1       | Interactive map, site status indicators      |
+| E9-US4 | As a Project Manager, I want portfolio-level statistics so that I can report aggregate metrics          | P1       | Total capacity, avg cost, pipeline value     |
+| E9-US5 | As an Executive, I want pipeline funnel visualization so that I can track deal flow                     | P1       | Stage-based view, conversion metrics         |
+| E9-US6 | As a Site Planner, I want to tag and filter sites so that I can organize by custom criteria             | P1       | Custom tags, multi-filter support            |
+| E9-US7 | As an Executive, I want risk-adjusted site scores so that I can account for uncertainty                 | P1       | Risk factors configurable, impact on ranking |
+| E9-US8 | As a Project Manager, I want to export portfolio reports so that I can share with stakeholders          | P1       | PDF and Excel formats, customizable sections |
 
 ### 5.3 User Journey Map
 
@@ -389,139 +392,142 @@ Organizations that can evaluate and secure sites faster gain significant competi
 ### 6.1 Requirement Categories
 
 #### P0 - Must Have (MVP)
+
 Critical for initial release. Product cannot launch without these features.
 
 #### P1 - Should Have
+
 Important features that significantly enhance value. Target for MVP+ release.
 
 #### P2 - Nice to Have
+
 Desirable features for future iterations.
 
 ### 6.2 Detailed Requirements
 
 #### 6.2.1 Data Ingestion Module
 
-| Req ID | Requirement | Priority | Notes |
-|--------|-------------|----------|-------|
-| FR-DI-001 | System shall accept KMZ file uploads up to 100MB | P0 | Validate structure, extract KML |
-| FR-DI-002 | System shall accept KML file uploads up to 50MB | P0 | Support KML 2.2 specification |
-| FR-DI-003 | System shall parse polygon boundaries from KML | P0 | Support MultiPolygon geometries |
-| FR-DI-004 | System shall accept GeoJSON uploads | P1 | FeatureCollection with Polygon/MultiPolygon |
-| FR-DI-005 | System shall accept Shapefile uploads (zipped) | P1 | .shp, .shx, .dbf, .prj required |
-| FR-DI-006 | System shall validate coordinate reference systems | P0 | Auto-detect, warn on missing |
-| FR-DI-007 | System shall reproject data to project CRS | P0 | Support EPSG:4326, UTM zones |
-| FR-DI-008 | System shall parse elevation/contour data | P0 | DXF contours, GeoTIFF DEMs |
-| FR-DI-009 | System shall generate DEM from contour data | P0 | TIN interpolation, configurable resolution |
-| FR-DI-010 | System shall validate data completeness | P0 | Boundary closure, elevation coverage |
+| Req ID    | Requirement                                        | Priority | Notes                                       |
+| --------- | -------------------------------------------------- | -------- | ------------------------------------------- |
+| FR-DI-001 | System shall accept KMZ file uploads up to 100MB   | P0       | Validate structure, extract KML             |
+| FR-DI-002 | System shall accept KML file uploads up to 50MB    | P0       | Support KML 2.2 specification               |
+| FR-DI-003 | System shall parse polygon boundaries from KML     | P0       | Support MultiPolygon geometries             |
+| FR-DI-004 | System shall accept GeoJSON uploads                | P1       | FeatureCollection with Polygon/MultiPolygon |
+| FR-DI-005 | System shall accept Shapefile uploads (zipped)     | P1       | .shp, .shx, .dbf, .prj required             |
+| FR-DI-006 | System shall validate coordinate reference systems | P0       | Auto-detect, warn on missing                |
+| FR-DI-007 | System shall reproject data to project CRS         | P0       | Support EPSG:4326, UTM zones                |
+| FR-DI-008 | System shall parse elevation/contour data          | P0       | DXF contours, GeoTIFF DEMs                  |
+| FR-DI-009 | System shall generate DEM from contour data        | P0       | TIN interpolation, configurable resolution  |
+| FR-DI-010 | System shall validate data completeness            | P0       | Boundary closure, elevation coverage        |
 
 #### 6.2.2 Terrain Analysis Module
 
-| Req ID | Requirement | Priority | Notes |
-|--------|-------------|----------|-------|
-| FR-TA-001 | System shall calculate slope from DEM | P0 | Degrees or percent, configurable |
-| FR-TA-002 | System shall calculate aspect from DEM | P0 | Cardinal directions, 0-360 degrees |
-| FR-TA-003 | System shall calculate elevation differential | P0 | Min, max, range within boundary |
-| FR-TA-004 | System shall generate slope classification map | P0 | Configurable breakpoints |
-| FR-TA-005 | System shall identify areas exceeding slope threshold | P0 | Highlight unbuildable zones |
-| FR-TA-006 | System shall calculate terrain ruggedness index | P1 | TRI per cell |
-| FR-TA-007 | System shall compute drainage flow direction | P1 | D8 algorithm |
-| FR-TA-008 | System shall identify drainage accumulation areas | P1 | Watershed delineation |
-| FR-TA-009 | System shall generate buildability score | P1 | Weighted composite metric |
-| FR-TA-010 | System shall create elevation profile along user-defined transect | P0 | Interactive tool |
+| Req ID    | Requirement                                                       | Priority | Notes                              |
+| --------- | ----------------------------------------------------------------- | -------- | ---------------------------------- |
+| FR-TA-001 | System shall calculate slope from DEM                             | P0       | Degrees or percent, configurable   |
+| FR-TA-002 | System shall calculate aspect from DEM                            | P0       | Cardinal directions, 0-360 degrees |
+| FR-TA-003 | System shall calculate elevation differential                     | P0       | Min, max, range within boundary    |
+| FR-TA-004 | System shall generate slope classification map                    | P0       | Configurable breakpoints           |
+| FR-TA-005 | System shall identify areas exceeding slope threshold             | P0       | Highlight unbuildable zones        |
+| FR-TA-006 | System shall calculate terrain ruggedness index                   | P1       | TRI per cell                       |
+| FR-TA-007 | System shall compute drainage flow direction                      | P1       | D8 algorithm                       |
+| FR-TA-008 | System shall identify drainage accumulation areas                 | P1       | Watershed delineation              |
+| FR-TA-009 | System shall generate buildability score                          | P1       | Weighted composite metric          |
+| FR-TA-010 | System shall create elevation profile along user-defined transect | P0       | Interactive tool                   |
 
 #### 6.2.3 Asset Placement Module
 
-| Req ID | Requirement | Priority | Notes |
-|--------|-------------|----------|-------|
-| FR-AP-001 | System shall auto-place BESS container arrays | P0 | Configurable dimensions, spacing |
-| FR-AP-002 | System shall auto-place substation footprint | P0 | Size based on capacity |
-| FR-AP-003 | System shall auto-place O&M building | P0 | Standard or custom footprint |
-| FR-AP-004 | System shall auto-place parking areas | P0 | Based on facility requirements |
-| FR-AP-005 | System shall auto-place laydown/staging areas | P0 | Construction requirements |
-| FR-AP-006 | System shall respect property boundary setbacks | P0 | Configurable distances |
-| FR-AP-007 | System shall respect exclusion zone constraints | P0 | No asset overlap with zones |
-| FR-AP-008 | System shall respect inter-asset buffer distances | P0 | Safety and access clearances |
-| FR-AP-009 | System shall respect maximum slope constraints per asset type | P0 | Configurable per asset |
-| FR-AP-010 | System shall optimize placement for minimum earthwork | P0 | Objective function |
-| FR-AP-011 | System shall allow manual adjustment of placements | P0 | Drag-and-drop interface |
-| FR-AP-012 | System shall validate constraint compliance on adjustment | P0 | Real-time feedback |
-| FR-AP-013 | System shall support multiple layout alternatives | P1 | Generate and compare |
-| FR-AP-014 | System shall support custom asset types | P1 | User-defined footprints |
-| FR-AP-015 | System shall support solar panel array placement | P2 | Row spacing, orientation |
+| Req ID    | Requirement                                                   | Priority | Notes                            |
+| --------- | ------------------------------------------------------------- | -------- | -------------------------------- |
+| FR-AP-001 | System shall auto-place BESS container arrays                 | P0       | Configurable dimensions, spacing |
+| FR-AP-002 | System shall auto-place substation footprint                  | P0       | Size based on capacity           |
+| FR-AP-003 | System shall auto-place O&M building                          | P0       | Standard or custom footprint     |
+| FR-AP-004 | System shall auto-place parking areas                         | P0       | Based on facility requirements   |
+| FR-AP-005 | System shall auto-place laydown/staging areas                 | P0       | Construction requirements        |
+| FR-AP-006 | System shall respect property boundary setbacks               | P0       | Configurable distances           |
+| FR-AP-007 | System shall respect exclusion zone constraints               | P0       | No asset overlap with zones      |
+| FR-AP-008 | System shall respect inter-asset buffer distances             | P0       | Safety and access clearances     |
+| FR-AP-009 | System shall respect maximum slope constraints per asset type | P0       | Configurable per asset           |
+| FR-AP-010 | System shall optimize placement for minimum earthwork         | P0       | Objective function               |
+| FR-AP-011 | System shall allow manual adjustment of placements            | P0       | Drag-and-drop interface          |
+| FR-AP-012 | System shall validate constraint compliance on adjustment     | P0       | Real-time feedback               |
+| FR-AP-013 | System shall support multiple layout alternatives             | P1       | Generate and compare             |
+| FR-AP-014 | System shall support custom asset types                       | P1       | User-defined footprints          |
+| FR-AP-015 | System shall support solar panel array placement              | P2       | Row spacing, orientation         |
 
 #### 6.2.4 Road Network Module
 
-| Req ID | Requirement | Priority | Notes |
-|--------|-------------|----------|-------|
-| FR-RN-001 | System shall identify property entry point(s) | P0 | User-specified or auto-detected |
-| FR-RN-002 | System shall generate access roads from entry to assets | P0 | A* pathfinding |
-| FR-RN-003 | System shall respect road width requirements | P0 | Configurable width |
-| FR-RN-004 | System shall respect maximum road gradient | P0 | Configurable max slope |
-| FR-RN-005 | System shall minimize road length while meeting constraints | P0 | Optimization objective |
-| FR-RN-006 | System shall avoid exclusion zones | P0 | Hard constraint |
-| FR-RN-007 | System shall generate internal circulation roads | P1 | Between assets |
-| FR-RN-008 | System shall calculate road gradient profile | P1 | Highlight exceedances |
-| FR-RN-009 | System shall support turning radius constraints | P1 | For heavy equipment |
+| Req ID    | Requirement                                                 | Priority | Notes                           |
+| --------- | ----------------------------------------------------------- | -------- | ------------------------------- |
+| FR-RN-001 | System shall identify property entry point(s)               | P0       | User-specified or auto-detected |
+| FR-RN-002 | System shall generate access roads from entry to assets     | P0       | A\* pathfinding                 |
+| FR-RN-003 | System shall respect road width requirements                | P0       | Configurable width              |
+| FR-RN-004 | System shall respect maximum road gradient                  | P0       | Configurable max slope          |
+| FR-RN-005 | System shall minimize road length while meeting constraints | P0       | Optimization objective          |
+| FR-RN-006 | System shall avoid exclusion zones                          | P0       | Hard constraint                 |
+| FR-RN-007 | System shall generate internal circulation roads            | P1       | Between assets                  |
+| FR-RN-008 | System shall calculate road gradient profile                | P1       | Highlight exceedances           |
+| FR-RN-009 | System shall support turning radius constraints             | P1       | For heavy equipment             |
 
 #### 6.2.5 Volume Estimation Module
 
-| Req ID | Requirement | Priority | Notes |
-|--------|-------------|----------|-------|
-| FR-VE-001 | System shall calculate cut volume for each asset pad | P0 | Cubic meters/yards |
-| FR-VE-002 | System shall calculate fill volume for each asset pad | P0 | Cubic meters/yards |
-| FR-VE-003 | System shall calculate net earthwork balance | P0 | Cut - Fill |
-| FR-VE-004 | System shall calculate road earthwork volumes | P0 | Along alignment |
-| FR-VE-005 | System shall estimate total project earthwork | P0 | Sum of all components |
-| FR-VE-006 | System shall apply cost factors to volumes | P0 | $/cubic unit |
-| FR-VE-007 | System shall estimate haul distances | P1 | Cut to fill areas |
-| FR-VE-008 | System shall calculate shrink/swell factors | P1 | Soil type dependent |
-| FR-VE-009 | System shall generate earthwork summary table | P0 | By component |
-| FR-VE-010 | System shall visualize cut/fill areas on map | P1 | Color-coded overlay |
+| Req ID    | Requirement                                           | Priority | Notes                 |
+| --------- | ----------------------------------------------------- | -------- | --------------------- |
+| FR-VE-001 | System shall calculate cut volume for each asset pad  | P0       | Cubic meters/yards    |
+| FR-VE-002 | System shall calculate fill volume for each asset pad | P0       | Cubic meters/yards    |
+| FR-VE-003 | System shall calculate net earthwork balance          | P0       | Cut - Fill            |
+| FR-VE-004 | System shall calculate road earthwork volumes         | P0       | Along alignment       |
+| FR-VE-005 | System shall estimate total project earthwork         | P0       | Sum of all components |
+| FR-VE-006 | System shall apply cost factors to volumes            | P0       | $/cubic unit          |
+| FR-VE-007 | System shall estimate haul distances                  | P1       | Cut to fill areas     |
+| FR-VE-008 | System shall calculate shrink/swell factors           | P1       | Soil type dependent   |
+| FR-VE-009 | System shall generate earthwork summary table         | P0       | By component          |
+| FR-VE-010 | System shall visualize cut/fill areas on map          | P1       | Color-coded overlay   |
 
 #### 6.2.6 Export & Reporting Module
 
-| Req ID | Requirement | Priority | Notes |
-|--------|-------------|----------|-------|
-| FR-ER-001 | System shall export layout as KMZ | P0 | Google Earth compatible |
-| FR-ER-002 | System shall export layout as GeoJSON | P0 | Web/GIS compatible |
-| FR-ER-003 | System shall export layout as PDF report | P0 | Professional formatting |
-| FR-ER-004 | System shall include terrain analysis in PDF | P0 | Maps, profiles |
-| FR-ER-005 | System shall include earthwork summary in PDF | P0 | Table and charts |
-| FR-ER-006 | System shall include cost estimates in PDF | P0 | Summary and breakdown |
-| FR-ER-007 | System shall export raw data as CSV | P1 | For external analysis |
-| FR-ER-008 | System shall export DXF for CAD import | P1 | AutoCAD compatible |
-| FR-ER-009 | System shall support custom report templates | P2 | Branding, sections |
-| FR-ER-010 | System shall generate comparison report for multiple layouts | P1 | Side-by-side metrics |
+| Req ID    | Requirement                                                  | Priority | Notes                   |
+| --------- | ------------------------------------------------------------ | -------- | ----------------------- |
+| FR-ER-001 | System shall export layout as KMZ                            | P0       | Google Earth compatible |
+| FR-ER-002 | System shall export layout as GeoJSON                        | P0       | Web/GIS compatible      |
+| FR-ER-003 | System shall export layout as PDF report                     | P0       | Professional formatting |
+| FR-ER-004 | System shall include terrain analysis in PDF                 | P0       | Maps, profiles          |
+| FR-ER-005 | System shall include earthwork summary in PDF                | P0       | Table and charts        |
+| FR-ER-006 | System shall include cost estimates in PDF                   | P0       | Summary and breakdown   |
+| FR-ER-007 | System shall export raw data as CSV                          | P1       | For external analysis   |
+| FR-ER-008 | System shall export DXF for CAD import                       | P1       | AutoCAD compatible      |
+| FR-ER-009 | System shall support custom report templates                 | P2       | Branding, sections      |
+| FR-ER-010 | System shall generate comparison report for multiple layouts | P1       | Side-by-side metrics    |
 
 #### 6.2.7 Sustainability & ESG Module
 
-| Req ID | Requirement | Priority | Notes |
-|--------|-------------|----------|-------|
-| FR-ESG-001 | System shall calculate construction carbon footprint | P1 | Based on earthwork volumes, equipment usage |
-| FR-ESG-002 | System shall estimate operational carbon offset | P1 | Based on energy capacity vs grid mix |
-| FR-ESG-003 | System shall display net carbon impact over project lifetime | P1 | 25-year default horizon |
-| FR-ESG-004 | System shall overlay USFWS endangered species habitat data | P1 | Critical habitat boundaries |
-| FR-ESG-005 | System shall overlay National Wetlands Inventory data | P1 | Wetland type classification |
-| FR-ESG-006 | System shall calculate habitat impact score | P1 | Weighted by species sensitivity |
-| FR-ESG-007 | System shall identify required environmental permits | P1 | Based on habitat overlaps |
-| FR-ESG-008 | System shall generate ESG summary for stakeholder reports | P1 | Executive-friendly format |
-| FR-ESG-009 | System shall support custom emission factors | P2 | Regional/organizational |
-| FR-ESG-010 | System shall track cumulative portfolio ESG metrics | P2 | Aggregate across all sites |
+| Req ID     | Requirement                                                  | Priority | Notes                                       |
+| ---------- | ------------------------------------------------------------ | -------- | ------------------------------------------- |
+| FR-ESG-001 | System shall calculate construction carbon footprint         | P1       | Based on earthwork volumes, equipment usage |
+| FR-ESG-002 | System shall estimate operational carbon offset              | P1       | Based on energy capacity vs grid mix        |
+| FR-ESG-003 | System shall display net carbon impact over project lifetime | P1       | 25-year default horizon                     |
+| FR-ESG-004 | System shall overlay USFWS endangered species habitat data   | P1       | Critical habitat boundaries                 |
+| FR-ESG-005 | System shall overlay National Wetlands Inventory data        | P1       | Wetland type classification                 |
+| FR-ESG-006 | System shall calculate habitat impact score                  | P1       | Weighted by species sensitivity             |
+| FR-ESG-007 | System shall identify required environmental permits         | P1       | Based on habitat overlaps                   |
+| FR-ESG-008 | System shall generate ESG summary for stakeholder reports    | P1       | Executive-friendly format                   |
+| FR-ESG-009 | System shall support custom emission factors                 | P2       | Regional/organizational                     |
+| FR-ESG-010 | System shall track cumulative portfolio ESG metrics          | P2       | Aggregate across all sites                  |
 
 #### 6.2.8 Portfolio Analytics Module
 
-| Req ID | Requirement | Priority | Notes |
-|--------|-------------|----------|-------|
-| FR-PA-001 | System shall display cross-site comparison dashboard | P1 | Configurable metrics |
-| FR-PA-002 | System shall rank sites by composite score | P1 | Weighted criteria |
-| FR-PA-003 | System shall support custom scoring weights | P1 | User-configurable |
-| FR-PA-004 | System shall visualize site locations on portfolio map | P1 | Geographic distribution |
-| FR-PA-005 | System shall calculate portfolio-level statistics | P1 | Total capacity, avg cost, etc. |
-| FR-PA-006 | System shall generate pipeline status visualization | P1 | Funnel/kanban view |
-| FR-PA-007 | System shall support site tagging and filtering | P1 | Custom categories |
-| FR-PA-008 | System shall calculate risk-adjusted site scores | P1 | Factor in regulatory, interconnection risk |
-| FR-PA-009 | System shall export portfolio summary reports | P1 | PDF, Excel formats |
-| FR-PA-010 | System shall provide executive dashboard view | P1 | KPIs, trends, alerts |
+| Req ID    | Requirement                                            | Priority | Notes                                      |
+| --------- | ------------------------------------------------------ | -------- | ------------------------------------------ |
+| FR-PA-001 | System shall display cross-site comparison dashboard   | P1       | Configurable metrics                       |
+| FR-PA-002 | System shall rank sites by composite score             | P1       | Weighted criteria                          |
+| FR-PA-003 | System shall support custom scoring weights            | P1       | User-configurable                          |
+| FR-PA-004 | System shall visualize site locations on portfolio map | P1       | Geographic distribution                    |
+| FR-PA-005 | System shall calculate portfolio-level statistics      | P1       | Total capacity, avg cost, etc.             |
+| FR-PA-006 | System shall generate pipeline status visualization    | P1       | Funnel/kanban view                         |
+| FR-PA-007 | System shall support site tagging and filtering        | P1       | Custom categories                          |
+| FR-PA-008 | System shall calculate risk-adjusted site scores       | P1       | Factor in regulatory, interconnection risk |
+| FR-PA-009 | System shall export portfolio summary reports          | P1       | PDF, Excel formats                         |
+| FR-PA-010 | System shall provide executive dashboard view          | P1       | KPIs, trends, alerts                       |
 
 ---
 
@@ -529,65 +535,65 @@ Desirable features for future iterations.
 
 ### 7.1 Performance Requirements
 
-| Req ID | Requirement | Target | Measurement |
-|--------|-------------|--------|-------------|
-| NFR-P-001 | Page load time | < 3 seconds | 95th percentile |
-| NFR-P-002 | File upload processing (100MB) | < 60 seconds | Average |
-| NFR-P-003 | Terrain analysis computation | < 30 seconds | For 1km² site |
-| NFR-P-004 | Layout optimization | < 2 minutes | Standard configuration |
-| NFR-P-005 | Report generation | < 30 seconds | PDF with all sections |
-| NFR-P-006 | Map interaction responsiveness | < 100ms | Pan, zoom operations |
-| NFR-P-007 | Concurrent users supported | 50+ | Without degradation |
+| Req ID    | Requirement                    | Target       | Measurement            |
+| --------- | ------------------------------ | ------------ | ---------------------- |
+| NFR-P-001 | Page load time                 | < 3 seconds  | 95th percentile        |
+| NFR-P-002 | File upload processing (100MB) | < 60 seconds | Average                |
+| NFR-P-003 | Terrain analysis computation   | < 30 seconds | For 1km² site          |
+| NFR-P-004 | Layout optimization            | < 2 minutes  | Standard configuration |
+| NFR-P-005 | Report generation              | < 30 seconds | PDF with all sections  |
+| NFR-P-006 | Map interaction responsiveness | < 100ms      | Pan, zoom operations   |
+| NFR-P-007 | Concurrent users supported     | 50+          | Without degradation    |
 
 ### 7.2 Scalability Requirements
 
-| Req ID | Requirement | Target |
-|--------|-------------|--------|
-| NFR-S-001 | Maximum site area supported | 500 hectares |
-| NFR-S-002 | Maximum DEM resolution | 1 meter |
-| NFR-S-003 | Maximum assets per layout | 100 |
-| NFR-S-004 | Maximum projects per organization | 1000 |
-| NFR-S-005 | Maximum concurrent optimizations | 10 |
+| Req ID    | Requirement                       | Target       |
+| --------- | --------------------------------- | ------------ |
+| NFR-S-001 | Maximum site area supported       | 500 hectares |
+| NFR-S-002 | Maximum DEM resolution            | 1 meter      |
+| NFR-S-003 | Maximum assets per layout         | 100          |
+| NFR-S-004 | Maximum projects per organization | 1000         |
+| NFR-S-005 | Maximum concurrent optimizations  | 10           |
 
 ### 7.3 Reliability Requirements
 
-| Req ID | Requirement | Target |
-|--------|-------------|--------|
-| NFR-R-001 | System uptime | 99.5% |
-| NFR-R-002 | Data durability | 99.999% |
-| NFR-R-003 | Recovery Point Objective (RPO) | 1 hour |
-| NFR-R-004 | Recovery Time Objective (RTO) | 4 hours |
+| Req ID    | Requirement                       | Target    |
+| --------- | --------------------------------- | --------- |
+| NFR-R-001 | System uptime                     | 99.5%     |
+| NFR-R-002 | Data durability                   | 99.999%   |
+| NFR-R-003 | Recovery Point Objective (RPO)    | 1 hour    |
+| NFR-R-004 | Recovery Time Objective (RTO)     | 4 hours   |
 | NFR-R-005 | Mean Time Between Failures (MTBF) | 720 hours |
 
 ### 7.4 Security Requirements
 
-| Req ID | Requirement | Notes |
-|--------|-------------|-------|
-| NFR-SEC-001 | All data encrypted at rest | AES-256 |
-| NFR-SEC-002 | All data encrypted in transit | TLS 1.3 |
-| NFR-SEC-003 | Authentication via SSO/OAuth 2.0 | SAML 2.0 support |
-| NFR-SEC-004 | Role-based access control | Admin, User, Viewer |
-| NFR-SEC-005 | Audit logging for all actions | Immutable logs |
-| NFR-SEC-006 | File upload scanning | Malware detection |
-| NFR-SEC-007 | Input validation and sanitization | OWASP compliance |
-| NFR-SEC-008 | Session timeout | 30 minutes inactive |
+| Req ID      | Requirement                       | Notes               |
+| ----------- | --------------------------------- | ------------------- |
+| NFR-SEC-001 | All data encrypted at rest        | AES-256             |
+| NFR-SEC-002 | All data encrypted in transit     | TLS 1.3             |
+| NFR-SEC-003 | Authentication via SSO/OAuth 2.0  | SAML 2.0 support    |
+| NFR-SEC-004 | Role-based access control         | Admin, User, Viewer |
+| NFR-SEC-005 | Audit logging for all actions     | Immutable logs      |
+| NFR-SEC-006 | File upload scanning              | Malware detection   |
+| NFR-SEC-007 | Input validation and sanitization | OWASP compliance    |
+| NFR-SEC-008 | Session timeout                   | 30 minutes inactive |
 
 ### 7.5 Usability Requirements
 
-| Req ID | Requirement | Target |
-|--------|-------------|--------|
-| NFR-U-001 | Time to complete basic workflow | < 30 minutes (first use) |
-| NFR-U-002 | Task success rate | > 90% without assistance |
-| NFR-U-003 | Error recovery rate | > 95% recoverable errors |
-| NFR-U-004 | Accessibility compliance | WCAG 2.1 AA |
-| NFR-U-005 | Browser support | Chrome, Firefox, Safari, Edge (latest 2 versions) |
+| Req ID    | Requirement                     | Target                                            |
+| --------- | ------------------------------- | ------------------------------------------------- |
+| NFR-U-001 | Time to complete basic workflow | < 30 minutes (first use)                          |
+| NFR-U-002 | Task success rate               | > 90% without assistance                          |
+| NFR-U-003 | Error recovery rate             | > 95% recoverable errors                          |
+| NFR-U-004 | Accessibility compliance        | WCAG 2.1 AA                                       |
+| NFR-U-005 | Browser support                 | Chrome, Firefox, Safari, Edge (latest 2 versions) |
 
 ### 7.6 Compliance Requirements
 
-| Req ID | Requirement | Notes |
-|--------|-------------|-------|
-| NFR-C-001 | GDPR compliance | For EU users |
-| NFR-C-002 | SOC 2 Type II | Data security |
+| Req ID    | Requirement            | Notes          |
+| --------- | ---------------------- | -------------- |
+| NFR-C-001 | GDPR compliance        | For EU users   |
+| NFR-C-002 | SOC 2 Type II          | Data security  |
 | NFR-C-003 | Data residency options | US, EU regions |
 
 ---
@@ -737,21 +743,21 @@ Desirable features for future iterations.
 
 ### 8.3 Technology Stack
 
-| Layer | Technology | Justification |
-|-------|------------|---------------|
-| **Frontend** | React 18 + TypeScript | Component reusability, type safety |
-| **State Management** | Zustand | Lightweight, minimal boilerplate |
-| **Mapping** | Mapbox GL JS | High performance, customizable |
-| **API Gateway** | Kong / AWS API Gateway | Rate limiting, authentication |
-| **Backend API** | Node.js + Express | Fast I/O, JavaScript ecosystem |
-| **Geospatial Processing** | Python + GDAL/GeoPandas | Industry standard, mature libraries |
-| **Optimization** | Python + SciPy/OR-Tools | Proven algorithms, active development |
-| **Database** | PostgreSQL + PostGIS | Spatial queries, ACID compliance |
-| **Cache** | Redis | Sub-millisecond latency |
-| **File Storage** | AWS S3 | Durability, scalability |
-| **Job Queue** | Bull (Redis-backed) | Reliability, monitoring |
-| **PDF Generation** | ReportLab / Puppeteer | Flexibility, quality |
-| **Infrastructure** | AWS (ECS, RDS, S3) | Enterprise-ready, global reach |
+| Layer                     | Technology              | Justification                         |
+| ------------------------- | ----------------------- | ------------------------------------- |
+| **Frontend**              | React 18 + TypeScript   | Component reusability, type safety    |
+| **State Management**      | Zustand                 | Lightweight, minimal boilerplate      |
+| **Mapping**               | Mapbox GL JS            | High performance, customizable        |
+| **API Gateway**           | Kong / AWS API Gateway  | Rate limiting, authentication         |
+| **Backend API**           | Node.js + Express       | Fast I/O, JavaScript ecosystem        |
+| **Geospatial Processing** | Python + GDAL/GeoPandas | Industry standard, mature libraries   |
+| **Optimization**          | Python + SciPy/OR-Tools | Proven algorithms, active development |
+| **Database**              | PostgreSQL + PostGIS    | Spatial queries, ACID compliance      |
+| **Cache**                 | Redis                   | Sub-millisecond latency               |
+| **File Storage**          | AWS S3                  | Durability, scalability               |
+| **Job Queue**             | Bull (Redis-backed)     | Reliability, monitoring               |
+| **PDF Generation**        | ReportLab / Puppeteer   | Flexibility, quality                  |
+| **Infrastructure**        | AWS (ECS, RDS, S3)      | Enterprise-ready, global reach        |
 
 ---
 
@@ -975,7 +981,7 @@ interface RoadSegment {
   geometry: GeoJSON.LineString;
   length: number;
   width: number;
-  grade: number[];  // grade at each vertex
+  grade: number[]; // grade at each vertex
   maxGrade: number;
   avgGrade: number;
   earthwork: {
@@ -1608,18 +1614,21 @@ Dashboard
 ### 11.4 Interaction Patterns
 
 #### Drag-and-Drop Asset Placement
+
 - Assets can be dragged from palette to map
 - Real-time constraint validation (red highlight for violations)
 - Snap-to-grid option for alignment
 - Multi-select for bulk operations
 
 #### Progressive Disclosure
+
 - Basic options visible by default
 - Advanced settings in expandable panels
 - Tooltips for technical parameters
 - Contextual help throughout
 
 #### Feedback Mechanisms
+
 - Toast notifications for background operations
 - Progress indicators for long-running tasks
 - Inline validation messages
@@ -1631,13 +1640,13 @@ Dashboard
 
 ### 12.1 External Data Sources
 
-| Source | Data Type | Integration Method | Update Frequency |
-|--------|-----------|-------------------|------------------|
-| **USGS** | Elevation data (DEMs) | REST API | Static (on-demand) |
-| **OpenStreetMap** | Road networks, land use | Overpass API | Weekly |
-| **FEMA** | Flood zones | WMS/WFS | Monthly |
-| **EPA** | Environmental constraints | REST API | Monthly |
-| **NWS** | Weather data | REST API | Real-time |
+| Source            | Data Type                 | Integration Method | Update Frequency   |
+| ----------------- | ------------------------- | ------------------ | ------------------ |
+| **USGS**          | Elevation data (DEMs)     | REST API           | Static (on-demand) |
+| **OpenStreetMap** | Road networks, land use   | Overpass API       | Weekly             |
+| **FEMA**          | Flood zones               | WMS/WFS            | Monthly            |
+| **EPA**           | Environmental constraints | REST API           | Monthly            |
+| **NWS**           | Weather data              | REST API           | Real-time          |
 
 ### 12.2 Internal System Integrations
 
@@ -1671,13 +1680,13 @@ Dashboard
 
 The system publishes events for external consumption:
 
-| Event | Trigger | Payload |
-|-------|---------|---------|
-| `site.created` | New site added | Site details |
-| `layout.optimized` | Optimization complete | Layout summary |
-| `layout.approved` | Layout approved | Layout + metrics |
-| `export.completed` | Export ready | Download URL |
-| `job.failed` | Job failure | Error details |
+| Event              | Trigger               | Payload          |
+| ------------------ | --------------------- | ---------------- |
+| `site.created`     | New site added        | Site details     |
+| `layout.optimized` | Optimization complete | Layout summary   |
+| `layout.approved`  | Layout approved       | Layout + metrics |
+| `export.completed` | Export ready          | Download URL     |
+| `job.failed`       | Job failure           | Error details    |
 
 ---
 
@@ -1725,29 +1734,29 @@ The system publishes events for external consumption:
 
 ### 13.2 Role-Based Access Control
 
-| Role | Permissions |
-|------|-------------|
-| **Admin** | Full access, user management, org settings |
+| Role        | Permissions                                     |
+| ----------- | ----------------------------------------------- |
+| **Admin**   | Full access, user management, org settings      |
 | **Manager** | Create/edit projects, approve layouts, view all |
-| **Analyst** | Create/edit sites, generate layouts, export |
-| **Viewer** | Read-only access to assigned projects |
-| **API** | Programmatic access with scoped permissions |
+| **Analyst** | Create/edit sites, generate layouts, export     |
+| **Viewer**  | Read-only access to assigned projects           |
+| **API**     | Programmatic access with scoped permissions     |
 
 ### 13.3 Data Classification
 
-| Classification | Examples | Handling |
-|----------------|----------|----------|
+| Classification   | Examples                            | Handling                            |
+| ---------------- | ----------------------------------- | ----------------------------------- |
 | **Confidential** | Site locations, business strategies | Encrypted, access logged, no export |
-| **Internal** | Layouts, cost estimates | Encrypted, role-restricted |
-| **Public** | Documentation, sample data | Standard protection |
+| **Internal**     | Layouts, cost estimates             | Encrypted, role-restricted          |
+| **Public**       | Documentation, sample data          | Standard protection                 |
 
 ### 13.4 Compliance Requirements
 
-| Framework | Status | Notes |
-|-----------|--------|-------|
-| **SOC 2 Type II** | Target | Annual audit |
-| **GDPR** | Required | EU user data handling |
-| **ISO 27001** | Future | Information security |
+| Framework         | Status   | Notes                 |
+| ----------------- | -------- | --------------------- |
+| **SOC 2 Type II** | Target   | Annual audit          |
+| **GDPR**          | Required | EU user data handling |
+| **ISO 27001**     | Future   | Information security  |
 
 ---
 
@@ -1774,28 +1783,28 @@ The system publishes events for external consumption:
 
 #### Unit Tests
 
-| Component | Framework | Coverage Target |
-|-----------|-----------|-----------------|
-| Frontend (React) | Jest + React Testing Library | 80% |
-| Backend (Node.js) | Jest | 85% |
-| Geospatial (Python) | pytest | 90% |
-| Optimization (Python) | pytest | 90% |
+| Component             | Framework                    | Coverage Target |
+| --------------------- | ---------------------------- | --------------- |
+| Frontend (React)      | Jest + React Testing Library | 80%             |
+| Backend (Node.js)     | Jest                         | 85%             |
+| Geospatial (Python)   | pytest                       | 90%             |
+| Optimization (Python) | pytest                       | 90%             |
 
 #### Integration Tests
 
-| Scope | Framework | Focus |
-|-------|-----------|-------|
-| API Endpoints | Supertest | Request/response validation |
-| Database | Jest + testcontainers | Query correctness |
-| External Services | Nock/Mock Service Worker | Contract testing |
+| Scope             | Framework                | Focus                       |
+| ----------------- | ------------------------ | --------------------------- |
+| API Endpoints     | Supertest                | Request/response validation |
+| Database          | Jest + testcontainers    | Query correctness           |
+| External Services | Nock/Mock Service Worker | Contract testing            |
 
 #### End-to-End Tests
 
-| Scope | Framework | Browsers |
-|-------|-----------|----------|
-| Critical Flows | Playwright | Chrome, Firefox, Safari |
-| Visual Regression | Percy | Chrome |
-| Accessibility | axe-core | Chrome |
+| Scope             | Framework  | Browsers                |
+| ----------------- | ---------- | ----------------------- |
+| Critical Flows    | Playwright | Chrome, Firefox, Safari |
+| Visual Regression | Percy      | Chrome                  |
+| Accessibility     | axe-core   | Chrome                  |
 
 ### 14.3 Test Data Strategy
 
@@ -1806,10 +1815,10 @@ The system publishes events for external consumption:
 
 ### 14.4 Quality Gates
 
-| Stage | Criteria |
-|-------|----------|
-| **PR Merge** | All tests pass, no decrease in coverage |
-| **Staging Deploy** | Integration tests pass, no critical bugs |
+| Stage                 | Criteria                                   |
+| --------------------- | ------------------------------------------ |
+| **PR Merge**          | All tests pass, no decrease in coverage    |
+| **Staging Deploy**    | Integration tests pass, no critical bugs   |
 | **Production Deploy** | E2E tests pass, performance benchmarks met |
 
 ---
@@ -1877,21 +1886,21 @@ The system publishes events for external consumption:
 
 ### 15.3 Environment Strategy
 
-| Environment | Purpose | Data | Access |
-|-------------|---------|------|--------|
-| **Development** | Feature development | Synthetic | Developers |
-| **Staging** | Integration testing | Anonymized prod | Team |
-| **Production** | Live users | Real data | Restricted |
+| Environment     | Purpose             | Data            | Access     |
+| --------------- | ------------------- | --------------- | ---------- |
+| **Development** | Feature development | Synthetic       | Developers |
+| **Staging**     | Integration testing | Anonymized prod | Team       |
+| **Production**  | Live users          | Real data       | Restricted |
 
 ### 15.4 Monitoring & Observability
 
-| Layer | Tool | Metrics |
-|-------|------|---------|
-| **Infrastructure** | CloudWatch | CPU, memory, disk, network |
-| **Application** | DataDog / New Relic | Request latency, error rates |
-| **Business** | Custom dashboards | Sites evaluated, layouts generated |
-| **Logs** | CloudWatch Logs + ELK | Centralized logging |
-| **Alerts** | PagerDuty | Incident management |
+| Layer              | Tool                  | Metrics                            |
+| ------------------ | --------------------- | ---------------------------------- |
+| **Infrastructure** | CloudWatch            | CPU, memory, disk, network         |
+| **Application**    | DataDog / New Relic   | Request latency, error rates       |
+| **Business**       | Custom dashboards     | Sites evaluated, layouts generated |
+| **Logs**           | CloudWatch Logs + ELK | Centralized logging                |
+| **Alerts**         | PagerDuty             | Incident management                |
 
 ---
 
@@ -1899,30 +1908,30 @@ The system publishes events for external consumption:
 
 ### 16.1 Technical Risks
 
-| Risk | Probability | Impact | Mitigation |
-|------|-------------|--------|------------|
-| **Optimization performance** | Medium | High | Implement timeout limits, progressive refinement |
-| **DEM resolution limitations** | Medium | Medium | Support multiple data sources, interpolation |
-| **Browser compatibility** | Low | Medium | Progressive enhancement, polyfills |
-| **Data accuracy** | Medium | High | Validation pipelines, confidence scoring |
-| **Scalability bottlenecks** | Low | High | Load testing, auto-scaling configuration |
+| Risk                           | Probability | Impact | Mitigation                                       |
+| ------------------------------ | ----------- | ------ | ------------------------------------------------ |
+| **Optimization performance**   | Medium      | High   | Implement timeout limits, progressive refinement |
+| **DEM resolution limitations** | Medium      | Medium | Support multiple data sources, interpolation     |
+| **Browser compatibility**      | Low         | Medium | Progressive enhancement, polyfills               |
+| **Data accuracy**              | Medium      | High   | Validation pipelines, confidence scoring         |
+| **Scalability bottlenecks**    | Low         | High   | Load testing, auto-scaling configuration         |
 
 ### 16.2 Business Risks
 
-| Risk | Probability | Impact | Mitigation |
-|------|-------------|--------|------------|
-| **User adoption resistance** | Medium | High | Training program, change management |
-| **Regulatory changes** | Low | Medium | Modular constraint engine, updates |
-| **Data availability** | Low | Medium | Multiple data source fallbacks |
-| **Competitive response** | Medium | Medium | Continuous improvement, IP protection |
+| Risk                         | Probability | Impact | Mitigation                            |
+| ---------------------------- | ----------- | ------ | ------------------------------------- |
+| **User adoption resistance** | Medium      | High   | Training program, change management   |
+| **Regulatory changes**       | Low         | Medium | Modular constraint engine, updates    |
+| **Data availability**        | Low         | Medium | Multiple data source fallbacks        |
+| **Competitive response**     | Medium      | Medium | Continuous improvement, IP protection |
 
 ### 16.3 Operational Risks
 
-| Risk | Probability | Impact | Mitigation |
-|------|-------------|--------|------------|
-| **System downtime** | Low | High | Multi-AZ deployment, failover |
-| **Data breach** | Low | Critical | Encryption, access controls, auditing |
-| **Key person dependency** | Medium | Medium | Documentation, cross-training |
+| Risk                      | Probability | Impact   | Mitigation                            |
+| ------------------------- | ----------- | -------- | ------------------------------------- |
+| **System downtime**       | Low         | High     | Multi-AZ deployment, failover         |
+| **Data breach**           | Low         | Critical | Encryption, access controls, auditing |
+| **Key person dependency** | Medium      | Medium   | Documentation, cross-training         |
 
 ---
 
@@ -1930,30 +1939,30 @@ The system publishes events for external consumption:
 
 ### 17.1 Product Metrics
 
-| Metric | Definition | Target | Measurement |
-|--------|------------|--------|-------------|
-| **Time to Layout** | Avg time from data upload to layout | < 2 hours | System logs |
-| **Layout Accuracy** | Cut/fill estimate vs actual | ±15% | Post-construction audit |
-| **User Satisfaction** | NPS score | > 50 | Quarterly survey |
-| **Feature Adoption** | % users using each feature | > 70% | Analytics |
+| Metric                | Definition                          | Target    | Measurement             |
+| --------------------- | ----------------------------------- | --------- | ----------------------- |
+| **Time to Layout**    | Avg time from data upload to layout | < 2 hours | System logs             |
+| **Layout Accuracy**   | Cut/fill estimate vs actual         | ±15%      | Post-construction audit |
+| **User Satisfaction** | NPS score                           | > 50      | Quarterly survey        |
+| **Feature Adoption**  | % users using each feature          | > 70%     | Analytics               |
 
 ### 17.2 Business Metrics
 
-| Metric | Definition | Target | Measurement |
-|--------|------------|--------|-------------|
-| **Sites Evaluated** | Sites processed per quarter | 2x baseline | System reports |
-| **Engineering Hours Saved** | Time reduction vs manual | 30% | Time tracking |
-| **Decision Velocity** | Days from site identification to go/no-go | 50% reduction | Process audit |
-| **ROI** | (Savings + Revenue) / Cost | > 300% Year 1 | Financial analysis |
+| Metric                      | Definition                                | Target        | Measurement        |
+| --------------------------- | ----------------------------------------- | ------------- | ------------------ |
+| **Sites Evaluated**         | Sites processed per quarter               | 2x baseline   | System reports     |
+| **Engineering Hours Saved** | Time reduction vs manual                  | 30%           | Time tracking      |
+| **Decision Velocity**       | Days from site identification to go/no-go | 50% reduction | Process audit      |
+| **ROI**                     | (Savings + Revenue) / Cost                | > 300% Year 1 | Financial analysis |
 
 ### 17.3 Technical Metrics
 
-| Metric | Definition | Target | Measurement |
-|--------|------------|--------|-------------|
-| **System Uptime** | Availability percentage | 99.5% | Monitoring |
-| **API Latency** | 95th percentile response time | < 500ms | APM |
-| **Error Rate** | Failed requests / total | < 0.1% | Logging |
-| **Build Success** | CI/CD pipeline success rate | > 95% | CI metrics |
+| Metric            | Definition                    | Target  | Measurement |
+| ----------------- | ----------------------------- | ------- | ----------- |
+| **System Uptime** | Availability percentage       | 99.5%   | Monitoring  |
+| **API Latency**   | 95th percentile response time | < 500ms | APM         |
+| **Error Rate**    | Failed requests / total       | < 0.1%  | Logging     |
+| **Build Success** | CI/CD pipeline success rate   | > 95%   | CI metrics  |
 
 ### 17.4 Tracking Dashboard
 
@@ -1989,15 +1998,15 @@ The system publishes events for external consumption:
 
 ### Appendix A: Glossary
 
-| Term | Definition |
-|------|------------|
-| **BESS** | Battery Energy Storage System |
-| **CRS** | Coordinate Reference System |
-| **DEM** | Digital Elevation Model |
+| Term        | Definition                                    |
+| ----------- | --------------------------------------------- |
+| **BESS**    | Battery Energy Storage System                 |
+| **CRS**     | Coordinate Reference System                   |
+| **DEM**     | Digital Elevation Model                       |
 | **KML/KMZ** | Keyhole Markup Language (Google Earth format) |
-| **O&M** | Operations and Maintenance |
-| **PostGIS** | PostgreSQL extension for geographic objects |
-| **TIN** | Triangulated Irregular Network |
+| **O&M**     | Operations and Maintenance                    |
+| **PostGIS** | PostgreSQL extension for geographic objects   |
+| **TIN**     | Triangulated Irregular Network                |
 
 ### Appendix B: References
 
@@ -2009,22 +2018,22 @@ The system publishes events for external consumption:
 
 ### Appendix C: Revision History
 
-| Version | Date | Author | Changes |
-|---------|------|--------|---------|
-| 1.0.0 | 2024-11-29 | Engineering Team | Initial release |
+| Version | Date       | Author           | Changes         |
+| ------- | ---------- | ---------------- | --------------- |
+| 1.0.0   | 2024-11-29 | Engineering Team | Initial release |
 
 ### Appendix D: Stakeholder Sign-Off
 
-| Role | Name | Signature | Date |
-|------|------|-----------|------|
-| Product Owner | | | |
-| Engineering Lead | | | |
-| Design Lead | | | |
-| Security | | | |
-| Executive Sponsor | | | |
+| Role              | Name | Signature | Date |
+| ----------------- | ---- | --------- | ---- |
+| Product Owner     |      |           |      |
+| Engineering Lead  |      |           |      |
+| Design Lead       |      |           |      |
+| Security          |      |           |      |
+| Executive Sponsor |      |           |      |
 
 ---
 
-*This document is confidential and intended for internal use at Pacifico Energy Group.*
+_This document is confidential and intended for internal use at Pacifico Energy Group._
 
 **Document End**

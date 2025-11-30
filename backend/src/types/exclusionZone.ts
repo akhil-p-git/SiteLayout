@@ -40,15 +40,15 @@ export const DEFAULT_BUFFER_DISTANCES: Record<ExclusionZoneType, number> = {
  * Zone type display colors (for map visualization)
  */
 export const ZONE_TYPE_COLORS: Record<ExclusionZoneType, string> = {
-  [ExclusionZoneType.WETLAND]: '#1E90FF',      // Dodger Blue
-  [ExclusionZoneType.SETBACK]: '#FF6347',      // Tomato
-  [ExclusionZoneType.EASEMENT]: '#FFD700',     // Gold
+  [ExclusionZoneType.WETLAND]: '#1E90FF', // Dodger Blue
+  [ExclusionZoneType.SETBACK]: '#FF6347', // Tomato
+  [ExclusionZoneType.EASEMENT]: '#FFD700', // Gold
   [ExclusionZoneType.ENVIRONMENTAL]: '#32CD32', // Lime Green
-  [ExclusionZoneType.CULTURAL]: '#9370DB',     // Medium Purple
+  [ExclusionZoneType.CULTURAL]: '#9370DB', // Medium Purple
   [ExclusionZoneType.INFRASTRUCTURE]: '#808080', // Gray
-  [ExclusionZoneType.SLOPE]: '#FF8C00',        // Dark Orange
-  [ExclusionZoneType.FLOOD]: '#4169E1',        // Royal Blue
-  [ExclusionZoneType.CUSTOM]: '#A0522D',       // Sienna
+  [ExclusionZoneType.SLOPE]: '#FF8C00', // Dark Orange
+  [ExclusionZoneType.FLOOD]: '#4169E1', // Royal Blue
+  [ExclusionZoneType.CUSTOM]: '#A0522D', // Sienna
 };
 
 /**
@@ -139,10 +139,13 @@ export interface ExclusionZoneSummary {
   totalExcludedArea: number; // in square meters
   totalBufferedArea: number; // in square meters
   excludedPercentage: number;
-  byType: Record<ExclusionZoneType, {
-    count: number;
-    area: number;
-  }>;
+  byType: Record<
+    ExclusionZoneType,
+    {
+      count: number;
+      area: number;
+    }
+  >;
 }
 
 /**
@@ -158,15 +161,18 @@ export interface BufferOptions {
 /**
  * GeoJSON Feature for exclusion zone
  */
-export type ExclusionZoneFeature = Feature<Polygon | MultiPolygon, {
-  id: string;
-  name: string;
-  type: ExclusionZoneType;
-  bufferDistance: number;
-  area: number;
-  isActive: boolean;
-  isBuffered?: boolean;
-}>;
+export type ExclusionZoneFeature = Feature<
+  Polygon | MultiPolygon,
+  {
+    id: string;
+    name: string;
+    type: ExclusionZoneType;
+    bufferDistance: number;
+    area: number;
+    isActive: boolean;
+    isBuffered?: boolean;
+  }
+>;
 
 /**
  * Import result for batch zone import

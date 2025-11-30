@@ -28,7 +28,11 @@ export interface GeoJSONLineString {
   coordinates: number[][];
 }
 
-export type GeoJSONGeometry = GeoJSONPoint | GeoJSONPolygon | GeoJSONMultiPolygon | GeoJSONLineString;
+export type GeoJSONGeometry =
+  | GeoJSONPoint
+  | GeoJSONPolygon
+  | GeoJSONMultiPolygon
+  | GeoJSONLineString;
 
 // ============================================================================
 // Core Entities

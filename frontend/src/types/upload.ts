@@ -126,7 +126,12 @@ export interface UploadState {
   isUploading: boolean;
   progress: UploadProgress | null;
   error: string | null;
-  result: BoundaryUploadResponse | ExclusionsUploadResponse | PreviewUploadResponse | ValidateUploadResponse | null;
+  result:
+    | BoundaryUploadResponse
+    | ExclusionsUploadResponse
+    | PreviewUploadResponse
+    | ValidateUploadResponse
+    | null;
 }
 
 // Allowed file extensions

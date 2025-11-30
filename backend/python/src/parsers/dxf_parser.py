@@ -5,15 +5,15 @@ Parses DXF files containing contour lines and extracts elevation data
 for DEM generation.
 """
 
+from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterator, Sequence
 
 import ezdxf
-from ezdxf.entities import LWPolyline, Polyline, Line, Spline
-from shapely.geometry import LineString, Point
 import numpy as np
+from ezdxf.entities import Line, LWPolyline, Polyline, Spline
 from numpy.typing import NDArray
+from shapely.geometry import LineString
 
 
 @dataclass

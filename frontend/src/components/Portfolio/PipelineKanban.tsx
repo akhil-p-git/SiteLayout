@@ -61,9 +61,7 @@ const SiteCard: React.FC<SiteCardProps> = ({ site, onClick }) => {
       </div>
 
       <div className="card-footer">
-        {site.location.region && (
-          <span className="card-region">{site.location.region}</span>
-        )}
+        {site.location.region && <span className="card-region">{site.location.region}</span>}
         {site.tags.priority && (
           <span className={`card-priority priority-${site.tags.priority}`}>
             {site.tags.priority}
@@ -100,11 +98,7 @@ const StageColumn: React.FC<StageColumnProps> = ({ stage, onSiteClick }) => {
           <div className="column-empty">No sites</div>
         ) : (
           stage.sites.map((site) => (
-            <SiteCard
-              key={site.id}
-              site={site}
-              onClick={() => onSiteClick?.(site)}
-            />
+            <SiteCard key={site.id} site={site} onClick={() => onSiteClick?.(site)} />
           ))
         )}
       </div>
@@ -112,10 +106,7 @@ const StageColumn: React.FC<StageColumnProps> = ({ stage, onSiteClick }) => {
   );
 };
 
-export const PipelineKanban: React.FC<PipelineKanbanProps> = ({
-  sites,
-  onSiteClick,
-}) => {
+export const PipelineKanban: React.FC<PipelineKanbanProps> = ({ sites, onSiteClick }) => {
   const stages = useMemo<PipelineStage[]>(() => {
     const pipelineStatuses: SiteStatus[] = [
       'prospecting',
@@ -185,20 +176,14 @@ export const PipelineKanban: React.FC<PipelineKanbanProps> = ({
 
       <div className="pipeline-columns">
         {stages.map((stage) => (
-          <StageColumn
-            key={stage.status}
-            stage={stage}
-            onSiteClick={onSiteClick}
-          />
+          <StageColumn key={stage.status} stage={stage} onSiteClick={onSiteClick} />
         ))}
       </div>
 
       <div className="pipeline-other">
         <div className="other-section">
           <h4>On Hold</h4>
-          <span className="other-count">
-            {sites.filter((s) => s.status === 'on_hold').length}
-          </span>
+          <span className="other-count">{sites.filter((s) => s.status === 'on_hold').length}</span>
         </div>
         <div className="other-section">
           <h4>Cancelled</h4>

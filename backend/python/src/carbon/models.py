@@ -7,7 +7,7 @@ Based on EPA emission factors and industry standards.
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional, List, Dict, Any
+from typing import Any
 
 
 class EquipmentType(Enum):
@@ -97,7 +97,7 @@ class EquipmentEmissionProfile:
 
 
 # Default equipment profiles based on industry averages
-DEFAULT_EQUIPMENT_PROFILES: Dict[EquipmentType, EquipmentEmissionProfile] = {
+DEFAULT_EQUIPMENT_PROFILES: dict[EquipmentType, EquipmentEmissionProfile] = {
     EquipmentType.EXCAVATOR: EquipmentEmissionProfile(
         EquipmentType.EXCAVATOR, FuelType.DIESEL, 6.0
     ),
@@ -149,9 +149,9 @@ class EarthworkCarbonInput:
     fill_volume_m3: float
     import_volume_m3: float = 0.0
     export_volume_m3: float = 0.0
-    hauling: Optional[HaulingParameters] = None
-    equipment_days: Dict[EquipmentType, int] = field(default_factory=dict)
-    custom_equipment: List[EquipmentEmissionProfile] = field(default_factory=list)
+    hauling: HaulingParameters | None = None
+    equipment_days: dict[EquipmentType, int] = field(default_factory=dict)
+    custom_equipment: list[EquipmentEmissionProfile] = field(default_factory=list)
 
 
 @dataclass
@@ -203,7 +203,7 @@ class GridEmissionFactors:
     """Grid emission factors for carbon offset calculations."""
 
     # kg CO2 per MWh by energy source
-    source_factors: Dict[EnergySource, float] = field(
+    source_factors: dict[EnergySource, float] = field(
         default_factory=lambda: {
             EnergySource.SOLAR: 0.0,
             EnergySource.WIND: 0.0,
@@ -270,7 +270,7 @@ class LifetimeImpactResult:
     construction_emissions_kg: float
     operational_offset_kg: float
     net_impact_kg: float
-    payback_years: Optional[float]  # years to offset construction
+    payback_years: float | None  # years to offset construction
     project_lifetime_years: int
     carbon_negative_years: int  # years where project is net negative
 
@@ -290,14 +290,14 @@ class CarbonCalculationResult:
 
     project_id: str
     construction: CarbonBreakdown
-    offset: Optional[CarbonOffsetResult] = None
-    lifetime: Optional[LifetimeImpactResult] = None
+    offset: CarbonOffsetResult | None = None
+    lifetime: LifetimeImpactResult | None = None
 
     # Summary metrics
     total_construction_metric_tons: float = 0.0
     total_offset_metric_tons: float = 0.0
     net_lifetime_metric_tons: float = 0.0
-    carbon_payback_years: Optional[float] = None
+    carbon_payback_years: float | None = None
 
     # Comparison metrics
     equivalent_car_years: float = 0.0  # avg car = 4.6 metric tons/year
@@ -319,7 +319,7 @@ class CarbonCalculationResult:
             )
             self.equivalent_homes_powered = annual_mwh / 7.5
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for API response."""
         result = {
             "project_id": self.project_id,

@@ -41,9 +41,7 @@ export function ZoneForm({
     zone?.type || ('wetland' as ExclusionZoneType)
   );
   const [description, setDescription] = useState(zone?.description || '');
-  const [bufferDistance, setBufferDistance] = useState<number>(
-    zone?.bufferDistance || 0
-  );
+  const [bufferDistance, setBufferDistance] = useState<number>(zone?.bufferDistance || 0);
 
   const isEditing = !!zone;
 
@@ -63,9 +61,7 @@ export function ZoneForm({
 
           // Set default buffer for selected type
           if (!zone) {
-            const selectedType = data.types.find(
-              (t: ZoneTypeOption) => t.value === type
-            );
+            const selectedType = data.types.find((t: ZoneTypeOption) => t.value === type);
             if (selectedType) {
               setBufferDistance(selectedType.defaultBuffer);
             }
@@ -86,7 +82,7 @@ export function ZoneForm({
 
       // Update buffer to default for this type if not editing
       if (!isEditing) {
-        const typeOption = zoneTypes.find(t => t.value === newType);
+        const typeOption = zoneTypes.find((t) => t.value === newType);
         if (typeOption) {
           setBufferDistance(typeOption.defaultBuffer);
         }
@@ -197,7 +193,7 @@ export function ZoneForm({
             id="zone-name"
             type="text"
             value={name}
-            onChange={e => setName(e.target.value)}
+            onChange={(e) => setName(e.target.value)}
             placeholder="Enter zone name"
             required
           />
@@ -207,17 +203,14 @@ export function ZoneForm({
         <div className="form-group">
           <label htmlFor="zone-type">Type *</label>
           <div className="type-select-wrapper">
-            <div
-              className="type-color-indicator"
-              style={{ backgroundColor: selectedTypeColor }}
-            />
+            <div className="type-color-indicator" style={{ backgroundColor: selectedTypeColor }} />
             <select
               id="zone-type"
               value={type}
-              onChange={e => handleTypeChange(e.target.value as ExclusionZoneType)}
+              onChange={(e) => handleTypeChange(e.target.value as ExclusionZoneType)}
               required
             >
-              {zoneTypes.map(typeOption => (
+              {zoneTypes.map((typeOption) => (
                 <option key={typeOption.value} value={typeOption.value}>
                   {typeOption.label}
                 </option>
@@ -236,11 +229,9 @@ export function ZoneForm({
             max="1000"
             step="1"
             value={bufferDistance}
-            onChange={e => setBufferDistance(parseInt(e.target.value) || 0)}
+            onChange={(e) => setBufferDistance(parseInt(e.target.value) || 0)}
           />
-          <span className="form-hint">
-            Additional buffer around the zone boundary
-          </span>
+          <span className="form-hint">Additional buffer around the zone boundary</span>
         </div>
 
         {/* Description */}
@@ -249,7 +240,7 @@ export function ZoneForm({
           <textarea
             id="zone-description"
             value={description}
-            onChange={e => setDescription(e.target.value)}
+            onChange={(e) => setDescription(e.target.value)}
             placeholder="Optional description"
             rows={3}
           />
@@ -280,12 +271,7 @@ export function ZoneForm({
       </div>
 
       <div className="form-actions">
-        <button
-          type="button"
-          className="btn-cancel"
-          onClick={onCancel}
-          disabled={isSubmitting}
-        >
+        <button type="button" className="btn-cancel" onClick={onCancel} disabled={isSubmitting}>
           Cancel
         </button>
         <button

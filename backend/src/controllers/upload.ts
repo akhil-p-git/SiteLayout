@@ -1,5 +1,10 @@
 import { Response } from 'express';
-import { parseFile, extractPolygons, validateGeometry, geometryToWkt } from '../services/fileParser';
+import {
+  parseFile,
+  extractPolygons,
+  validateGeometry,
+  geometryToWkt,
+} from '../services/fileParser';
 import { cleanupFile, getFileInfo } from '../middleware/upload';
 import { logFromRequest, AuditActions } from '../services/audit';
 import type { AuthenticatedRequest } from '../types/auth';
@@ -38,13 +43,13 @@ export async function uploadBoundary(req: AuthenticatedRequest, res: Response): 
     }
 
     // Validate geometries
-    const validationResults = polygons.map(p => ({
+    const validationResults = polygons.map((p) => ({
       id: p.id,
       name: p.name,
       ...validateGeometry(p.geometry),
     }));
 
-    const invalidGeometries = validationResults.filter(v => !v.valid);
+    const invalidGeometries = validationResults.filter((v) => !v.valid);
 
     // Log the upload
     await logFromRequest(req, AuditActions.DATA_IMPORT, 'boundary', undefined, {
@@ -55,7 +60,7 @@ export async function uploadBoundary(req: AuthenticatedRequest, res: Response): 
     });
 
     // Convert to WKT for potential PostGIS storage
-    const polygonsWithWkt = polygons.map(p => ({
+    const polygonsWithWkt = polygons.map((p) => ({
       ...p,
       wkt: geometryToWkt(p.geometry),
       areaAcres: p.area ? p.area / 4046.86 : undefined, // Convert sq meters to acres
@@ -122,7 +127,7 @@ export async function uploadExclusions(req: AuthenticatedRequest, res: Response)
         filename: fileInfo.originalName,
         type: parsedFile.type,
         polygonCount: polygons.length,
-        polygons: polygons.map(p => ({
+        polygons: polygons.map((p) => ({
           id: p.id,
           name: p.name,
           type: p.type,
@@ -195,7 +200,7 @@ export async function previewFile(req: AuthenticatedRequest, res: Response): Pro
         featureCount: previewFeatures.length,
         totalFeatures: parsedFile.features.length,
         truncated: parsedFile.features.length > 100,
-        features: previewFeatures.map(f => ({
+        features: previewFeatures.map((f) => ({
           type: f.geometry?.type,
           name: f.properties?.name,
           properties: f.properties,
@@ -251,7 +256,7 @@ export async function validateFile(req: AuthenticatedRequest, res: Response): Pr
       };
     });
 
-    const invalidCount = validationResults.filter(v => !v.valid).length;
+    const invalidCount = validationResults.filter((v) => !v.valid).length;
 
     res.json({
       file: {
@@ -264,7 +269,7 @@ export async function validateFile(req: AuthenticatedRequest, res: Response): Pr
         totalFeatures: parsedFile.features.length,
         validFeatures: parsedFile.features.length - invalidCount,
         invalidFeatures: invalidCount,
-        details: validationResults.filter(v => !v.valid),
+        details: validationResults.filter((v) => !v.valid),
       },
       metadata: {
         ...parsedFile.metadata,

@@ -16,7 +16,7 @@ export function SimpleBarChart({
 }: SimpleBarChartProps) {
   if (data.length === 0) return null;
 
-  const maxValue = Math.max(...data.map(d => d.value));
+  const maxValue = Math.max(...data.map((d) => d.value));
 
   return (
     <div className="simple-bar-chart" style={{ height }}>
@@ -56,18 +56,16 @@ interface SimplePieChartProps {
   showLegend?: boolean;
 }
 
-export function SimplePieChart({
-  data,
-  size = 120,
-  showLegend = true,
-}: SimplePieChartProps) {
+export function SimplePieChart({ data, size = 120, showLegend = true }: SimplePieChartProps) {
   if (data.length === 0) return null;
 
   const total = data.reduce((sum, d) => sum + d.value, 0);
   if (total === 0) return null;
 
   // Calculate pie segments using reduce to avoid mutable variable
-  const segments = data.reduce<Array<ChartDataPoint & { percentage: number; startAngle: number; endAngle: number }>>((acc, item) => {
+  const segments = data.reduce<
+    Array<ChartDataPoint & { percentage: number; startAngle: number; endAngle: number }>
+  >((acc, item) => {
     const percentage = (item.value / total) * 100;
     const angle = (item.value / total) * 360;
     const startAngle = acc.length > 0 ? acc[acc.length - 1].endAngle : 0;
@@ -117,10 +115,7 @@ export function SimplePieChart({
         <div className="pie-legend">
           {segments.map((seg, index) => (
             <div key={index} className="legend-item">
-              <span
-                className="legend-color"
-                style={{ backgroundColor: seg.color }}
-              />
+              <span className="legend-color" style={{ backgroundColor: seg.color }} />
               <span className="legend-label">{seg.label}</span>
               <span className="legend-value">{seg.percentage.toFixed(0)}%</span>
             </div>
@@ -160,9 +155,7 @@ export function ProgressBar({
           }}
         />
       </div>
-      {showPercentage && (
-        <span className="progress-percentage">{percentage.toFixed(0)}%</span>
-      )}
+      {showPercentage && <span className="progress-percentage">{percentage.toFixed(0)}%</span>}
     </div>
   );
 }

@@ -1,12 +1,7 @@
 import { Router } from 'express';
 import { uploadSingle, uploadMultiple, handleUploadError } from '../middleware/upload';
 import { authenticate, requirePermission } from '../middleware/auth';
-import {
-  uploadBoundary,
-  uploadExclusions,
-  previewFile,
-  validateFile,
-} from '../controllers/upload';
+import { uploadBoundary, uploadExclusions, previewFile, validateFile } from '../controllers/upload';
 
 const router = Router();
 
@@ -43,25 +38,13 @@ router.post(
  * @desc    Preview file contents without persisting
  * @access  Private - any authenticated user
  */
-router.post(
-  '/preview',
-  authenticate,
-  uploadSingle,
-  handleUploadError,
-  previewFile
-);
+router.post('/preview', authenticate, uploadSingle, handleUploadError, previewFile);
 
 /**
  * @route   POST /api/v1/upload/validate
  * @desc    Validate a file without processing
  * @access  Private - any authenticated user
  */
-router.post(
-  '/validate',
-  authenticate,
-  uploadSingle,
-  handleUploadError,
-  validateFile
-);
+router.post('/validate', authenticate, uploadSingle, handleUploadError, validateFile);
 
 export default router;

@@ -81,7 +81,8 @@ export function useApi() {
 
   // Convenience methods
   const get = useCallback(
-    <T>(endpoint: string, options?: ApiOptions) => request<T>(endpoint, { ...options, method: 'GET' }),
+    <T>(endpoint: string, options?: ApiOptions) =>
+      request<T>(endpoint, { ...options, method: 'GET' }),
     [request]
   );
 
@@ -116,7 +117,8 @@ export function useApi() {
   );
 
   const del = useCallback(
-    <T>(endpoint: string, options?: ApiOptions) => request<T>(endpoint, { ...options, method: 'DELETE' }),
+    <T>(endpoint: string, options?: ApiOptions) =>
+      request<T>(endpoint, { ...options, method: 'DELETE' }),
     [request]
   );
 

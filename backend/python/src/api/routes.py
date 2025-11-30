@@ -5,7 +5,6 @@ FastAPI routes for DEM processing and terrain analysis.
 """
 
 import os
-import tempfile
 import uuid
 from pathlib import Path
 from typing import Annotated, Literal
@@ -14,26 +13,23 @@ from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 
-from ..parsers import parse_dxf, get_dxf_info, ContourSet
+from ..parsers import get_dxf_info, parse_dxf
 from ..terrain import (
     DEMConfig,
-    DEMResult,
-    generate_dem_from_contours,
-    generate_dem_from_points,
-    save_dem_as_geotiff,
-    load_dem_from_geotiff,
     SlopeUnit,
-    calculate_slope,
     calculate_aspect,
-    classify_slope,
+    calculate_slope,
     calculate_terrain_metrics,
-    generate_slope_visualization,
+    classify_slope,
     generate_aspect_visualization,
+    generate_dem_from_contours,
+    generate_slope_visualization,
     identify_steep_areas,
-    save_slope_as_geotiff,
+    load_dem_from_geotiff,
     save_aspect_as_geotiff,
+    save_dem_as_geotiff,
+    save_slope_as_geotiff,
 )
-
 
 # Configuration
 OUTPUT_DIR = Path(os.getenv("OUTPUT_DIR", "./output"))
@@ -761,10 +757,9 @@ async def get_aspect_visualization(dem_id: str) -> FileResponse:
 # ============================================================================
 
 from ..optimization import (
-    optimize_layout,
-    AssetType,
-    OptimizationObjective,
     DEFAULT_ASSET_DEFINITIONS,
+    OptimizationObjective,
+    optimize_layout,
 )
 
 
@@ -925,7 +920,6 @@ async def run_optimization(request: OptimizationRequest) -> OptimizationResponse
     Uses a genetic algorithm to find optimal asset placements
     that satisfy constraints and optimize the specified objective.
     """
-    import numpy as np
 
     try:
         # Load slope data if DEM ID provided
@@ -1010,7 +1004,6 @@ async def run_optimization(request: OptimizationRequest) -> OptimizationResponse
 
 from ..roads import (
     generate_road_network,
-    PathfindingConfig,
 )
 
 
@@ -1103,7 +1096,6 @@ async def generate_roads(request: RoadNetworkRequest) -> RoadNetworkResponse:
     optimal road paths that respect gradient constraints and avoid
     exclusion zones.
     """
-    import numpy as np
 
     try:
         # Load slope data if DEM ID provided
@@ -1335,15 +1327,15 @@ async def get_road_config_defaults() -> dict:
 # ============================================================================
 
 from ..earthwork import (
-    calculate_earthwork,
+    DEFAULT_COST_FACTORS,
+    DEFAULT_SOIL_PROPERTIES,
+    CostFactors,
+    GradingMethod,
     PadDesign,
     RoadDesign,
     SoilProperties,
-    CostFactors,
     SoilType,
-    GradingMethod,
-    DEFAULT_SOIL_PROPERTIES,
-    DEFAULT_COST_FACTORS,
+    calculate_earthwork,
 )
 
 
@@ -1690,16 +1682,18 @@ async def get_cost_defaults() -> dict:
 # ============================================================================
 
 from ..reports import (
-    generate_report,
-    ReportData,
-    ReportConfig,
-    ReportSection,
-    ProjectInfo,
-    TerrainSummary,
     AssetInfo,
-    RoadInfo,
-    EarthworkSummary as ReportEarthworkSummary,
     CostBreakdown,
+    ProjectInfo,
+    ReportConfig,
+    ReportData,
+    ReportSection,
+    RoadInfo,
+    TerrainSummary,
+    generate_report,
+)
+from ..reports import (
+    EarthworkSummary as ReportEarthworkSummary,
 )
 
 
@@ -1833,7 +1827,6 @@ async def generate_pdf_report(request: ReportRequest) -> ReportResultResponse:
 
     Returns report metadata. Use /download endpoint to get the PDF file.
     """
-    from fastapi.responses import Response
 
     try:
         # Build report config
@@ -2014,15 +2007,14 @@ async def get_available_sections() -> list[dict]:
 
 from ..carbon import (
     CarbonCalculator,
-    calculate_project_carbon,
-    EquipmentType,
-    FuelType,
+    EarthworkCarbonInput,
     EnergySource,
     EPAEmissionFactors,
+    EquipmentType,
     HaulingParameters,
-    EarthworkCarbonInput,
-    RoadConstructionInput,
     ProjectEnergyProfile,
+    RoadConstructionInput,
+    calculate_project_carbon,
 )
 
 
@@ -2378,14 +2370,10 @@ def _get_source_description(source: EnergySource) -> str:
 # ============================================================================
 
 from ..habitat import (
-    analyze_habitat,
-    HabitatImpactCalculator,
-    SpeciesStatus,
-    WetlandType,
-    HabitatSensitivity,
-    PermitType,
     BUFFER_DISTANCES,
     PERMIT_TIMELINES,
+    PermitType,
+    analyze_habitat,
 )
 
 

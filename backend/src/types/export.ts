@@ -245,12 +245,12 @@ export const DEFAULT_KML_STYLES: Record<ExportLayerType, KMLStyle> = {
  * Asset type specific colors for KML
  */
 export const ASSET_KML_COLORS: Record<string, string> = {
-  bess: 'ff00ff00',        // Green
-  substation: 'ff0080ff',   // Orange
-  o_and_m: 'ffff8000',      // Cyan
-  parking: 'ff808080',      // Gray
-  laydown: 'ff00ffff',      // Yellow
-  solar_panel: 'ff0000ff',  // Blue
-  inverter: 'ff800080',     // Purple
-  transformer: 'ff008080',  // Teal
+  bess: 'ff00ff00', // Green
+  substation: 'ff0080ff', // Orange
+  o_and_m: 'ffff8000', // Cyan
+  parking: 'ff808080', // Gray
+  laydown: 'ff00ffff', // Yellow
+  solar_panel: 'ff0000ff', // Blue
+  inverter: 'ff800080', // Purple
+  transformer: 'ff008080', // Teal
 };

@@ -30,7 +30,7 @@ import * as turf from '@turf/turf';
  * Get available constraint types
  */
 export async function getConstraintTypes(req: Request, res: Response) {
-  const types = Object.values(ConstraintType).map(type => ({
+  const types = Object.values(ConstraintType).map((type) => ({
     value: type,
     label: formatConstraintType(type),
     description: getConstraintTypeDescription(type),
@@ -44,8 +44,8 @@ export async function getConstraintTypes(req: Request, res: Response) {
  */
 export async function getAssetTypes(req: Request, res: Response) {
   const types = Object.values(AssetType)
-    .filter(type => type !== AssetType.ANY)
-    .map(type => ({
+    .filter((type) => type !== AssetType.ANY)
+    .map((type) => ({
       value: type,
       label: formatAssetType(type),
       defaultSlopeLimit: getDefaultSlopeLimit(type),
@@ -142,7 +142,7 @@ export async function validateAsset(req: Request, res: Response) {
     constraintSets = [createDefaultConstraintSet(projectId, userId)];
   }
 
-  const activeConstraintSet = constraintSets.find(cs => cs.isDefault) || constraintSets[0];
+  const activeConstraintSet = constraintSets.find((cs) => cs.isDefault) || constraintSets[0];
 
   // Build validation context
   const context: ValidationContext = {};
@@ -161,11 +161,7 @@ export async function validateAsset(req: Request, res: Response) {
   }
 
   // Validate
-  const result = await validateAssetPlacement(
-    asset,
-    activeConstraintSet.constraints,
-    context
-  );
+  const result = await validateAssetPlacement(asset, activeConstraintSet.constraints, context);
 
   res.json({ result });
 }
@@ -193,7 +189,7 @@ export async function validateAssets(req: Request, res: Response) {
     constraintSets = [createDefaultConstraintSet(projectId, userId)];
   }
 
-  const activeConstraintSet = constraintSets.find(cs => cs.isDefault) || constraintSets[0];
+  const activeConstraintSet = constraintSets.find((cs) => cs.isDefault) || constraintSets[0];
 
   // Build validation context
   const context: ValidationContext = {};
@@ -212,11 +208,7 @@ export async function validateAssets(req: Request, res: Response) {
   }
 
   // Validate batch
-  const result = await validateBatch(
-    assets,
-    activeConstraintSet.constraints,
-    context
-  );
+  const result = await validateBatch(assets, activeConstraintSet.constraints, context);
 
   // Convert Map to object for JSON serialization
   const assetResultsObj: Record<string, unknown> = {};
@@ -264,7 +256,7 @@ export async function getValidPlacementAreas(req: Request, res: Response) {
     constraintSets = [createDefaultConstraintSet(projectId, userId)];
   }
 
-  const activeConstraintSet = constraintSets.find(cs => cs.isDefault) || constraintSets[0];
+  const activeConstraintSet = constraintSets.find((cs) => cs.isDefault) || constraintSets[0];
 
   // Build validation context
   const context: ValidationContext = {
@@ -311,7 +303,7 @@ export async function getValidPlacementAreas(req: Request, res: Response) {
  * Get violation severity levels
  */
 export async function getSeverityLevels(req: Request, res: Response) {
-  const levels = Object.values(ViolationSeverity).map(level => ({
+  const levels = Object.values(ViolationSeverity).map((level) => ({
     value: level,
     label: level.charAt(0).toUpperCase() + level.slice(1),
     description: getSeverityDescription(level),

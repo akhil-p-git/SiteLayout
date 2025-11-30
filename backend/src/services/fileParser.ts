@@ -5,16 +5,30 @@ import unzipper from 'unzipper';
 import { DOMParser } from 'xmldom';
 import * as toGeoJSON from '@tmcw/togeojson';
 import proj4 from 'proj4';
-import type { Feature, FeatureCollection, Geometry, Polygon, MultiPolygon, LineString, Point } from 'geojson';
+import type {
+  Feature,
+  FeatureCollection,
+  Geometry,
+  Polygon,
+  MultiPolygon,
+  LineString,
+  Point,
+} from 'geojson';
 
 // Define common projections
 proj4.defs('EPSG:4326', '+proj=longlat +datum=WGS84 +no_defs');
-proj4.defs('EPSG:3857', '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs');
+proj4.defs(
+  'EPSG:3857',
+  '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs'
+);
 
 // UTM zones (for auto-detection)
 for (let zone = 1; zone <= 60; zone++) {
   proj4.defs(`EPSG:${32600 + zone}`, `+proj=utm +zone=${zone} +datum=WGS84 +units=m +no_defs`);
-  proj4.defs(`EPSG:${32700 + zone}`, `+proj=utm +zone=${zone} +south +datum=WGS84 +units=m +no_defs`);
+  proj4.defs(
+    `EPSG:${32700 + zone}`,
+    `+proj=utm +zone=${zone} +south +datum=WGS84 +units=m +no_defs`
+  );
 }
 
 // Parsed file result
@@ -67,11 +81,11 @@ export async function extractKmlFromKmz(kmzPath: string): Promise<string> {
 
     // Find the doc.kml file (usually the main KML in a KMZ)
     const files = await fs.readdir(tempDir);
-    let kmlFile = files.find(f => f.toLowerCase() === 'doc.kml');
+    let kmlFile = files.find((f) => f.toLowerCase() === 'doc.kml');
 
     // If no doc.kml, look for any .kml file
     if (!kmlFile) {
-      kmlFile = files.find(f => f.toLowerCase().endsWith('.kml'));
+      kmlFile = files.find((f) => f.toLowerCase().endsWith('.kml'));
     }
 
     if (!kmlFile) {
@@ -268,7 +282,7 @@ export function extractPolygons(parsedFile: ParsedFile): ExtractedGeometry[] {
 
     if (geomType === 'Polygon' || geomType === 'MultiPolygon') {
       const id = feature.id?.toString() || crypto.randomUUID();
-      const name = feature.properties?.name as string || `Polygon ${polygons.length + 1}`;
+      const name = (feature.properties?.name as string) || `Polygon ${polygons.length + 1}`;
 
       polygons.push({
         id,
@@ -300,7 +314,7 @@ function calculatePolygonArea(geometry: Polygon | MultiPolygon): number {
 
       // Convert to approximate meters at the centroid latitude
       const avgLat = (lat1 + lat2) / 2;
-      const latRad = avgLat * Math.PI / 180;
+      const latRad = (avgLat * Math.PI) / 180;
       const mPerDegLng = 111320 * Math.cos(latRad);
       const mPerDegLat = 110540;
 
@@ -309,7 +323,7 @@ function calculatePolygonArea(geometry: Polygon | MultiPolygon): number {
       const x2 = lng2 * mPerDegLng;
       const y2 = lat2 * mPerDegLat;
 
-      area += (x1 * y2) - (x2 * y1);
+      area += x1 * y2 - x2 * y1;
     }
 
     return Math.abs(area / 2);
@@ -349,11 +363,7 @@ export function detectUtmZone(lng: number, lat: number): string {
 /**
  * Reproject coordinates from one CRS to another
  */
-export function reprojectCoordinates(
-  coords: number[],
-  fromCrs: string,
-  toCrs: string
-): number[] {
+export function reprojectCoordinates(coords: number[], fromCrs: string, toCrs: string): number[] {
   if (fromCrs === toCrs) return coords;
 
   const [x, y] = proj4(fromCrs, toCrs, [coords[0], coords[1]]);
@@ -363,11 +373,7 @@ export function reprojectCoordinates(
 /**
  * Reproject a geometry to a different CRS
  */
-export function reprojectGeometry(
-  geometry: Geometry,
-  fromCrs: string,
-  toCrs: string
-): Geometry {
+export function reprojectGeometry(geometry: Geometry, fromCrs: string, toCrs: string): Geometry {
   if (fromCrs === toCrs) return geometry;
 
   function reprojectCoords(coords: unknown): unknown {
@@ -377,7 +383,7 @@ export function reprojectGeometry(
       return reprojectCoordinates(coords as number[], fromCrs, toCrs);
     }
 
-    return coords.map(c => reprojectCoords(c));
+    return coords.map((c) => reprojectCoords(c));
   }
 
   const reprojected = { ...geometry };
@@ -417,9 +423,7 @@ export function geometryToWkt(geometry: Geometry): string {
     }
     case 'MultiPolygon': {
       const multi = geometry as MultiPolygon;
-      const polygons = multi.coordinates.map(
-        p => `(${p.map(ringToWkt).join(', ')})`
-      );
+      const polygons = multi.coordinates.map((p) => `(${p.map(ringToWkt).join(', ')})`);
       return `MULTIPOLYGON(${polygons.join(', ')})`;
     }
     default:

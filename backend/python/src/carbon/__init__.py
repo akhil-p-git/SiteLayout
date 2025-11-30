@@ -4,27 +4,26 @@ Carbon Calculator Module
 Construction carbon footprint and lifetime impact calculations.
 """
 
-from .models import (
-    EquipmentType,
-    FuelType,
-    EnergySource,
-    EPAEmissionFactors,
-    EquipmentEmissionProfile,
-    DEFAULT_EQUIPMENT_PROFILES,
-    HaulingParameters,
-    EarthworkCarbonInput,
-    RoadConstructionInput,
-    ProjectEnergyProfile,
-    GridEmissionFactors,
-    CarbonBreakdown,
-    CarbonOffsetResult,
-    LifetimeImpactResult,
-    CarbonCalculationResult,
-)
-
 from .calculator import (
     CarbonCalculator,
     calculate_project_carbon,
+)
+from .models import (
+    DEFAULT_EQUIPMENT_PROFILES,
+    CarbonBreakdown,
+    CarbonCalculationResult,
+    CarbonOffsetResult,
+    EarthworkCarbonInput,
+    EnergySource,
+    EPAEmissionFactors,
+    EquipmentEmissionProfile,
+    EquipmentType,
+    FuelType,
+    GridEmissionFactors,
+    HaulingParameters,
+    LifetimeImpactResult,
+    ProjectEnergyProfile,
+    RoadConstructionInput,
 )
 
 __all__ = [

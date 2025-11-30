@@ -152,7 +152,9 @@ export function deleteUserSessions(userId: string): number {
 /**
  * Get all active sessions for a user
  */
-export function getUserSessions(userId: string): Array<{ sessionId: string; session: SessionData }> {
+export function getUserSessions(
+  userId: string
+): Array<{ sessionId: string; session: SessionData }> {
   const userSessionSet = userSessions.get(userId);
   if (!userSessionSet) return [];
 
@@ -218,12 +220,15 @@ export function cleanupExpiredSessions(): number {
 }
 
 // Run cleanup every 5 minutes
-setInterval(() => {
-  const cleaned = cleanupExpiredSessions();
-  if (cleaned > 0) {
-    console.log(`Cleaned up ${cleaned} expired sessions`);
-  }
-}, 5 * 60 * 1000);
+setInterval(
+  () => {
+    const cleaned = cleanupExpiredSessions();
+    if (cleaned > 0) {
+      console.log(`Cleaned up ${cleaned} expired sessions`);
+    }
+  },
+  5 * 60 * 1000
+);
 
 /**
  * Get session statistics

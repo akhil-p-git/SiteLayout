@@ -5,23 +5,22 @@ Main FastAPI application for geospatial processing services.
 """
 
 import os
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from pathlib import Path
-from typing import AsyncGenerator
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .routes import (
-    dem_router,
-    optimization_router,
-    roads_router,
-    earthwork_router,
-    reports_router,
     carbon_router,
+    dem_router,
+    earthwork_router,
     habitat_router,
+    optimization_router,
+    reports_router,
+    roads_router,
 )
-
 
 # Configuration
 UPLOAD_DIR = Path(os.getenv("UPLOAD_DIR", "./uploads"))

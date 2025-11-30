@@ -74,8 +74,8 @@ const RiskFactorCard: React.FC<RiskFactorCardProps> = ({
               {factor.mitigationStatus === 'mitigated'
                 ? 'Mitigated'
                 : factor.mitigationStatus === 'in_progress'
-                ? 'In Progress'
-                : 'Not Started'}
+                  ? 'In Progress'
+                  : 'Not Started'}
             </span>
           ) : (
             <select
@@ -99,9 +99,7 @@ const RiskFactorCard: React.FC<RiskFactorCardProps> = ({
         )}
       </div>
 
-      <div className="factor-weight">
-        Impact: {Math.round(factor.weight * 100)}%
-      </div>
+      <div className="factor-weight">Impact: {Math.round(factor.weight * 100)}%</div>
     </div>
   );
 };
@@ -217,20 +215,21 @@ export const RiskAssessmentPanel: React.FC<RiskAssessmentPanelProps> = ({
   const [selectedCategory, setSelectedCategory] = useState<RiskCategory | 'all'>('all');
 
   const filteredFactors = useMemo(() => {
-    const factors = selectedCategory === 'all'
-      ? riskProfile.factors
-      : riskProfile.factors.filter((f) => f.category === selectedCategory);
+    const factors =
+      selectedCategory === 'all'
+        ? riskProfile.factors
+        : riskProfile.factors.filter((f) => f.category === selectedCategory);
     return [...factors].sort(sortBySeverity);
   }, [riskProfile.factors, selectedCategory]);
 
   const categoryScores = useMemo(() => {
-    return Object.keys(RISK_CATEGORY_CONFIG).reduce((acc, cat) => {
-      acc[cat as RiskCategory] = getCategoryRiskScore(
-        riskProfile.factors,
-        cat as RiskCategory
-      );
-      return acc;
-    }, {} as Record<RiskCategory, number>);
+    return Object.keys(RISK_CATEGORY_CONFIG).reduce(
+      (acc, cat) => {
+        acc[cat as RiskCategory] = getCategoryRiskScore(riskProfile.factors, cat as RiskCategory);
+        return acc;
+      },
+      {} as Record<RiskCategory, number>
+    );
   }, [riskProfile.factors]);
 
   const handleAdd = (factor: Omit<RiskFactor, 'id'>) => {
@@ -264,7 +263,10 @@ export const RiskAssessmentPanel: React.FC<RiskAssessmentPanelProps> = ({
         </div>
         <div className="score-card risk">
           <span className="score-label">Risk Score</span>
-          <span className="score-value" style={{ color: getScoreColor(riskProfile.overallRiskScore) }}>
+          <span
+            className="score-value"
+            style={{ color: getScoreColor(riskProfile.overallRiskScore) }}
+          >
             {riskProfile.overallRiskScore}
           </span>
         </div>
@@ -280,7 +282,9 @@ export const RiskAssessmentPanel: React.FC<RiskAssessmentPanelProps> = ({
               <button
                 key={cat}
                 className={`category-score ${selectedCategory === cat ? 'selected' : ''}`}
-                onClick={() => setSelectedCategory(selectedCategory === cat ? 'all' : (cat as RiskCategory))}
+                onClick={() =>
+                  setSelectedCategory(selectedCategory === cat ? 'all' : (cat as RiskCategory))
+                }
               >
                 <span className="cat-icon">{config.icon}</span>
                 <span className="cat-name">{config.label}</span>
@@ -312,9 +316,7 @@ export const RiskAssessmentPanel: React.FC<RiskAssessmentPanelProps> = ({
           )}
         </div>
 
-        {showAddForm && (
-          <AddRiskForm onAdd={handleAdd} onCancel={() => setShowAddForm(false)} />
-        )}
+        {showAddForm && <AddRiskForm onAdd={handleAdd} onCancel={() => setShowAddForm(false)} />}
 
         <div className="factors-list">
           {filteredFactors.length === 0 ? (

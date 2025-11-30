@@ -20,7 +20,12 @@ export interface LayerVisibility {
 export type TerrainOverlayType = 'elevation' | 'slope' | 'aspect' | 'none';
 
 // Drawing mode types
-export type DrawingMode = 'simple_select' | 'draw_polygon' | 'draw_line_string' | 'draw_point' | 'static';
+export type DrawingMode =
+  | 'simple_select'
+  | 'draw_polygon'
+  | 'draw_line_string'
+  | 'draw_point'
+  | 'static';
 
 // Map view state
 export interface MapViewState {
@@ -162,25 +167,25 @@ export const DEFAULT_LAYER_STYLES: Record<string, LayerStyle> = {
 // Terrain color ramps
 export const TERRAIN_COLOR_RAMPS = {
   elevation: [
-    [0, '#22c55e'],      // Low - Green
-    [0.25, '#84cc16'],   // Lime
-    [0.5, '#eab308'],    // Yellow
-    [0.75, '#f97316'],   // Orange
-    [1, '#dc2626'],      // High - Red
+    [0, '#22c55e'], // Low - Green
+    [0.25, '#84cc16'], // Lime
+    [0.5, '#eab308'], // Yellow
+    [0.75, '#f97316'], // Orange
+    [1, '#dc2626'], // High - Red
   ],
   slope: [
-    [0, '#22c55e'],      // Flat - Green (good)
-    [0.05, '#84cc16'],   // 0-5% - Lime
-    [0.1, '#eab308'],    // 5-10% - Yellow
-    [0.15, '#f97316'],   // 10-15% - Orange
-    [0.2, '#dc2626'],    // >15% - Red (bad)
+    [0, '#22c55e'], // Flat - Green (good)
+    [0.05, '#84cc16'], // 0-5% - Lime
+    [0.1, '#eab308'], // 5-10% - Yellow
+    [0.15, '#f97316'], // 10-15% - Orange
+    [0.2, '#dc2626'], // >15% - Red (bad)
   ],
   aspect: [
-    [0, '#3b82f6'],      // North - Blue
-    [0.25, '#22c55e'],   // East - Green
-    [0.5, '#eab308'],    // South - Yellow
-    [0.75, '#ef4444'],   // West - Red
-    [1, '#3b82f6'],      // North - Blue (wrap)
+    [0, '#3b82f6'], // North - Blue
+    [0.25, '#22c55e'], // East - Green
+    [0.5, '#eab308'], // South - Yellow
+    [0.75, '#ef4444'], // West - Red
+    [1, '#3b82f6'], // North - Blue (wrap)
   ],
 };
 

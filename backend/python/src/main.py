@@ -5,6 +5,7 @@ Runs the FastAPI geospatial processing service.
 """
 
 import os
+
 import uvicorn
 
 

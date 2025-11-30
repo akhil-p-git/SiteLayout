@@ -83,23 +83,16 @@ app.use('/api/v1/layouts', (_req, res) => {
 });
 
 // Error handling middleware
-app.use(
-  (
-    err: Error,
-    _req: express.Request,
-    res: express.Response,
-    _next: express.NextFunction
-  ) => {
-    console.error('Error:', err.message);
-    res.status(500).json({
-      error: {
-        code: 'INTERNAL_ERROR',
-        message: 'An unexpected error occurred',
-        requestId: crypto.randomUUID(),
-      },
-    });
-  }
-);
+app.use((err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+  console.error('Error:', err.message);
+  res.status(500).json({
+    error: {
+      code: 'INTERNAL_ERROR',
+      message: 'An unexpected error occurred',
+      requestId: crypto.randomUUID(),
+    },
+  });
+});
 
 // 404 handler
 app.use((_req, res) => {

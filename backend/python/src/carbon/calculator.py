@@ -4,23 +4,23 @@ Carbon Calculator
 Construction carbon footprint and lifetime impact calculations.
 """
 
-from typing import Optional, Dict, List
+
 from .models import (
-    EquipmentType,
-    FuelType,
+    DEFAULT_EQUIPMENT_PROFILES,
+    CarbonBreakdown,
+    CarbonCalculationResult,
+    CarbonOffsetResult,
+    EarthworkCarbonInput,
     EnergySource,
     EPAEmissionFactors,
     EquipmentEmissionProfile,
-    DEFAULT_EQUIPMENT_PROFILES,
-    HaulingParameters,
-    EarthworkCarbonInput,
-    RoadConstructionInput,
-    ProjectEnergyProfile,
+    EquipmentType,
+    FuelType,
     GridEmissionFactors,
-    CarbonBreakdown,
-    CarbonOffsetResult,
+    HaulingParameters,
     LifetimeImpactResult,
-    CarbonCalculationResult,
+    ProjectEnergyProfile,
+    RoadConstructionInput,
 )
 
 
@@ -40,16 +40,16 @@ class CarbonCalculator:
 
     def __init__(
         self,
-        emission_factors: Optional[EPAEmissionFactors] = None,
-        grid_factors: Optional[GridEmissionFactors] = None,
+        emission_factors: EPAEmissionFactors | None = None,
+        grid_factors: GridEmissionFactors | None = None,
     ):
         self.emission_factors = emission_factors or EPAEmissionFactors()
         self.grid_factors = grid_factors or GridEmissionFactors()
 
     def calculate_equipment_emissions(
         self,
-        equipment_days: Dict[EquipmentType, int],
-        custom_equipment: Optional[List[EquipmentEmissionProfile]] = None,
+        equipment_days: dict[EquipmentType, int],
+        custom_equipment: list[EquipmentEmissionProfile] | None = None,
     ) -> float:
         """
         Calculate CO2 emissions from construction equipment operation.
@@ -291,11 +291,11 @@ class CarbonCalculator:
     def calculate_full_analysis(
         self,
         project_id: str,
-        earthwork: Optional[EarthworkCarbonInput] = None,
-        road_input: Optional[RoadConstructionInput] = None,
-        energy_profile: Optional[ProjectEnergyProfile] = None,
+        earthwork: EarthworkCarbonInput | None = None,
+        road_input: RoadConstructionInput | None = None,
+        energy_profile: ProjectEnergyProfile | None = None,
         grid_baseline: EnergySource = EnergySource.US_AVERAGE_GRID,
-        additional_materials: Optional[Dict[str, float]] = None,
+        additional_materials: dict[str, float] | None = None,
     ) -> CarbonCalculationResult:
         """
         Perform complete carbon analysis for a project.
@@ -380,7 +380,7 @@ class CarbonCalculator:
         self,
         cut_volume_m3: float,
         fill_volume_m3: float,
-    ) -> Dict[EquipmentType, int]:
+    ) -> dict[EquipmentType, int]:
         """
         Estimate equipment operating days based on earthwork volumes.
 

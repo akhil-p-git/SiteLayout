@@ -1,11 +1,6 @@
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
-import type {
-  JwtPayload,
-  RefreshTokenPayload,
-  TokenPair,
-  AuthenticatedUser,
-} from '../types/auth';
+import type { JwtPayload, RefreshTokenPayload, TokenPair, AuthenticatedUser } from '../types/auth';
 
 // Environment variables with defaults for development
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-jwt-secret-change-in-production';

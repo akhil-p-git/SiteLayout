@@ -7,9 +7,10 @@ and optimization objectives.
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional, List, Dict, Any, Tuple
+from typing import Any
+
 import numpy as np
-from shapely.geometry import Polygon, Point, MultiPolygon
+from shapely.geometry import Point, Polygon
 from shapely.ops import unary_union
 
 
@@ -59,8 +60,8 @@ class AssetConstraints:
     requires_road_access: bool = True
     max_road_distance: float = 50.0  # meters
     min_distance_to_same: float = 0.0  # meters to same asset type
-    min_distance_to_other: Dict[AssetType, float] = field(default_factory=dict)
-    preferred_elevation: Optional[str] = None  # "high", "low", "flat"
+    min_distance_to_other: dict[AssetType, float] = field(default_factory=dict)
+    preferred_elevation: str | None = None  # "high", "low", "flat"
     avoid_exclusion_zones: bool = True
 
 
@@ -79,7 +80,7 @@ class AssetDefinition:
 
 
 # Default asset definitions for solar sites
-DEFAULT_ASSET_DEFINITIONS: Dict[AssetType, AssetDefinition] = {
+DEFAULT_ASSET_DEFINITIONS: dict[AssetType, AssetDefinition] = {
     AssetType.BESS: AssetDefinition(
         asset_type=AssetType.BESS,
         name="Battery Energy Storage System",
@@ -186,9 +187,9 @@ class PlacedAsset:
     asset_id: str
     asset_type: AssetType
     definition: AssetDefinition
-    position: Tuple[float, float]  # (x, y) in site coordinates
+    position: tuple[float, float]  # (x, y) in site coordinates
     rotation: float = 0.0  # degrees
-    footprint: Optional[Polygon] = None
+    footprint: Polygon | None = None
 
     def __post_init__(self):
         """Calculate footprint polygon."""
@@ -197,11 +198,11 @@ class PlacedAsset:
 
     def _calculate_footprint(self) -> Polygon:
         """Calculate the footprint polygon based on position and rotation."""
-        w = self.definition.dimensions.width / 2
-        l = self.definition.dimensions.length / 2
+        half_w = self.definition.dimensions.width / 2
+        half_l = self.definition.dimensions.length / 2
 
         # Create rectangle centered at origin
-        corners = [(-w, -l), (w, -l), (w, l), (-w, l)]
+        corners = [(-half_w, -half_l), (half_w, -half_l), (half_w, half_l), (-half_w, half_l)]
 
         # Rotate if needed
         if self.rotation != 0:
@@ -216,7 +217,7 @@ class PlacedAsset:
 
         return Polygon(corners)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for JSON serialization."""
         return {
             "asset_id": self.asset_id,
@@ -248,7 +249,7 @@ class OptimizationConfig:
     """Configuration for the optimization algorithm."""
 
     objective: OptimizationObjective = OptimizationObjective.BALANCED
-    objective_weights: Dict[str, float] = field(
+    objective_weights: dict[str, float] = field(
         default_factory=lambda: {
             "earthwork": 0.4,
             "cable_length": 0.3,
@@ -263,7 +264,7 @@ class OptimizationConfig:
     elite_size: int = 10
     convergence_threshold: float = 0.001
     max_stagnation: int = 30  # Generations without improvement
-    random_seed: Optional[int] = None
+    random_seed: int | None = None
     parallel_workers: int = 4
     generate_alternatives: int = 3  # Number of alternative layouts
 
@@ -273,11 +274,11 @@ class SiteContext:
     """Context information about the site for optimization."""
 
     boundary: Polygon
-    exclusion_zones: List[Polygon] = field(default_factory=list)
-    slope_data: Optional[np.ndarray] = None  # 2D array of slope values
-    elevation_data: Optional[np.ndarray] = None  # DEM data
-    existing_roads: List[Polygon] = field(default_factory=list)
-    entry_points: List[Point] = field(default_factory=list)
+    exclusion_zones: list[Polygon] = field(default_factory=list)
+    slope_data: np.ndarray | None = None  # 2D array of slope values
+    elevation_data: np.ndarray | None = None  # DEM data
+    existing_roads: list[Polygon] = field(default_factory=list)
+    entry_points: list[Point] = field(default_factory=list)
     grid_resolution: float = 1.0  # meters per pixel
     crs: str = "EPSG:4326"
 
@@ -306,10 +307,10 @@ class LayoutSolution:
     """A complete layout solution from the optimizer."""
 
     solution_id: str
-    placed_assets: List[PlacedAsset]
+    placed_assets: list[PlacedAsset]
     fitness_score: float
-    objective_scores: Dict[str, float]
-    constraint_violations: List[str]
+    objective_scores: dict[str, float]
+    constraint_violations: list[str]
     is_valid: bool
     generation: int
     computation_time_ms: float
@@ -322,7 +323,7 @@ class LayoutSolution:
             return 0.0
         return unary_union(footprints).area
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for JSON serialization."""
         return {
             "solution_id": self.solution_id,
@@ -345,13 +346,13 @@ class OptimizationResult:
     """Result of running the optimization."""
 
     best_solution: LayoutSolution
-    alternative_solutions: List[LayoutSolution]
-    convergence_history: List[float]
+    alternative_solutions: list[LayoutSolution]
+    convergence_history: list[float]
     total_generations: int
     total_time_ms: float
     config: OptimizationConfig
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for JSON serialization."""
         return {
             "best_solution": self.best_solution.to_dict(),

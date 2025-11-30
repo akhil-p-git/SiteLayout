@@ -4,13 +4,7 @@
  * Exports portfolio data to PDF, Excel, and CSV formats.
  */
 
-import {
-  SiteData,
-  PortfolioSummary,
-  STATUS_CONFIG,
-  formatCapacity,
-  formatCurrency,
-} from './types';
+import { SiteData, PortfolioSummary, STATUS_CONFIG, formatCapacity, formatCurrency } from './types';
 import { SiteRiskProfile, RISK_CATEGORY_CONFIG, SEVERITY_CONFIG } from './riskTypes';
 
 export type ExportFormat = 'pdf' | 'excel' | 'csv';
@@ -223,61 +217,79 @@ export function exportToExcelXML(data: PortfolioExportData, options: ExportOptio
 
   // Sites worksheet
   const siteHeaders = [
-    'Project Code', 'Site Name', 'Status', 'Region', 'Country',
-    'Latitude', 'Longitude', 'Capacity (MW)', 'Area (m²)', 'Buildable %',
+    'Project Code',
+    'Site Name',
+    'Status',
+    'Region',
+    'Country',
+    'Latitude',
+    'Longitude',
+    'Capacity (MW)',
+    'Area (m²)',
+    'Buildable %',
   ];
 
   if (options.includeMetrics) {
-    siteHeaders.push('Cut (m³)', 'Fill (m³)', 'Roads (m)', 'Assets', 'Est. Cost', 'CO2 (t)', 'Offset (t/yr)');
+    siteHeaders.push(
+      'Cut (m³)',
+      'Fill (m³)',
+      'Roads (m)',
+      'Assets',
+      'Est. Cost',
+      'CO2 (t)',
+      'Offset (t/yr)'
+    );
   }
 
   if (options.includeScores) {
     siteHeaders.push('Terrain', 'Earthwork', 'Access', 'Environ', 'Cost', 'Composite');
   }
 
-  const headerRow = siteHeaders.map((h) =>
-    `<Cell ss:StyleID="Header"><Data ss:Type="String">${h}</Data></Cell>`
-  ).join('');
+  const headerRow = siteHeaders
+    .map((h) => `<Cell ss:StyleID="Header"><Data ss:Type="String">${h}</Data></Cell>`)
+    .join('');
 
-  const siteRows = sites.map((site) => {
-    const cells = [
-      `<Cell><Data ss:Type="String">${escapeXML(site.projectCode)}</Data></Cell>`,
-      `<Cell><Data ss:Type="String">${escapeXML(site.name)}</Data></Cell>`,
-      `<Cell><Data ss:Type="String">${STATUS_CONFIG[site.status].label}</Data></Cell>`,
-      `<Cell><Data ss:Type="String">${escapeXML(site.location.region || '')}</Data></Cell>`,
-      `<Cell><Data ss:Type="String">${escapeXML(site.location.country)}</Data></Cell>`,
-      `<Cell ss:StyleID="Number"><Data ss:Type="Number">${site.location.latitude}</Data></Cell>`,
-      `<Cell ss:StyleID="Number"><Data ss:Type="Number">${site.location.longitude}</Data></Cell>`,
-      `<Cell ss:StyleID="Number"><Data ss:Type="Number">${site.metrics.capacityMw}</Data></Cell>`,
-      `<Cell ss:StyleID="Integer"><Data ss:Type="Number">${site.metrics.totalArea}</Data></Cell>`,
-      `<Cell ss:StyleID="Number"><Data ss:Type="Number">${site.metrics.buildablePercent}</Data></Cell>`,
-    ];
+  const siteRows = sites
+    .map((site) => {
+      const cells = [
+        `<Cell><Data ss:Type="String">${escapeXML(site.projectCode)}</Data></Cell>`,
+        `<Cell><Data ss:Type="String">${escapeXML(site.name)}</Data></Cell>`,
+        `<Cell><Data ss:Type="String">${STATUS_CONFIG[site.status].label}</Data></Cell>`,
+        `<Cell><Data ss:Type="String">${escapeXML(site.location.region || '')}</Data></Cell>`,
+        `<Cell><Data ss:Type="String">${escapeXML(site.location.country)}</Data></Cell>`,
+        `<Cell ss:StyleID="Number"><Data ss:Type="Number">${site.location.latitude}</Data></Cell>`,
+        `<Cell ss:StyleID="Number"><Data ss:Type="Number">${site.location.longitude}</Data></Cell>`,
+        `<Cell ss:StyleID="Number"><Data ss:Type="Number">${site.metrics.capacityMw}</Data></Cell>`,
+        `<Cell ss:StyleID="Integer"><Data ss:Type="Number">${site.metrics.totalArea}</Data></Cell>`,
+        `<Cell ss:StyleID="Number"><Data ss:Type="Number">${site.metrics.buildablePercent}</Data></Cell>`,
+      ];
 
-    if (options.includeMetrics) {
-      cells.push(
-        `<Cell ss:StyleID="Integer"><Data ss:Type="Number">${site.metrics.cutVolume}</Data></Cell>`,
-        `<Cell ss:StyleID="Integer"><Data ss:Type="Number">${site.metrics.fillVolume}</Data></Cell>`,
-        `<Cell ss:StyleID="Integer"><Data ss:Type="Number">${site.metrics.roadLength}</Data></Cell>`,
-        `<Cell ss:StyleID="Integer"><Data ss:Type="Number">${site.metrics.assetCount}</Data></Cell>`,
-        `<Cell ss:StyleID="Currency"><Data ss:Type="Number">${site.metrics.estimatedCost}</Data></Cell>`,
-        `<Cell ss:StyleID="Number"><Data ss:Type="Number">${site.metrics.carbonFootprint}</Data></Cell>`,
-        `<Cell ss:StyleID="Number"><Data ss:Type="Number">${site.metrics.carbonOffset}</Data></Cell>`
-      );
-    }
+      if (options.includeMetrics) {
+        cells.push(
+          `<Cell ss:StyleID="Integer"><Data ss:Type="Number">${site.metrics.cutVolume}</Data></Cell>`,
+          `<Cell ss:StyleID="Integer"><Data ss:Type="Number">${site.metrics.fillVolume}</Data></Cell>`,
+          `<Cell ss:StyleID="Integer"><Data ss:Type="Number">${site.metrics.roadLength}</Data></Cell>`,
+          `<Cell ss:StyleID="Integer"><Data ss:Type="Number">${site.metrics.assetCount}</Data></Cell>`,
+          `<Cell ss:StyleID="Currency"><Data ss:Type="Number">${site.metrics.estimatedCost}</Data></Cell>`,
+          `<Cell ss:StyleID="Number"><Data ss:Type="Number">${site.metrics.carbonFootprint}</Data></Cell>`,
+          `<Cell ss:StyleID="Number"><Data ss:Type="Number">${site.metrics.carbonOffset}</Data></Cell>`
+        );
+      }
 
-    if (options.includeScores) {
-      cells.push(
-        `<Cell ss:StyleID="Integer"><Data ss:Type="Number">${site.scores.terrain}</Data></Cell>`,
-        `<Cell ss:StyleID="Integer"><Data ss:Type="Number">${site.scores.earthwork}</Data></Cell>`,
-        `<Cell ss:StyleID="Integer"><Data ss:Type="Number">${site.scores.accessibility}</Data></Cell>`,
-        `<Cell ss:StyleID="Integer"><Data ss:Type="Number">${site.scores.environmental}</Data></Cell>`,
-        `<Cell ss:StyleID="Integer"><Data ss:Type="Number">${site.scores.cost}</Data></Cell>`,
-        `<Cell ss:StyleID="Integer"><Data ss:Type="Number">${site.scores.composite}</Data></Cell>`
-      );
-    }
+      if (options.includeScores) {
+        cells.push(
+          `<Cell ss:StyleID="Integer"><Data ss:Type="Number">${site.scores.terrain}</Data></Cell>`,
+          `<Cell ss:StyleID="Integer"><Data ss:Type="Number">${site.scores.earthwork}</Data></Cell>`,
+          `<Cell ss:StyleID="Integer"><Data ss:Type="Number">${site.scores.accessibility}</Data></Cell>`,
+          `<Cell ss:StyleID="Integer"><Data ss:Type="Number">${site.scores.environmental}</Data></Cell>`,
+          `<Cell ss:StyleID="Integer"><Data ss:Type="Number">${site.scores.cost}</Data></Cell>`,
+          `<Cell ss:StyleID="Integer"><Data ss:Type="Number">${site.scores.composite}</Data></Cell>`
+        );
+      }
 
-    return `<Row>${cells.join('')}</Row>`;
-  }).join('\n      ');
+      return `<Row>${cells.join('')}</Row>`;
+    })
+    .join('\n      ');
 
   const sitesSheet = `
   <Worksheet ss:Name="Sites">
@@ -290,10 +302,19 @@ export function exportToExcelXML(data: PortfolioExportData, options: ExportOptio
   // Risk worksheet (if included)
   let riskSheet = '';
   if (options.includeRiskAssessment && data.riskProfiles) {
-    const riskHeaders = ['Site', 'Risk Score', 'Adjusted Score', 'Category', 'Factor', 'Severity', 'Weight', 'Status'];
-    const riskHeaderRow = riskHeaders.map((h) =>
-      `<Cell ss:StyleID="Header"><Data ss:Type="String">${h}</Data></Cell>`
-    ).join('');
+    const riskHeaders = [
+      'Site',
+      'Risk Score',
+      'Adjusted Score',
+      'Category',
+      'Factor',
+      'Severity',
+      'Weight',
+      'Status',
+    ];
+    const riskHeaderRow = riskHeaders
+      .map((h) => `<Cell ss:StyleID="Header"><Data ss:Type="String">${h}</Data></Cell>`)
+      .join('');
 
     const riskRows: string[] = [];
     sites.forEach((site) => {
@@ -350,10 +371,7 @@ export function downloadFile(content: string, filename: string, mimeType: string
 }
 
 // Main export function
-export function exportPortfolio(
-  data: PortfolioExportData,
-  options: ExportOptions
-): void {
+export function exportPortfolio(data: PortfolioExportData, options: ExportOptions): void {
   const timestamp = new Date().toISOString().split('T')[0];
   const baseFilename = options.filename || `portfolio-export-${timestamp}`;
 
@@ -396,7 +414,9 @@ Annual Carbon Offset: ${(summary.totalCarbonOffset / 1000).toFixed(1)}K tonnes C
 Status Breakdown:
 ${Object.entries(summary.statusBreakdown)
   .filter(([, count]) => count > 0)
-  .map(([status, count]) => `  ${STATUS_CONFIG[status as keyof typeof STATUS_CONFIG].label}: ${count}`)
+  .map(
+    ([status, count]) => `  ${STATUS_CONFIG[status as keyof typeof STATUS_CONFIG].label}: ${count}`
+  )
   .join('\n')}
 `.trim();
 }

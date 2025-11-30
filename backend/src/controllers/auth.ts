@@ -375,7 +375,9 @@ export async function oauthCallback(req: AuthenticatedRequest, res: Response): P
     const { code, error, error_description } = req.query;
 
     if (error) {
-      res.redirect(`/login?error=${encodeURIComponent(error_description as string || error as string)}`);
+      res.redirect(
+        `/login?error=${encodeURIComponent((error_description as string) || (error as string))}`
+      );
       return;
     }
 

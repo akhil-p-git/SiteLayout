@@ -6,7 +6,7 @@ Data models for endangered species, wetlands, and habitat impact assessment.
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional, List, Dict, Any, Tuple
+from typing import Any
 
 
 class SpeciesStatus(Enum):
@@ -80,9 +80,9 @@ class Species:
     critical_habitat: bool = False
     critical_habitat_area_km2: float = 0.0
     recovery_plan: bool = False
-    listing_date: Optional[str] = None
-    population_estimate: Optional[int] = None
-    threats: List[str] = field(default_factory=list)
+    listing_date: str | None = None
+    population_estimate: int | None = None
+    threats: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -94,8 +94,8 @@ class CriticalHabitat:
     unit_id: str
     area_km2: float
     designation_date: str
-    boundary_geojson: Optional[Dict[str, Any]] = None
-    primary_constituent_elements: List[str] = field(default_factory=list)
+    boundary_geojson: dict[str, Any] | None = None
+    primary_constituent_elements: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -107,8 +107,8 @@ class Wetland:
     classification_code: str  # Full NWI code (e.g., PEM1A)
     area_m2: float
     water_regime: str  # A=temporary, B=seasonal, C=semi-permanent, etc.
-    special_modifier: Optional[str] = None  # d=partly drained, f=farmed, etc.
-    boundary_geojson: Optional[Dict[str, Any]] = None
+    special_modifier: str | None = None  # d=partly drained, f=farmed, etc.
+    boundary_geojson: dict[str, Any] | None = None
 
     @property
     def type_label(self) -> str:
@@ -134,7 +134,7 @@ class BufferZone:
     source_id: str
     buffer_distance_m: float
     restriction_level: HabitatSensitivity
-    notes: Optional[str] = None
+    notes: str | None = None
 
 
 @dataclass
@@ -159,7 +159,7 @@ class HabitatImpactScore:
     buffer_zone_overlap_m2: float
 
     # Permits likely required
-    permits_required: List[PermitType] = field(default_factory=list)
+    permits_required: list[PermitType] = field(default_factory=list)
     estimated_review_months: int = 0
 
 
@@ -169,29 +169,29 @@ class HabitatOverlayResult:
 
     site_id: str
     analysis_date: str
-    site_boundary_geojson: Dict[str, Any]
+    site_boundary_geojson: dict[str, Any]
 
     # Species data
-    species_in_range: List[Species] = field(default_factory=list)
-    critical_habitats: List[CriticalHabitat] = field(default_factory=list)
+    species_in_range: list[Species] = field(default_factory=list)
+    critical_habitats: list[CriticalHabitat] = field(default_factory=list)
 
     # Wetland data
-    wetlands: List[Wetland] = field(default_factory=list)
+    wetlands: list[Wetland] = field(default_factory=list)
     total_wetland_area_m2: float = 0.0
-    wetland_types_present: List[WetlandType] = field(default_factory=list)
+    wetland_types_present: list[WetlandType] = field(default_factory=list)
 
     # Buffer zones
-    buffer_zones: List[BufferZone] = field(default_factory=list)
+    buffer_zones: list[BufferZone] = field(default_factory=list)
 
     # Impact assessment
-    impact_score: Optional[HabitatImpactScore] = None
+    impact_score: HabitatImpactScore | None = None
 
     # Data quality
-    data_sources: List[str] = field(default_factory=list)
-    data_date: Optional[str] = None
+    data_sources: list[str] = field(default_factory=list)
+    data_date: str | None = None
     confidence_level: str = "medium"  # low, medium, high
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for API response."""
         return {
             "site_id": self.site_id,

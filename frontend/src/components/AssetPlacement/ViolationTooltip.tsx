@@ -11,8 +11,8 @@ interface ViolationTooltipProps {
 
 export function ViolationTooltip({ asset, position, onClose }: ViolationTooltipProps) {
   const definition = ASSET_DEFINITIONS[asset.type];
-  const hasErrors = asset.violations.some(v => v.type === 'error');
-  const hasWarnings = asset.violations.some(v => v.type === 'warning');
+  const hasErrors = asset.violations.some((v) => v.type === 'error');
+  const hasWarnings = asset.violations.some((v) => v.type === 'warning');
 
   if (asset.violations.length === 0) return null;
 

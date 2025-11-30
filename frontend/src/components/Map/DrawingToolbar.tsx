@@ -40,7 +40,11 @@ const ToolButton = ({ mode, icon, label, tooltip }: ToolButtonProps) => {
   );
 };
 
-export function DrawingToolbar({ className = '', onDelete, vertical = false }: DrawingToolbarProps) {
+export function DrawingToolbar({
+  className = '',
+  onDelete,
+  vertical = false,
+}: DrawingToolbarProps) {
   const { isLoaded, selectedFeatureId, setDrawingMode } = useMapContext();
 
   if (!isLoaded) {

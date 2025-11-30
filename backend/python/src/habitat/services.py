@@ -4,23 +4,23 @@ Habitat Data Services
 Services for USFWS and NWI data integration.
 """
 
-import math
 from datetime import datetime
-from typing import Optional, List, Dict, Any, Tuple
+from typing import Any
+
 from .models import (
+    BUFFER_DISTANCES,
+    PERMIT_TIMELINES,
+    BufferZone,
+    CriticalHabitat,
+    HabitatImpactScore,
+    HabitatOverlayResult,
+    HabitatSensitivity,
+    PermitType,
     Species,
     SpeciesStatus,
     TaxonomicGroup,
-    CriticalHabitat,
     Wetland,
     WetlandType,
-    BufferZone,
-    HabitatSensitivity,
-    HabitatImpactScore,
-    HabitatOverlayResult,
-    PermitType,
-    BUFFER_DISTANCES,
-    PERMIT_TIMELINES,
 )
 
 
@@ -37,7 +37,7 @@ class USFWSService:
     ECOS_BASE_URL = "https://ecos.fws.gov/ecp/services"
     IPAC_BASE_URL = "https://ipac.ecosphere.fws.gov"
 
-    def __init__(self, api_key: Optional[str] = None):
+    def __init__(self, api_key: str | None = None):
         self.api_key = api_key
 
     async def get_species_in_range(
@@ -45,7 +45,7 @@ class USFWSService:
         latitude: float,
         longitude: float,
         radius_km: float = 10.0,
-    ) -> List[Species]:
+    ) -> list[Species]:
         """
         Get endangered/threatened species with range overlapping the area.
 
@@ -59,8 +59,8 @@ class USFWSService:
 
     async def get_critical_habitats(
         self,
-        boundary_geojson: Dict[str, Any],
-    ) -> List[CriticalHabitat]:
+        boundary_geojson: dict[str, Any],
+    ) -> list[CriticalHabitat]:
         """
         Get critical habitat designations overlapping the site boundary.
 
@@ -74,7 +74,7 @@ class USFWSService:
         self,
         latitude: float,
         longitude: float,
-    ) -> List[Species]:
+    ) -> list[Species]:
         """Generate simulated species data for development."""
         species = []
 
@@ -140,8 +140,8 @@ class USFWSService:
 
     def _get_simulated_critical_habitats(
         self,
-        boundary_geojson: Dict[str, Any],
-    ) -> List[CriticalHabitat]:
+        boundary_geojson: dict[str, Any],
+    ) -> list[CriticalHabitat]:
         """Generate simulated critical habitat data for development."""
         # In production, this would perform spatial intersection
         return []
@@ -162,8 +162,8 @@ class NWIService:
 
     async def get_wetlands_in_boundary(
         self,
-        boundary_geojson: Dict[str, Any],
-    ) -> List[Wetland]:
+        boundary_geojson: dict[str, Any],
+    ) -> list[Wetland]:
         """
         Get wetlands within or intersecting the site boundary.
 
@@ -172,7 +172,7 @@ class NWIService:
         # Simulated wetland data for development
         return self._get_simulated_wetlands(boundary_geojson)
 
-    def parse_nwi_code(self, code: str) -> Dict[str, Any]:
+    def parse_nwi_code(self, code: str) -> dict[str, Any]:
         """
         Parse NWI classification code into components.
 
@@ -234,8 +234,8 @@ class NWIService:
 
     def _get_simulated_wetlands(
         self,
-        boundary_geojson: Dict[str, Any],
-    ) -> List[Wetland]:
+        boundary_geojson: dict[str, Any],
+    ) -> list[Wetland]:
         """Generate simulated wetland data for development."""
         # Simulate some wetlands for development/testing
         wetlands = []
@@ -289,8 +289,8 @@ class HabitatImpactCalculator:
     async def analyze_site(
         self,
         site_id: str,
-        boundary_geojson: Dict[str, Any],
-        centroid: Tuple[float, float],
+        boundary_geojson: dict[str, Any],
+        centroid: tuple[float, float],
     ) -> HabitatOverlayResult:
         """
         Perform complete habitat analysis for a site.
@@ -344,9 +344,9 @@ class HabitatImpactCalculator:
 
     def _generate_buffer_zones(
         self,
-        wetlands: List[Wetland],
-        critical_habitats: List[CriticalHabitat],
-    ) -> List[BufferZone]:
+        wetlands: list[Wetland],
+        critical_habitats: list[CriticalHabitat],
+    ) -> list[BufferZone]:
         """Generate buffer zones around sensitive features."""
         zones = []
 
@@ -384,10 +384,10 @@ class HabitatImpactCalculator:
     def _calculate_impact_score(
         self,
         site_id: str,
-        species: List[Species],
-        critical_habitats: List[CriticalHabitat],
-        wetlands: List[Wetland],
-        buffer_zones: List[BufferZone],
+        species: list[Species],
+        critical_habitats: list[CriticalHabitat],
+        wetlands: list[Wetland],
+        buffer_zones: list[BufferZone],
     ) -> HabitatImpactScore:
         """Calculate overall habitat impact score."""
         # Count species by status
@@ -503,12 +503,12 @@ class HabitatImpactCalculator:
 
     def _determine_permits(
         self,
-        species: List[Species],
-        critical_habitats: List[CriticalHabitat],
-        wetlands: List[Wetland],
+        species: list[Species],
+        critical_habitats: list[CriticalHabitat],
+        wetlands: list[Wetland],
         endangered_count: int,
         threatened_count: int,
-    ) -> List[PermitType]:
+    ) -> list[PermitType]:
         """Determine likely required environmental permits."""
         permits = []
 
@@ -540,7 +540,7 @@ class HabitatImpactCalculator:
 
 async def analyze_habitat(
     site_id: str,
-    boundary_geojson: Dict[str, Any],
+    boundary_geojson: dict[str, Any],
     latitude: float,
     longitude: float,
 ) -> HabitatOverlayResult:

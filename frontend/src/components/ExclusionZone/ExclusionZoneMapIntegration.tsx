@@ -61,8 +61,8 @@ export function ExclusionZoneMapIntegration({
     if (!map) return;
 
     // Create GeoJSON for zones
-    const activeZones = zones.filter(z => z.isActive);
-    const features = activeZones.map(zone => ({
+    const activeZones = zones.filter((z) => z.isActive);
+    const features = activeZones.map((zone) => ({
       type: 'Feature' as const,
       id: zone.id,
       properties: {
@@ -78,8 +78,8 @@ export function ExclusionZoneMapIntegration({
 
     // Buffer features (if available)
     const bufferFeatures = activeZones
-      .filter(z => z.bufferedGeometry && z.bufferDistance > 0)
-      .map(zone => ({
+      .filter((z) => z.bufferedGeometry && z.bufferDistance > 0)
+      .map((zone) => ({
         type: 'Feature' as const,
         id: `${zone.id}-buffer`,
         properties: {
@@ -140,12 +140,7 @@ export function ExclusionZoneMapIntegration({
         source: ZONES_SOURCE_ID,
         paint: {
           'fill-color': ['get', 'color'],
-          'fill-opacity': [
-            'case',
-            ['get', 'isSelected'],
-            0.5,
-            0.3,
-          ],
+          'fill-opacity': ['case', ['get', 'isSelected'], 0.5, 0.3],
         },
       });
     }
@@ -157,12 +152,7 @@ export function ExclusionZoneMapIntegration({
         source: ZONES_SOURCE_ID,
         paint: {
           'line-color': ['get', 'color'],
-          'line-width': [
-            'case',
-            ['get', 'isSelected'],
-            3,
-            2,
-          ],
+          'line-width': ['case', ['get', 'isSelected'], 3, 2],
           'line-dasharray': [2, 2],
         },
       });
@@ -195,33 +185,42 @@ export function ExclusionZoneMapIntegration({
   }, [map, zones, updateMapLayers]);
 
   // Handle zone selection
-  const handleZoneSelect = useCallback((zone: ExclusionZone) => {
-    setSelectedZone(zone);
+  const handleZoneSelect = useCallback(
+    (zone: ExclusionZone) => {
+      setSelectedZone(zone);
 
-    // Fly to zone on map
-    if (map && zone.geometry) {
-      const coords = zone.geometry.type === 'Polygon'
-        ? zone.geometry.coordinates[0]
-        : zone.geometry.coordinates[0][0];
+      // Fly to zone on map
+      if (map && zone.geometry) {
+        const coords =
+          zone.geometry.type === 'Polygon'
+            ? zone.geometry.coordinates[0]
+            : zone.geometry.coordinates[0][0];
 
-      // Calculate bounds
-      let minLng = Infinity, maxLng = -Infinity;
-      let minLat = Infinity, maxLat = -Infinity;
+        // Calculate bounds
+        let minLng = Infinity,
+          maxLng = -Infinity;
+        let minLat = Infinity,
+          maxLat = -Infinity;
 
-      for (const coord of coords) {
-        const [lng, lat] = coord as [number, number];
-        minLng = Math.min(minLng, lng);
-        maxLng = Math.max(maxLng, lng);
-        minLat = Math.min(minLat, lat);
-        maxLat = Math.max(maxLat, lat);
+        for (const coord of coords) {
+          const [lng, lat] = coord as [number, number];
+          minLng = Math.min(minLng, lng);
+          maxLng = Math.max(maxLng, lng);
+          minLat = Math.min(minLat, lat);
+          maxLat = Math.max(maxLat, lat);
+        }
+
+        map.fitBounds(
+          [
+            [minLng, minLat],
+            [maxLng, maxLat],
+          ],
+          { padding: 100, duration: 1000 }
+        );
       }
-
-      map.fitBounds(
-        [[minLng, minLat], [maxLng, maxLat]],
-        { padding: 100, duration: 1000 }
-      );
-    }
-  }, [map]);
+    },
+    [map]
+  );
 
   // Handle create zone
   const handleCreateZone = useCallback(() => {
@@ -240,19 +239,25 @@ export function ExclusionZoneMapIntegration({
 
   // Handle delete zone
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleDeleteZone = useCallback((zoneId: string) => {
-    fetchZones();
-  }, [fetchZones]);
+  const handleDeleteZone = useCallback(
+    (zoneId: string) => {
+      fetchZones();
+    },
+    [fetchZones]
+  );
 
   // Handle form save
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleFormSave = useCallback((zone: ExclusionZone) => {
-    setIsFormOpen(false);
-    setDrawnGeometry(undefined);
-    setEditingZone(undefined);
-    setDrawingMode('simple_select');
-    fetchZones();
-  }, [fetchZones, setDrawingMode]);
+  const handleFormSave = useCallback(
+    (zone: ExclusionZone) => {
+      setIsFormOpen(false);
+      setDrawnGeometry(undefined);
+      setEditingZone(undefined);
+      setDrawingMode('simple_select');
+      fetchZones();
+    },
+    [fetchZones, setDrawingMode]
+  );
 
   // Handle form cancel
   const handleFormCancel = useCallback(() => {
@@ -264,10 +269,7 @@ export function ExclusionZoneMapIntegration({
 
   // Handle drawn feature from map
   const handleFeatureDrawn = useCallback((feature: GeoJSON.Feature) => {
-    if (
-      feature.geometry.type === 'Polygon' ||
-      feature.geometry.type === 'MultiPolygon'
-    ) {
+    if (feature.geometry.type === 'Polygon' || feature.geometry.type === 'MultiPolygon') {
       setDrawnGeometry(feature.geometry as Polygon | MultiPolygon);
     }
   }, []);
@@ -275,10 +277,13 @@ export function ExclusionZoneMapIntegration({
   // Expose feature handler for parent component
   useEffect(() => {
     // This allows the parent MapView to pass drawn features to us
-    (window as { __exclusionZoneFeatureHandler?: typeof handleFeatureDrawn }).__exclusionZoneFeatureHandler = handleFeatureDrawn;
+    (
+      window as { __exclusionZoneFeatureHandler?: typeof handleFeatureDrawn }
+    ).__exclusionZoneFeatureHandler = handleFeatureDrawn;
 
     return () => {
-      delete (window as { __exclusionZoneFeatureHandler?: typeof handleFeatureDrawn }).__exclusionZoneFeatureHandler;
+      delete (window as { __exclusionZoneFeatureHandler?: typeof handleFeatureDrawn })
+        .__exclusionZoneFeatureHandler;
     };
   }, [handleFeatureDrawn]);
 
@@ -290,7 +295,8 @@ export function ExclusionZoneMapIntegration({
         if (map.getLayer(ZONES_OUTLINE_LAYER_ID)) map.removeLayer(ZONES_OUTLINE_LAYER_ID);
         if (map.getLayer(ZONES_BUFFER_LAYER_ID)) map.removeLayer(ZONES_BUFFER_LAYER_ID);
         if (map.getSource(ZONES_SOURCE_ID)) map.removeSource(ZONES_SOURCE_ID);
-        if (map.getSource(`${ZONES_SOURCE_ID}-buffer`)) map.removeSource(`${ZONES_SOURCE_ID}-buffer`);
+        if (map.getSource(`${ZONES_SOURCE_ID}-buffer`))
+          map.removeSource(`${ZONES_SOURCE_ID}-buffer`);
       }
     };
   }, [map]);

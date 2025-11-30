@@ -310,7 +310,12 @@ export const DEFAULT_ASSET_CONSTRAINTS: Record<AssetType, Partial<Constraint>[]>
   [AssetType.SOLAR_PANEL]: [
     {
       type: ConstraintType.SLOPE_LIMIT,
-      parameters: { type: 'slope_limit', maxSlope: 15, slopeUnit: 'degrees', checkMethod: 'average' },
+      parameters: {
+        type: 'slope_limit',
+        maxSlope: 15,
+        slopeUnit: 'degrees',
+        checkMethod: 'average',
+      },
       priority: 80,
       severity: ViolationSeverity.ERROR,
     },
@@ -324,7 +329,12 @@ export const DEFAULT_ASSET_CONSTRAINTS: Record<AssetType, Partial<Constraint>[]>
   [AssetType.SOLAR_ARRAY]: [
     {
       type: ConstraintType.SLOPE_LIMIT,
-      parameters: { type: 'slope_limit', maxSlope: 10, slopeUnit: 'degrees', checkMethod: 'maximum' },
+      parameters: {
+        type: 'slope_limit',
+        maxSlope: 10,
+        slopeUnit: 'degrees',
+        checkMethod: 'maximum',
+      },
       priority: 85,
       severity: ViolationSeverity.ERROR,
     },
@@ -338,7 +348,12 @@ export const DEFAULT_ASSET_CONSTRAINTS: Record<AssetType, Partial<Constraint>[]>
   [AssetType.INVERTER]: [
     {
       type: ConstraintType.SLOPE_LIMIT,
-      parameters: { type: 'slope_limit', maxSlope: 5, slopeUnit: 'degrees', checkMethod: 'average' },
+      parameters: {
+        type: 'slope_limit',
+        maxSlope: 5,
+        slopeUnit: 'degrees',
+        checkMethod: 'average',
+      },
       priority: 75,
       severity: ViolationSeverity.ERROR,
     },
@@ -352,7 +367,12 @@ export const DEFAULT_ASSET_CONSTRAINTS: Record<AssetType, Partial<Constraint>[]>
   [AssetType.TRANSFORMER]: [
     {
       type: ConstraintType.SLOPE_LIMIT,
-      parameters: { type: 'slope_limit', maxSlope: 3, slopeUnit: 'degrees', checkMethod: 'maximum' },
+      parameters: {
+        type: 'slope_limit',
+        maxSlope: 3,
+        slopeUnit: 'degrees',
+        checkMethod: 'maximum',
+      },
       priority: 80,
       severity: ViolationSeverity.ERROR,
     },
@@ -366,13 +386,23 @@ export const DEFAULT_ASSET_CONSTRAINTS: Record<AssetType, Partial<Constraint>[]>
   [AssetType.SUBSTATION]: [
     {
       type: ConstraintType.SLOPE_LIMIT,
-      parameters: { type: 'slope_limit', maxSlope: 2, slopeUnit: 'degrees', checkMethod: 'maximum' },
+      parameters: {
+        type: 'slope_limit',
+        maxSlope: 2,
+        slopeUnit: 'degrees',
+        checkMethod: 'maximum',
+      },
       priority: 90,
       severity: ViolationSeverity.ERROR,
     },
     {
       type: ConstraintType.ACCESS_REQUIREMENT,
-      parameters: { type: 'access_requirement', requireRoadAccess: true, maxDistanceToRoad: 30, requireEmergencyAccess: true },
+      parameters: {
+        type: 'access_requirement',
+        requireRoadAccess: true,
+        maxDistanceToRoad: 30,
+        requireEmergencyAccess: true,
+      },
       priority: 85,
       severity: ViolationSeverity.ERROR,
     },
@@ -380,7 +410,12 @@ export const DEFAULT_ASSET_CONSTRAINTS: Record<AssetType, Partial<Constraint>[]>
   [AssetType.ACCESS_ROAD]: [
     {
       type: ConstraintType.SLOPE_LIMIT,
-      parameters: { type: 'slope_limit', maxSlope: 12, slopeUnit: 'percentage', checkMethod: 'any_point' },
+      parameters: {
+        type: 'slope_limit',
+        maxSlope: 12,
+        slopeUnit: 'percentage',
+        checkMethod: 'any_point',
+      },
       priority: 80,
       severity: ViolationSeverity.ERROR,
     },
@@ -396,7 +431,12 @@ export const DEFAULT_ASSET_CONSTRAINTS: Record<AssetType, Partial<Constraint>[]>
   [AssetType.COMBINER_BOX]: [
     {
       type: ConstraintType.SLOPE_LIMIT,
-      parameters: { type: 'slope_limit', maxSlope: 10, slopeUnit: 'degrees', checkMethod: 'average' },
+      parameters: {
+        type: 'slope_limit',
+        maxSlope: 10,
+        slopeUnit: 'degrees',
+        checkMethod: 'average',
+      },
       priority: 60,
       severity: ViolationSeverity.WARNING,
     },
@@ -404,7 +444,12 @@ export const DEFAULT_ASSET_CONSTRAINTS: Record<AssetType, Partial<Constraint>[]>
   [AssetType.WEATHER_STATION]: [
     {
       type: ConstraintType.INTER_ASSET_BUFFER,
-      parameters: { type: 'inter_asset_buffer', fromAssetType: AssetType.WEATHER_STATION, toAssetType: AssetType.SOLAR_ARRAY, minDistance: 20 },
+      parameters: {
+        type: 'inter_asset_buffer',
+        fromAssetType: AssetType.WEATHER_STATION,
+        toAssetType: AssetType.SOLAR_ARRAY,
+        minDistance: 20,
+      },
       priority: 50,
       severity: ViolationSeverity.WARNING,
     },
@@ -412,7 +457,12 @@ export const DEFAULT_ASSET_CONSTRAINTS: Record<AssetType, Partial<Constraint>[]>
   [AssetType.STORAGE_BUILDING]: [
     {
       type: ConstraintType.SLOPE_LIMIT,
-      parameters: { type: 'slope_limit', maxSlope: 3, slopeUnit: 'degrees', checkMethod: 'maximum' },
+      parameters: {
+        type: 'slope_limit',
+        maxSlope: 3,
+        slopeUnit: 'degrees',
+        checkMethod: 'maximum',
+      },
       priority: 75,
       severity: ViolationSeverity.ERROR,
     },
@@ -431,7 +481,7 @@ export const DEFAULT_ASSET_CONSTRAINTS: Record<AssetType, Partial<Constraint>[]>
  */
 export function getDefaultSlopeLimit(assetType: AssetType): number {
   const constraints = DEFAULT_ASSET_CONSTRAINTS[assetType];
-  const slopeConstraint = constraints?.find(c => c.type === ConstraintType.SLOPE_LIMIT);
+  const slopeConstraint = constraints?.find((c) => c.type === ConstraintType.SLOPE_LIMIT);
   if (slopeConstraint?.parameters && 'maxSlope' in slopeConstraint.parameters) {
     return (slopeConstraint.parameters as SlopeLimitParams).maxSlope;
   }
@@ -443,7 +493,7 @@ export function getDefaultSlopeLimit(assetType: AssetType): number {
  */
 export function getDefaultSetback(assetType: AssetType): number {
   const constraints = DEFAULT_ASSET_CONSTRAINTS[assetType];
-  const setbackConstraint = constraints?.find(c => c.type === ConstraintType.BOUNDARY_SETBACK);
+  const setbackConstraint = constraints?.find((c) => c.type === ConstraintType.BOUNDARY_SETBACK);
   if (setbackConstraint?.parameters && 'minDistance' in setbackConstraint.parameters) {
     return (setbackConstraint.parameters as BoundarySetbackParams).minDistance;
   }

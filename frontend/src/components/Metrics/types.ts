@@ -8,47 +8,47 @@
  * Area metrics
  */
 export interface AreaMetrics {
-  totalArea: number;         // Total site area (m²)
-  usableArea: number;        // Area after exclusions (m²)
-  developedArea: number;     // Area used by assets (m²)
-  utilizationRate: number;   // Percentage of usable area developed
-  exclusionArea: number;     // Total exclusion zone area (m²)
+  totalArea: number; // Total site area (m²)
+  usableArea: number; // Area after exclusions (m²)
+  developedArea: number; // Area used by assets (m²)
+  utilizationRate: number; // Percentage of usable area developed
+  exclusionArea: number; // Total exclusion zone area (m²)
 }
 
 /**
  * Earthwork volume metrics
  */
 export interface EarthworkMetrics {
-  totalCutVolume: number;    // Total cut volume (m³)
-  totalFillVolume: number;   // Total fill volume (m³)
-  netVolume: number;         // Cut - Fill (m³)
-  adjustedCut: number;       // After shrink factor
-  adjustedFill: number;      // After swell factor
-  importRequired: number;    // Fill needed from off-site
-  exportRequired: number;    // Cut to be removed
-  balanceOnSite: number;     // Material balanced on-site
+  totalCutVolume: number; // Total cut volume (m³)
+  totalFillVolume: number; // Total fill volume (m³)
+  netVolume: number; // Cut - Fill (m³)
+  adjustedCut: number; // After shrink factor
+  adjustedFill: number; // After swell factor
+  importRequired: number; // Fill needed from off-site
+  exportRequired: number; // Cut to be removed
+  balanceOnSite: number; // Material balanced on-site
 }
 
 /**
  * Cost breakdown
  */
 export interface CostMetrics {
-  cutCost: number;           // Excavation cost ($)
-  fillCost: number;          // Fill placement cost ($)
-  haulCost: number;          // On-site hauling cost ($)
-  importCost: number;        // Import material cost ($)
-  exportCost: number;        // Export material cost ($)
-  totalCost: number;         // Total earthwork cost ($)
+  cutCost: number; // Excavation cost ($)
+  fillCost: number; // Fill placement cost ($)
+  haulCost: number; // On-site hauling cost ($)
+  importCost: number; // Import material cost ($)
+  exportCost: number; // Export material cost ($)
+  totalCost: number; // Total earthwork cost ($)
 }
 
 /**
  * Road network metrics
  */
 export interface RoadMetrics {
-  totalLength: number;       // Total road length (m)
-  segmentCount: number;      // Number of road segments
-  maxGradient: number;       // Maximum gradient (%)
-  averageGradient: number;   // Average gradient (%)
+  totalLength: number; // Total road length (m)
+  segmentCount: number; // Number of road segments
+  maxGradient: number; // Maximum gradient (%)
+  averageGradient: number; // Average gradient (%)
   averageHaulDistance: number; // Average haul distance (m)
 }
 
@@ -56,11 +56,11 @@ export interface RoadMetrics {
  * Asset metrics
  */
 export interface AssetMetrics {
-  totalCount: number;        // Total number of assets
-  byType: Record<string, number>;  // Count by asset type
-  totalFootprint: number;    // Total asset footprint area (m²)
-  validCount: number;        // Number passing all constraints
-  invalidCount: number;      // Number with violations
+  totalCount: number; // Total number of assets
+  byType: Record<string, number>; // Count by asset type
+  totalFootprint: number; // Total asset footprint area (m²)
+  validCount: number; // Number passing all constraints
+  invalidCount: number; // Number with violations
 }
 
 /**
@@ -115,10 +115,7 @@ export interface MetricFormatOptions {
 /**
  * Helper function to format metric values
  */
-export function formatMetricValue(
-  value: number,
-  options: MetricFormatOptions
-): string {
+export function formatMetricValue(value: number, options: MetricFormatOptions): string {
   const { type, precision = 0, prefix = '', suffix = '' } = options;
 
   let formatted: string;

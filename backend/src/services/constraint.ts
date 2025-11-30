@@ -114,7 +114,7 @@ export function getConstraintSets(projectId: string): ConstraintSet[] {
   if (!setIds) return [];
 
   return Array.from(setIds)
-    .map(id => constraintSetsStore.get(id))
+    .map((id) => constraintSetsStore.get(id))
     .filter((cs): cs is ConstraintSet => cs !== undefined);
 }
 
@@ -140,7 +140,9 @@ export async function validateAssetPlacement(
 
   // Filter constraints that apply to this asset type
   const applicableConstraints = constraints.filter(
-    c => c.enabled && (c.appliesToAssets.includes(asset.assetType) || c.appliesToAssets.includes(AssetType.ANY))
+    (c) =>
+      c.enabled &&
+      (c.appliesToAssets.includes(asset.assetType) || c.appliesToAssets.includes(AssetType.ANY))
   );
 
   // Sort by priority (higher first)
@@ -356,7 +358,9 @@ function validateBoundarySetback(
     const assetCenter = turf.centroid(assetFeature);
     const moveDistance = params.minDistance - distance + 5; // Add 5m buffer
     const bearing = turf.bearing(assetCenter, boundaryCenter);
-    const newPosition = turf.destination(assetCenter, moveDistance / 1000, bearing, { units: 'kilometers' });
+    const newPosition = turf.destination(assetCenter, moveDistance / 1000, bearing, {
+      units: 'kilometers',
+    });
 
     const suggestedFix: SuggestedFix = {
       description: `Move asset ${moveDistance.toFixed(1)}m toward site center`,
@@ -406,9 +410,8 @@ function validateExclusionZone(
     }
 
     // Use buffered geometry if available and requested
-    const zoneGeometry = params.includeBuffer && zone.bufferedGeometry
-      ? zone.bufferedGeometry
-      : zone.geometry;
+    const zoneGeometry =
+      params.includeBuffer && zone.bufferedGeometry ? zone.bufferedGeometry : zone.geometry;
 
     const zoneFeature = turf.feature(zoneGeometry);
 
@@ -449,7 +452,9 @@ function validateExclusionZone(
       const assetCentroid = turf.centroid(assetFeature);
       const bearing = turf.bearing(zoneCentroid, assetCentroid);
       const moveDistance = Math.sqrt(overlapArea) + 10; // Rough estimate
-      const newPosition = turf.destination(assetCentroid, moveDistance / 1000, bearing, { units: 'kilometers' });
+      const newPosition = turf.destination(assetCentroid, moveDistance / 1000, bearing, {
+        units: 'kilometers',
+      });
 
       const suggestedFix: SuggestedFix = {
         description: `Move asset away from ${zone.name}`,
@@ -513,7 +518,7 @@ function validateSlopeLimit(
   const maxSlope = params.maxSlope;
   if (params.slopeUnit === 'percentage') {
     // Convert check value from degrees to percentage for comparison
-    checkValue = Math.tan(checkValue * Math.PI / 180) * 100;
+    checkValue = Math.tan((checkValue * Math.PI) / 180) * 100;
   }
 
   if (checkValue > maxSlope) {
@@ -590,14 +595,14 @@ function validateAspectRange(
       },
       suggestedFix: params.preferredAspect
         ? {
-          description: `Rotate or relocate to achieve ${params.preferredAspect}° aspect`,
-          action: 'rotate',
-          suggestedRotation: params.preferredAspect - dominant,
-        }
+            description: `Rotate or relocate to achieve ${params.preferredAspect}° aspect`,
+            action: 'rotate',
+            suggestedRotation: params.preferredAspect - dominant,
+          }
         : {
-          description: 'Relocate asset to area with suitable aspect',
-          action: 'move',
-        },
+            description: 'Relocate asset to area with suitable aspect',
+            action: 'move',
+          },
     };
   }
 
@@ -653,7 +658,9 @@ function validateInterAssetBuffer(
       // Calculate direction to move
       const bearing = turf.bearing(otherCentroid, assetCentroid);
       const moveDistance = params.minDistance - distance + 2;
-      const newPosition = turf.destination(assetCentroid, moveDistance / 1000, bearing, { units: 'kilometers' });
+      const newPosition = turf.destination(assetCentroid, moveDistance / 1000, bearing, {
+        units: 'kilometers',
+      });
 
       return {
         constraintId: constraint.id,
@@ -790,7 +797,7 @@ function getAssetPolygon(asset: AssetPlacement): Polygon | null {
     // Create a small buffer around the point as the footprint
     const point = turf.point(asset.geometry.coordinates);
     const buffer = turf.buffer(point, 0.005, { units: 'kilometers' }); // 5m radius
-    return buffer?.geometry as Polygon || null;
+    return (buffer?.geometry as Polygon) || null;
   }
 
   if (asset.geometry.type === 'MultiPolygon') {
@@ -818,7 +825,7 @@ export function findValidPlacementAreas(
 
   // Apply boundary setback
   const setbackConstraint = constraints.find(
-    c =>
+    (c) =>
       c.enabled &&
       c.type === ConstraintType.BOUNDARY_SETBACK &&
       (c.appliesToAssets.includes(assetType) || c.appliesToAssets.includes(AssetType.ANY))
@@ -835,7 +842,7 @@ export function findValidPlacementAreas(
   // Subtract exclusion zones
   if (context.exclusionZones) {
     const exclusionConstraint = constraints.find(
-      c =>
+      (c) =>
         c.enabled &&
         c.type === ConstraintType.EXCLUSION_ZONE &&
         (c.appliesToAssets.includes(assetType) || c.appliesToAssets.includes(AssetType.ANY))
@@ -851,13 +858,15 @@ export function findValidPlacementAreas(
           if (!params.zoneTypes.includes(zone.type)) continue;
         }
 
-        const zoneGeometry = params.includeBuffer && zone.bufferedGeometry
-          ? zone.bufferedGeometry
-          : zone.geometry;
+        const zoneGeometry =
+          params.includeBuffer && zone.bufferedGeometry ? zone.bufferedGeometry : zone.geometry;
 
         try {
           const diff = turf.difference(
-            turf.featureCollection([validArea as Feature<Polygon>, turf.feature(zoneGeometry) as Feature<Polygon>])
+            turf.featureCollection([
+              validArea as Feature<Polygon>,
+              turf.feature(zoneGeometry) as Feature<Polygon>,
+            ])
           );
           if (diff) {
             validArea = diff;

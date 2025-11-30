@@ -7,30 +7,25 @@ Generates professional PDF reports using ReportLab.
 import io
 import time
 from datetime import datetime
-from typing import List, Optional
 
 from reportlab.lib import colors
-from reportlab.lib.pagesizes import letter, A4
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.pagesizes import A4, letter
+from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import inch
 from reportlab.platypus import (
-    SimpleDocTemplate,
+    Image,
+    PageBreak,
     Paragraph,
+    SimpleDocTemplate,
     Spacer,
     Table,
     TableStyle,
-    Image,
-    PageBreak,
-    KeepTogether,
 )
-from reportlab.platypus.tableofcontents import TableOfContents
 
 from .models import (
     ReportData,
     ReportResult,
     ReportSection,
-    MapType,
-    ReportConfig,
 )
 
 
@@ -512,7 +507,7 @@ class PDFReportGenerator:
                     Paragraph(f"Scale: {map_img.scale}", self.styles["BodyText"])
                 )
 
-    def _create_table(self, data: List[List], col_widths: List[float]) -> Table:
+    def _create_table(self, data: list[list], col_widths: list[float]) -> Table:
         """Create a styled table."""
         table = Table(data, colWidths=col_widths)
         table.setStyle(
@@ -596,7 +591,9 @@ class PDFReportGenerator:
             generation_time = (time.time() - start_time) * 1000
 
             # Generate filename
-            filename = f"{self.data.project.project_name.replace(' ', '_')}_Report_{datetime.now().strftime('%Y%m%d')}.pdf"
+            project_name = self.data.project.project_name.replace(' ', '_')
+            date_str = datetime.now().strftime('%Y%m%d')
+            filename = f"{project_name}_Report_{date_str}.pdf"
 
             return ReportResult(
                 success=True,

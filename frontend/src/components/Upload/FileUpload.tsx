@@ -21,7 +21,13 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
 interface FileUploadProps {
   type: UploadType;
-  onSuccess?: (result: BoundaryUploadResponse | ExclusionsUploadResponse | PreviewUploadResponse | ValidateUploadResponse) => void;
+  onSuccess?: (
+    result:
+      | BoundaryUploadResponse
+      | ExclusionsUploadResponse
+      | PreviewUploadResponse
+      | ValidateUploadResponse
+  ) => void;
   onError?: (error: string) => void;
   multiple?: boolean;
   className?: string;
@@ -61,48 +67,54 @@ export function FileUpload({
   }, [type, hasPermission]);
 
   // Validate files before upload
-  const validateFiles = useCallback((files: File[]): string | null => {
-    if (files.length === 0) {
-      return 'No files selected';
-    }
-
-    for (const file of files) {
-      if (!isValidFileExtension(file.name)) {
-        return `Invalid file type: ${file.name}. Allowed: ${ALLOWED_EXTENSIONS.join(', ')}`;
+  const validateFiles = useCallback(
+    (files: File[]): string | null => {
+      if (files.length === 0) {
+        return 'No files selected';
       }
 
-      if (file.size > MAX_FILE_SIZE) {
-        return `File too large: ${file.name} (${formatFileSize(file.size)}). Maximum: ${formatFileSize(MAX_FILE_SIZE)}`;
+      for (const file of files) {
+        if (!isValidFileExtension(file.name)) {
+          return `Invalid file type: ${file.name}. Allowed: ${ALLOWED_EXTENSIONS.join(', ')}`;
+        }
+
+        if (file.size > MAX_FILE_SIZE) {
+          return `File too large: ${file.name} (${formatFileSize(file.size)}). Maximum: ${formatFileSize(MAX_FILE_SIZE)}`;
+        }
       }
-    }
 
-    if (!multiple && files.length > 1) {
-      return 'Only one file allowed';
-    }
+      if (!multiple && files.length > 1) {
+        return 'Only one file allowed';
+      }
 
-    if (type === 'exclusions' && files.length > 10) {
-      return 'Maximum 10 files allowed';
-    }
+      if (type === 'exclusions' && files.length > 10) {
+        return 'Maximum 10 files allowed';
+      }
 
-    return null;
-  }, [multiple, type]);
+      return null;
+    },
+    [multiple, type]
+  );
 
   // Handle file selection
-  const handleFileSelect = useCallback((files: FileList | null) => {
-    if (!files) return;
+  const handleFileSelect = useCallback(
+    (files: FileList | null) => {
+      if (!files) return;
 
-    const fileArray = Array.from(files);
-    const error = validateFiles(fileArray);
+      const fileArray = Array.from(files);
+      const error = validateFiles(fileArray);
 
-    if (error) {
-      setUploadState(prev => ({ ...prev, error }));
-      onError?.(error);
-      return;
-    }
+      if (error) {
+        setUploadState((prev) => ({ ...prev, error }));
+        onError?.(error);
+        return;
+      }
 
-    setSelectedFiles(fileArray);
-    setUploadState(prev => ({ ...prev, error: null }));
-  }, [validateFiles, onError]);
+      setSelectedFiles(fileArray);
+      setUploadState((prev) => ({ ...prev, error: null }));
+    },
+    [validateFiles, onError]
+  );
 
   // Handle drag events
   const handleDrag = useCallback((e: React.DragEvent) => {
@@ -116,20 +128,26 @@ export function FileUpload({
   }, []);
 
   // Handle drop
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(false);
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setDragActive(false);
 
-    if (e.dataTransfer.files) {
-      handleFileSelect(e.dataTransfer.files);
-    }
-  }, [handleFileSelect]);
+      if (e.dataTransfer.files) {
+        handleFileSelect(e.dataTransfer.files);
+      }
+    },
+    [handleFileSelect]
+  );
 
   // Handle input change
-  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    handleFileSelect(e.target.files);
-  }, [handleFileSelect]);
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      handleFileSelect(e.target.files);
+    },
+    [handleFileSelect]
+  );
 
   // Upload files
   const uploadFiles = useCallback(async () => {
@@ -137,14 +155,14 @@ export function FileUpload({
 
     if (!accessToken) {
       const error = 'Not authenticated';
-      setUploadState(prev => ({ ...prev, error }));
+      setUploadState((prev) => ({ ...prev, error }));
       onError?.(error);
       return;
     }
 
     if (!canUpload()) {
       const error = 'You do not have permission to perform this upload';
-      setUploadState(prev => ({ ...prev, error }));
+      setUploadState((prev) => ({ ...prev, error }));
       onError?.(error);
       return;
     }
@@ -160,7 +178,7 @@ export function FileUpload({
       const formData = new FormData();
 
       if (multiple || type === 'exclusions') {
-        selectedFiles.forEach(file => {
+        selectedFiles.forEach((file) => {
           formData.append('files', file);
         });
       } else {
@@ -177,17 +195,19 @@ export function FileUpload({
             total: e.total,
             percentage: Math.round((e.loaded / e.total) * 100),
           };
-          setUploadState(prev => ({ ...prev, progress }));
+          setUploadState((prev) => ({ ...prev, progress }));
         }
       });
 
       // Create promise to handle response
       const response = await new Promise<Response>((resolve, reject) => {
         xhr.addEventListener('load', () => {
-          resolve(new Response(xhr.responseText, {
-            status: xhr.status,
-            statusText: xhr.statusText,
-          }));
+          resolve(
+            new Response(xhr.responseText, {
+              status: xhr.status,
+              statusText: xhr.statusText,
+            })
+          );
         });
         xhr.addEventListener('error', () => reject(new Error('Network error')));
         xhr.addEventListener('abort', () => reject(new Error('Upload aborted')));
@@ -231,7 +251,7 @@ export function FileUpload({
 
   // Remove file from selection
   const removeFile = useCallback((index: number) => {
-    setSelectedFiles(prev => prev.filter((_, i) => i !== index));
+    setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
   }, []);
 
   // Clear all
@@ -325,7 +345,9 @@ export function FileUpload({
       {selectedFiles.length > 0 && (
         <div className="file-upload-selected">
           <div className="selected-header">
-            <span>{selectedFiles.length} file{selectedFiles.length !== 1 ? 's' : ''} selected</span>
+            <span>
+              {selectedFiles.length} file{selectedFiles.length !== 1 ? 's' : ''} selected
+            </span>
             <button type="button" onClick={clearAll} className="btn-clear">
               Clear all
             </button>
@@ -358,9 +380,7 @@ export function FileUpload({
               style={{ width: `${uploadState.progress.percentage}%` }}
             />
           </div>
-          <span className="progress-text">
-            Uploading... {uploadState.progress.percentage}%
-          </span>
+          <span className="progress-text">Uploading... {uploadState.progress.percentage}%</span>
         </div>
       )}
 

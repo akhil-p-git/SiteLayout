@@ -21,7 +21,7 @@ import { logFromRequest, AuditActions } from '../services/audit';
  * GET /api/v1/exclusion-zones/types
  */
 export async function getZoneTypes(_req: AuthenticatedRequest, res: Response): Promise<void> {
-  const types = Object.values(ExclusionZoneType).map(type => ({
+  const types = Object.values(ExclusionZoneType).map((type) => ({
     value: type,
     label: ZONE_TYPE_LABELS[type],
     color: ZONE_TYPE_COLORS[type],
@@ -66,16 +66,19 @@ export async function createZone(req: AuthenticatedRequest, res: Response): Prom
   }
 
   try {
-    const zone = await exclusionZoneService.createExclusionZone({
-      siteId,
-      name,
-      type,
-      description,
-      geometry,
-      bufferDistance,
-      properties,
-      source: 'drawn',
-    }, req.user!.id);
+    const zone = await exclusionZoneService.createExclusionZone(
+      {
+        siteId,
+        name,
+        type,
+        description,
+        geometry,
+        bufferDistance,
+        properties,
+        source: 'drawn',
+      },
+      req.user!.id
+    );
 
     await logFromRequest(req, AuditActions.CREATE_ZONE, 'exclusion_zone', zone.id, {
       siteId,
@@ -319,9 +322,10 @@ export async function importZones(req: AuthenticatedRequest, res: Response): Pro
   }
 
   // Validate default type
-  const zoneType = defaultType && Object.values(ExclusionZoneType).includes(defaultType)
-    ? defaultType
-    : ExclusionZoneType.CUSTOM;
+  const zoneType =
+    defaultType && Object.values(ExclusionZoneType).includes(defaultType)
+      ? defaultType
+      : ExclusionZoneType.CUSTOM;
 
   try {
     const result = await exclusionZoneService.importExclusionZones(

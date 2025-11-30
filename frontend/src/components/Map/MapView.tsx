@@ -52,7 +52,8 @@ export function MapView({
 
       // Pass polygon features to exclusion zone handler
       if (feature.geometry.type === 'Polygon' || feature.geometry.type === 'MultiPolygon') {
-        const handler = (window as { __exclusionZoneFeatureHandler?: (f: GeoJSON.Feature) => void }).__exclusionZoneFeatureHandler;
+        const handler = (window as { __exclusionZoneFeatureHandler?: (f: GeoJSON.Feature) => void })
+          .__exclusionZoneFeatureHandler;
         if (handler) {
           handler(feature);
         }
@@ -79,11 +80,7 @@ export function MapView({
     <MapProvider initialViewState={initialViewState}>
       <div className={`map-view ${className}`}>
         {/* Mobile menu toggle */}
-        <button
-          className="mobile-menu-toggle"
-          onClick={toggleMobileMenu}
-          aria-label="Toggle menu"
-        >
+        <button className="mobile-menu-toggle" onClick={toggleMobileMenu} aria-label="Toggle menu">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <line x1="3" y1="6" x2="21" y2="6" />
             <line x1="3" y1="12" x2="21" y2="12" />
@@ -123,7 +120,9 @@ export function MapView({
 
         {/* Sidebar with layer controls */}
         {showControls && (
-          <div className={`map-view-sidebar ${isSidebarOpen ? 'open' : ''} ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
+          <div
+            className={`map-view-sidebar ${isSidebarOpen ? 'open' : ''} ${isMobileMenuOpen ? 'mobile-open' : ''}`}
+          >
             <div className="sidebar-header">
               <h2>Map Controls</h2>
               <button
@@ -157,20 +156,13 @@ export function MapView({
                 <line x1="6" y1="6" x2="18" y2="18" />
               </svg>
             </button>
-            <ElevationProfile
-              data={elevationData}
-              title="Elevation Profile"
-              unit="meters"
-            />
+            <ElevationProfile data={elevationData} title="Elevation Profile" unit="meters" />
           </div>
         )}
 
         {/* Mobile overlay */}
         {isMobileMenuOpen && (
-          <div
-            className="mobile-overlay"
-            onClick={() => setIsMobileMenuOpen(false)}
-          />
+          <div className="mobile-overlay" onClick={() => setIsMobileMenuOpen(false)} />
         )}
       </div>
     </MapProvider>

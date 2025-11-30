@@ -4,14 +4,13 @@ Terrain Analysis Module
 Calculates slope, aspect, elevation metrics, and buildability scores from DEM data.
 """
 
+from collections.abc import Sequence
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Sequence
 
 import numpy as np
 from numpy.typing import NDArray
-import rasterio
 from rasterio.crs import CRS
 from rasterio.transform import Affine
 
@@ -511,7 +510,6 @@ def generate_aspect_visualization(
     """
     import matplotlib.pyplot as plt
     from matplotlib import cm
-    from matplotlib.colors import LinearSegmentedColormap
 
     output_path = Path(output_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)

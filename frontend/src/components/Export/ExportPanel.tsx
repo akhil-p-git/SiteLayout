@@ -121,10 +121,8 @@ export function ExportPanel({
   const [error, setError] = useState<string | null>(null);
 
   const toggleLayer = useCallback((layer: ExportLayer) => {
-    setSelectedLayers(prev =>
-      prev.includes(layer)
-        ? prev.filter(l => l !== layer)
-        : [...prev, layer]
+    setSelectedLayers((prev) =>
+      prev.includes(layer) ? prev.filter((l) => l !== layer) : [...prev, layer]
     );
   }, []);
 
@@ -194,7 +192,15 @@ export function ExportPanel({
     } finally {
       setIsExporting(false);
     }
-  }, [layoutData, format, selectedLayers, includeStyles, includeMetadata, onExportStart, onExportComplete]);
+  }, [
+    layoutData,
+    format,
+    selectedLayers,
+    includeStyles,
+    includeMetadata,
+    onExportStart,
+    onExportComplete,
+  ]);
 
   const canExport = layoutData && selectedLayers.length > 0 && !isExporting;
 
@@ -202,16 +208,14 @@ export function ExportPanel({
     <div className={`export-panel ${className}`}>
       <div className="export-panel-header">
         <h3>Export Layout</h3>
-        <p className="export-panel-subtitle">
-          Export your layout to GIS-compatible formats
-        </p>
+        <p className="export-panel-subtitle">Export your layout to GIS-compatible formats</p>
       </div>
 
       {/* Format Selection */}
       <div className="export-section">
         <label className="export-section-label">Export Format</label>
         <div className="export-format-options">
-          {(Object.keys(FORMAT_INFO) as ExportFormat[]).map(fmt => (
+          {(Object.keys(FORMAT_INFO) as ExportFormat[]).map((fmt) => (
             <button
               key={fmt}
               className={`export-format-btn ${format === fmt ? 'active' : ''}`}
@@ -230,7 +234,7 @@ export function ExportPanel({
       <div className="export-section">
         <label className="export-section-label">Include Layers</label>
         <div className="export-layer-options">
-          {(Object.keys(LAYER_INFO) as ExportLayer[]).map(layer => (
+          {(Object.keys(LAYER_INFO) as ExportLayer[]).map((layer) => (
             <label
               key={layer}
               className={`export-layer-checkbox ${selectedLayers.includes(layer) ? 'checked' : ''}`}
@@ -264,7 +268,7 @@ export function ExportPanel({
             <input
               type="checkbox"
               checked={includeStyles}
-              onChange={e => setIncludeStyles(e.target.checked)}
+              onChange={(e) => setIncludeStyles(e.target.checked)}
               disabled={isExporting}
             />
             <span>Include styling (colors, line widths)</span>
@@ -273,7 +277,7 @@ export function ExportPanel({
             <input
               type="checkbox"
               checked={includeMetadata}
-              onChange={e => setIncludeMetadata(e.target.checked)}
+              onChange={(e) => setIncludeMetadata(e.target.checked)}
               disabled={isExporting}
             />
             <span>Include metadata (dimensions, earthwork)</span>
@@ -293,7 +297,7 @@ export function ExportPanel({
             <span className="summary-value">
               {(selectedLayers.includes('boundary') ? 1 : 0) +
                 (selectedLayers.includes('assets') ? layoutData.assets.length : 0) +
-                (selectedLayers.includes('roads') ? (layoutData.roads?.segments.length || 0) : 0) +
+                (selectedLayers.includes('roads') ? layoutData.roads?.segments.length || 0 : 0) +
                 (selectedLayers.includes('exclusion_zones') ? layoutData.exclusionZones.length : 0)}
             </span>
           </div>
@@ -309,11 +313,7 @@ export function ExportPanel({
       )}
 
       {/* Export Button */}
-      <button
-        className="export-button"
-        onClick={handleExport}
-        disabled={!canExport}
-      >
+      <button className="export-button" onClick={handleExport} disabled={!canExport}>
         {isExporting ? (
           <>
             <span className="spinner"></span>
@@ -328,9 +328,7 @@ export function ExportPanel({
       </button>
 
       {!layoutData && (
-        <p className="export-no-data">
-          No layout data available. Create or load a layout first.
-        </p>
+        <p className="export-no-data">No layout data available. Create or load a layout first.</p>
       )}
     </div>
   );

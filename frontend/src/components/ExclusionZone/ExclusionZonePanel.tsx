@@ -70,10 +70,9 @@ export function ExclusionZonePanel({
       const params = new URLSearchParams();
       if (showInactive) params.append('includeInactive', 'true');
 
-      const response = await fetch(
-        `${API_URL}/api/v1/exclusion-zones/site/${siteId}?${params}`,
-        { headers: { Authorization: `Bearer ${accessToken}` } }
-      );
+      const response = await fetch(`${API_URL}/api/v1/exclusion-zones/site/${siteId}?${params}`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
 
       if (!response.ok) {
         throw new Error('Failed to fetch zones');
@@ -93,10 +92,9 @@ export function ExclusionZonePanel({
     if (!accessToken || !siteId) return;
 
     try {
-      const response = await fetch(
-        `${API_URL}/api/v1/exclusion-zones/site/${siteId}/summary`,
-        { headers: { Authorization: `Bearer ${accessToken}` } }
-      );
+      const response = await fetch(`${API_URL}/api/v1/exclusion-zones/site/${siteId}/summary`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
 
       if (response.ok) {
         const data = await response.json();
@@ -122,17 +120,14 @@ export function ExclusionZonePanel({
     if (!accessToken || !canEdit) return;
 
     try {
-      const response = await fetch(
-        `${API_URL}/api/v1/exclusion-zones/${zone.id}`,
-        {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${accessToken}`,
-          },
-          body: JSON.stringify({ isActive: !zone.isActive }),
-        }
-      );
+      const response = await fetch(`${API_URL}/api/v1/exclusion-zones/${zone.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ isActive: !zone.isActive }),
+      });
 
       if (response.ok) {
         fetchZones();
@@ -152,13 +147,10 @@ export function ExclusionZonePanel({
     }
 
     try {
-      const response = await fetch(
-        `${API_URL}/api/v1/exclusion-zones/${zoneId}`,
-        {
-          method: 'DELETE',
-          headers: { Authorization: `Bearer ${accessToken}` },
-        }
-      );
+      const response = await fetch(`${API_URL}/api/v1/exclusion-zones/${zoneId}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
 
       if (response.ok) {
         fetchZones();
@@ -171,7 +163,7 @@ export function ExclusionZonePanel({
   };
 
   // Filter zones
-  const filteredZones = zones.filter(zone => {
+  const filteredZones = zones.filter((zone) => {
     if (filterType !== 'all' && zone.type !== filterType) {
       return false;
     }
@@ -183,11 +175,7 @@ export function ExclusionZonePanel({
       <div className="panel-header">
         <h3>Exclusion Zones</h3>
         {canEdit && (
-          <button
-            type="button"
-            className="btn-add-zone"
-            onClick={onZoneCreate}
-          >
+          <button type="button" className="btn-add-zone" onClick={onZoneCreate}>
             + Add Zone
           </button>
         )}
@@ -217,11 +205,11 @@ export function ExclusionZonePanel({
       <div className="zone-filters">
         <select
           value={filterType}
-          onChange={e => setFilterType(e.target.value as ExclusionZoneType | 'all')}
+          onChange={(e) => setFilterType(e.target.value as ExclusionZoneType | 'all')}
           className="filter-select"
         >
           <option value="all">All Types</option>
-          {zoneTypes.map(type => (
+          {zoneTypes.map((type) => (
             <option key={type.value} value={type.value}>
               {type.label}
             </option>
@@ -232,7 +220,7 @@ export function ExclusionZonePanel({
           <input
             type="checkbox"
             checked={showInactive}
-            onChange={e => setShowInactive(e.target.checked)}
+            onChange={(e) => setShowInactive(e.target.checked)}
           />
           Show Inactive
         </label>
@@ -240,13 +228,9 @@ export function ExclusionZonePanel({
 
       {/* Zone list */}
       <div className="zone-list">
-        {isLoading && (
-          <div className="loading-state">Loading zones...</div>
-        )}
+        {isLoading && <div className="loading-state">Loading zones...</div>}
 
-        {error && (
-          <div className="error-state">{error}</div>
-        )}
+        {error && <div className="error-state">{error}</div>}
 
         {!isLoading && !error && filteredZones.length === 0 && (
           <div className="empty-state">
@@ -259,16 +243,13 @@ export function ExclusionZonePanel({
           </div>
         )}
 
-        {filteredZones.map(zone => (
+        {filteredZones.map((zone) => (
           <div
             key={zone.id}
             className={`zone-item ${selectedZoneId === zone.id ? 'selected' : ''} ${!zone.isActive ? 'inactive' : ''}`}
             onClick={() => onZoneSelect?.(zone)}
           >
-            <div
-              className="zone-color"
-              style={{ backgroundColor: getZoneColor(zone.type) }}
-            />
+            <div className="zone-color" style={{ backgroundColor: getZoneColor(zone.type) }} />
             <div className="zone-info">
               <div className="zone-name">{zone.name}</div>
               <div className="zone-meta">
@@ -276,9 +257,7 @@ export function ExclusionZonePanel({
                 <span className="zone-area">{formatArea(zone.bufferedArea || zone.area)}</span>
               </div>
               {zone.bufferDistance > 0 && (
-                <div className="zone-buffer">
-                  Buffer: {zone.bufferDistance}m
-                </div>
+                <div className="zone-buffer">Buffer: {zone.bufferDistance}m</div>
               )}
             </div>
             {canEdit && (
@@ -286,7 +265,7 @@ export function ExclusionZonePanel({
                 <button
                   type="button"
                   className="btn-icon"
-                  onClick={e => {
+                  onClick={(e) => {
                     e.stopPropagation();
                     onZoneEdit?.(zone);
                   }}
@@ -300,7 +279,7 @@ export function ExclusionZonePanel({
                 <button
                   type="button"
                   className="btn-icon"
-                  onClick={e => {
+                  onClick={(e) => {
                     e.stopPropagation();
                     handleToggleActive(zone);
                   }}
@@ -321,7 +300,7 @@ export function ExclusionZonePanel({
                 <button
                   type="button"
                   className="btn-icon btn-delete"
-                  onClick={e => {
+                  onClick={(e) => {
                     e.stopPropagation();
                     handleDelete(zone.id);
                   }}
@@ -351,9 +330,7 @@ export function ExclusionZonePanel({
                     className="breakdown-color"
                     style={{ backgroundColor: getZoneColor(type as ExclusionZoneType) }}
                   />
-                  <span className="breakdown-label">
-                    {getZoneLabel(type as ExclusionZoneType)}
-                  </span>
+                  <span className="breakdown-label">{getZoneLabel(type as ExclusionZoneType)}</span>
                   <span className="breakdown-count">{data.count}</span>
                   <span className="breakdown-area">{formatArea(data.area)}</span>
                 </div>

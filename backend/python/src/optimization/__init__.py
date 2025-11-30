@@ -4,23 +4,22 @@ Optimization module for asset placement.
 Provides genetic algorithm-based optimization for solar site layout.
 """
 
-from .models import (
-    AssetType,
-    AssetDefinition,
-    AssetDimensions,
-    AssetConstraints,
-    PlacedAsset,
-    OptimizationConfig,
-    OptimizationObjective,
-    SiteContext,
-    LayoutSolution,
-    OptimizationResult,
-    DEFAULT_ASSET_DEFINITIONS,
-)
-
 from .genetic_optimizer import (
     GeneticOptimizer,
     optimize_layout,
+)
+from .models import (
+    DEFAULT_ASSET_DEFINITIONS,
+    AssetConstraints,
+    AssetDefinition,
+    AssetDimensions,
+    AssetType,
+    LayoutSolution,
+    OptimizationConfig,
+    OptimizationObjective,
+    OptimizationResult,
+    PlacedAsset,
+    SiteContext,
 )
 
 __all__ = [

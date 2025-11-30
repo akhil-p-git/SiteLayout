@@ -11,11 +11,7 @@ import { ROLE_PERMISSIONS } from '../types/auth';
 /**
  * Authentication middleware - validates JWT and attaches user to request
  */
-export function authenticate(
-  req: AuthenticatedRequest,
-  res: Response,
-  next: NextFunction
-): void {
+export function authenticate(req: AuthenticatedRequest, res: Response, next: NextFunction): void {
   const authHeader = req.headers.authorization;
   const token = extractBearerToken(authHeader);
 
@@ -52,11 +48,7 @@ export function authenticate(
 /**
  * Optional authentication - doesn't fail if no token, but attaches user if valid
  */
-export function optionalAuth(
-  req: AuthenticatedRequest,
-  _res: Response,
-  next: NextFunction
-): void {
+export function optionalAuth(req: AuthenticatedRequest, _res: Response, next: NextFunction): void {
   const authHeader = req.headers.authorization;
   const token = extractBearerToken(authHeader);
 

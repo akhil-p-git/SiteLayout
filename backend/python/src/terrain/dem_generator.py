@@ -10,13 +10,12 @@ from pathlib import Path
 from typing import Literal
 
 import numpy as np
-from numpy.typing import NDArray
-from scipy.spatial import Delaunay
-from scipy.interpolate import LinearNDInterpolator, NearestNDInterpolator
 import rasterio
+from numpy.typing import NDArray
 from rasterio.crs import CRS
-from rasterio.transform import from_bounds
 from rasterio.enums import Resampling
+from rasterio.transform import from_bounds
+from scipy.interpolate import LinearNDInterpolator, NearestNDInterpolator
 
 from ..parsers.dxf_parser import ContourSet
 

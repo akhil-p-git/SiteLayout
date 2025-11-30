@@ -61,11 +61,7 @@ const MapMarker: React.FC<MapMarkerProps> = ({ site, x, y, isSelected, onClick, 
         className="marker-ring"
       />
       {/* Inner circle - score color */}
-      <circle
-        r={size / 2}
-        fill={scoreColor}
-        opacity={0.9}
-      />
+      <circle r={size / 2} fill={scoreColor} opacity={0.9} />
       {/* Selection highlight */}
       {isSelected && (
         <circle
@@ -110,10 +106,7 @@ const SiteTooltip: React.FC<TooltipProps> = ({ site, x, y }) => {
     >
       <div className="tooltip-header">
         <span className="tooltip-name">{site.name}</span>
-        <span
-          className="tooltip-status"
-          style={{ backgroundColor: status.color }}
-        >
+        <span className="tooltip-status" style={{ backgroundColor: status.color }}>
           {status.label}
         </span>
       </div>
@@ -212,24 +205,10 @@ export const PortfolioMap: React.FC<PortfolioMapProps> = ({
           {/* Grid lines */}
           <g className="map-grid" opacity={0.1}>
             {[...Array(10)].map((_, i) => (
-              <line
-                key={`h-${i}`}
-                x1={0}
-                y1={i * 50}
-                x2={800}
-                y2={i * 50}
-                stroke="currentColor"
-              />
+              <line key={`h-${i}`} x1={0} y1={i * 50} x2={800} y2={i * 50} stroke="currentColor" />
             ))}
             {[...Array(16)].map((_, i) => (
-              <line
-                key={`v-${i}`}
-                x1={i * 50}
-                y1={0}
-                x2={i * 50}
-                y2={500}
-                stroke="currentColor"
-              />
+              <line key={`v-${i}`} x1={i * 50} y1={0} x2={i * 50} y2={500} stroke="currentColor" />
             ))}
           </g>
 
@@ -256,9 +235,7 @@ export const PortfolioMap: React.FC<PortfolioMapProps> = ({
         </svg>
 
         {/* Tooltip */}
-        {hoveredSite && (
-          <SiteTooltip site={hoveredSite} x={mousePos.x} y={mousePos.y} />
-        )}
+        {hoveredSite && <SiteTooltip site={hoveredSite} x={mousePos.x} y={mousePos.y} />}
       </div>
 
       {/* Legend */}

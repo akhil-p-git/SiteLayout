@@ -95,12 +95,11 @@ export const SiteComparisonTable: React.FC<SiteComparisonTableProps> = ({
     return (
       <div className="score-cell">
         <div className="score-bar-container">
-          <div
-            className="score-bar"
-            style={{ width: `${score}%`, backgroundColor: color }}
-          />
+          <div className="score-bar" style={{ width: `${score}%`, backgroundColor: color }} />
         </div>
-        <span className="score-value" style={{ color }}>{score}</span>
+        <span className="score-value" style={{ color }}>
+          {score}
+        </span>
       </div>
     );
   };
@@ -108,10 +107,7 @@ export const SiteComparisonTable: React.FC<SiteComparisonTableProps> = ({
   const renderStatusBadge = (status: SiteData['status']) => {
     const config = STATUS_CONFIG[status];
     return (
-      <span
-        className="status-badge"
-        style={{ backgroundColor: config.color }}
-      >
+      <span className="status-badge" style={{ backgroundColor: config.color }}>
         {config.label}
       </span>
     );
@@ -196,9 +192,7 @@ export const SiteComparisonTable: React.FC<SiteComparisonTableProps> = ({
             {sortedSites.length === 0 && (
               <tr className="empty-row">
                 <td colSpan={COLUMNS.length + 2}>
-                  <div className="empty-message">
-                    No sites match the current filters
-                  </div>
+                  <div className="empty-message">No sites match the current filters</div>
                 </td>
               </tr>
             )}

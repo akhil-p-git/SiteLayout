@@ -59,7 +59,9 @@ export function UploadResult({ result, type, onDismiss, onUseData }: UploadResul
   );
 
   // Render bounds
-  const renderBounds = (bounds: { minLat: number; maxLat: number; minLng: number; maxLng: number } | null) => {
+  const renderBounds = (
+    bounds: { minLat: number; maxLat: number; minLng: number; maxLng: number } | null
+  ) => {
     if (!bounds) return null;
     return (
       <div className="result-bounds">
@@ -103,7 +105,10 @@ export function UploadResult({ result, type, onDismiss, onUseData }: UploadResul
   );
 
   // Render validation status
-  const renderValidation = (validation: { valid: boolean; errors?: { id?: string; name?: string; errors: string[] }[] }) => (
+  const renderValidation = (validation: {
+    valid: boolean;
+    errors?: { id?: string; name?: string; errors: string[] }[];
+  }) => (
     <div className={`result-validation ${validation.valid ? 'valid' : 'invalid'}`}>
       <div className="validation-status">
         <span className="status-icon">{validation.valid ? '\u2713' : '\u2717'}</span>
@@ -115,8 +120,8 @@ export function UploadResult({ result, type, onDismiss, onUseData }: UploadResul
         <ul className="validation-errors">
           {validation.errors.map((err, index) => (
             <li key={index} className="validation-error">
-              <strong>{err.name || err.id || `Feature ${index + 1}`}:</strong>
-              {' '}{err.errors?.join(', ')}
+              <strong>{err.name || err.id || `Feature ${index + 1}`}:</strong>{' '}
+              {err.errors?.join(', ')}
             </li>
           ))}
         </ul>
@@ -156,11 +161,7 @@ export function UploadResult({ result, type, onDismiss, onUseData }: UploadResul
       {renderValidation(data.validation)}
       {data.polygons.length > 0 && onUseData && (
         <div className="result-actions">
-          <button
-            type="button"
-            className="btn-use-data"
-            onClick={() => onUseData(data.polygons)}
-          >
+          <button type="button" className="btn-use-data" onClick={() => onUseData(data.polygons)}>
             Use as Site Boundary
           </button>
         </div>
@@ -242,9 +243,7 @@ export function UploadResult({ result, type, onDismiss, onUseData }: UploadResul
       <div className="result-validation-summary">
         <h4>Validation Summary</h4>
         <div className={`validation-summary ${data.validation.valid ? 'valid' : 'invalid'}`}>
-          <div className="summary-icon">
-            {data.validation.valid ? '\u2713' : '\u2717'}
-          </div>
+          <div className="summary-icon">{data.validation.valid ? '\u2713' : '\u2717'}</div>
           <div className="summary-details">
             <span className="summary-status">
               {data.validation.valid ? 'File is valid' : 'File has issues'}

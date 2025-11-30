@@ -6,11 +6,12 @@ optimal road routes that respect slope constraints and avoid exclusion zones.
 """
 
 import heapq
-import numpy as np
-from dataclasses import dataclass, field
-from typing import List, Tuple, Optional, Set, Dict, Any
+from dataclasses import dataclass
 from enum import Enum
-from shapely.geometry import Point, LineString, Polygon, MultiPolygon
+from typing import Any, Optional
+
+import numpy as np
+from shapely.geometry import LineString, Point, Polygon
 from shapely.ops import unary_union
 
 
@@ -78,13 +79,13 @@ class PathNode:
 class RoadSegment:
     """A segment of road between two points."""
 
-    start: Tuple[float, float]
-    end: Tuple[float, float]
+    start: tuple[float, float]
+    end: tuple[float, float]
     length: float
     gradient: float  # percent
     direction: float  # degrees
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "start": {"x": self.start[0], "y": self.start[1]},
             "end": {"x": self.end[0], "y": self.end[1]},
@@ -99,16 +100,16 @@ class RoadPath:
     """A complete road path from start to end."""
 
     path_id: str
-    start_point: Tuple[float, float]
-    end_point: Tuple[float, float]
-    waypoints: List[Tuple[float, float]]
-    segments: List[RoadSegment]
+    start_point: tuple[float, float]
+    end_point: tuple[float, float]
+    waypoints: list[tuple[float, float]]
+    segments: list[RoadSegment]
     total_length: float
     max_gradient: float
     avg_gradient: float
     geometry: LineString
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "path_id": self.path_id,
             "start_point": {"x": self.start_point[0], "y": self.start_point[1]},
@@ -130,12 +131,12 @@ class RoadNetwork:
     """Complete road network for a site."""
 
     network_id: str
-    entry_point: Tuple[float, float]
-    paths: List[RoadPath]
+    entry_point: tuple[float, float]
+    paths: list[RoadPath]
     total_length: float
     coverage_area: float
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "network_id": self.network_id,
             "entry_point": {"x": self.entry_point[0], "y": self.entry_point[1]},
@@ -156,11 +157,11 @@ class TerrainAwarePathfinder:
     def __init__(
         self,
         boundary: Polygon,
-        elevation_data: Optional[np.ndarray] = None,
-        slope_data: Optional[np.ndarray] = None,
-        exclusion_zones: Optional[List[Polygon]] = None,
-        config: Optional[PathfindingConfig] = None,
-        bounds: Optional[Tuple[float, float, float, float]] = None,
+        elevation_data: np.ndarray | None = None,
+        slope_data: np.ndarray | None = None,
+        exclusion_zones: list[Polygon] | None = None,
+        config: PathfindingConfig | None = None,
+        bounds: tuple[float, float, float, float] | None = None,
     ):
         self.boundary = boundary
         self.elevation_data = elevation_data
@@ -261,13 +262,13 @@ class TerrainAwarePathfinder:
                         * 0.5
                     )
 
-    def _grid_to_world(self, col: int, row: int) -> Tuple[float, float]:
+    def _grid_to_world(self, col: int, row: int) -> tuple[float, float]:
         """Convert grid coordinates to world coordinates."""
         x = self.min_x + col * self.config.grid_resolution
         y = self.max_y - row * self.config.grid_resolution  # Y is inverted
         return (x, y)
 
-    def _world_to_grid(self, x: float, y: float) -> Tuple[int, int]:
+    def _world_to_grid(self, x: float, y: float) -> tuple[int, int]:
         """Convert world coordinates to grid coordinates."""
         col = int((x - self.min_x) / self.config.grid_resolution)
         row = int((self.max_y - y) / self.config.grid_resolution)
@@ -275,7 +276,7 @@ class TerrainAwarePathfinder:
         row = max(0, min(row, self.grid_rows - 1))
         return (col, row)
 
-    def _get_neighbors(self, node: PathNode) -> List[Tuple[PathNode, float]]:
+    def _get_neighbors(self, node: PathNode) -> list[tuple[PathNode, float]]:
         """Get valid neighboring nodes with movement costs."""
         neighbors = []
 
@@ -346,9 +347,9 @@ class TerrainAwarePathfinder:
 
     def find_path(
         self,
-        start: Tuple[float, float],
-        end: Tuple[float, float],
-    ) -> Optional[List[Tuple[float, float]]]:
+        start: tuple[float, float],
+        end: tuple[float, float],
+    ) -> list[tuple[float, float]] | None:
         """
         Find optimal path between two points using A*.
 
@@ -375,14 +376,14 @@ class TerrainAwarePathfinder:
         start_node.h_cost = self._heuristic(start_node, goal_node)
 
         # Priority queue (min-heap)
-        open_set: List[PathNode] = [start_node]
+        open_set: list[PathNode] = [start_node]
         heapq.heapify(open_set)
 
         # Visited nodes
-        closed_set: Set[Tuple[int, int]] = set()
+        closed_set: set[tuple[int, int]] = set()
 
         # Node lookup for updating costs
-        node_map: Dict[Tuple[int, int], PathNode] = {(start_col, start_row): start_node}
+        node_map: dict[tuple[int, int], PathNode] = {(start_col, start_row): start_node}
 
         while open_set:
             current = heapq.heappop(open_set)
@@ -415,10 +416,10 @@ class TerrainAwarePathfinder:
 
         return None  # No path found
 
-    def _reconstruct_path(self, end_node: PathNode) -> List[Tuple[float, float]]:
+    def _reconstruct_path(self, end_node: PathNode) -> list[tuple[float, float]]:
         """Reconstruct path from end node to start."""
         path = []
-        current: Optional[PathNode] = end_node
+        current: PathNode | None = end_node
 
         while current is not None:
             world_coords = self._grid_to_world(current.x, current.y)
@@ -434,8 +435,8 @@ class TerrainAwarePathfinder:
         return path
 
     def _smooth_path(
-        self, path: List[Tuple[float, float]]
-    ) -> List[Tuple[float, float]]:
+        self, path: list[tuple[float, float]]
+    ) -> list[tuple[float, float]]:
         """Smooth path using iterative averaging."""
         if len(path) < 3:
             return path
@@ -468,8 +469,8 @@ class TerrainAwarePathfinder:
 
     def calculate_road_segments(
         self,
-        waypoints: List[Tuple[float, float]],
-    ) -> List[RoadSegment]:
+        waypoints: list[tuple[float, float]],
+    ) -> list[RoadSegment]:
         """Calculate road segments with gradients from waypoints."""
         segments = []
 
@@ -504,7 +505,7 @@ class TerrainAwarePathfinder:
 
         return segments
 
-    def _get_elevation(self, x: float, y: float) -> Optional[float]:
+    def _get_elevation(self, x: float, y: float) -> float | None:
         """Get elevation at a point."""
         if self.elevation_data is None:
             return None
@@ -520,14 +521,14 @@ class TerrainAwarePathfinder:
 
 
 def generate_road_network(
-    boundary: Dict[str, Any],
-    entry_point: Tuple[float, float],
-    destinations: List[Tuple[float, float]],
-    exclusion_zones: Optional[List[Dict[str, Any]]] = None,
-    elevation_data: Optional[np.ndarray] = None,
-    slope_data: Optional[np.ndarray] = None,
-    config: Optional[Dict[str, Any]] = None,
-) -> Dict[str, Any]:
+    boundary: dict[str, Any],
+    entry_point: tuple[float, float],
+    destinations: list[tuple[float, float]],
+    exclusion_zones: list[dict[str, Any]] | None = None,
+    elevation_data: np.ndarray | None = None,
+    slope_data: np.ndarray | None = None,
+    config: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     """
     Generate a road network connecting entry point to destinations.
 
@@ -543,8 +544,9 @@ def generate_road_network(
     Returns:
         Road network as dictionary
     """
-    from shapely.geometry import shape
     import uuid
+
+    from shapely.geometry import shape
 
     # Convert boundary
     boundary_poly = shape(boundary)

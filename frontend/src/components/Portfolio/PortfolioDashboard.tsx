@@ -192,10 +192,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({ filters, onFiltersChange, sit
   );
 };
 
-export const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({
-  sites,
-  onSiteSelect,
-}) => {
+export const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ sites, onSiteSelect }) => {
   const [viewMode, setViewMode] = useState<ViewMode>('table');
   const [filters, setFilters] = useState<FilterCriteria>({});
   const [selectedSites, setSelectedSites] = useState<string[]>([]);
@@ -207,15 +204,16 @@ export const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({
   const handleStatusFilter = useCallback((status: SiteStatus) => {
     setFilters((prev) => ({
       ...prev,
-      status: prev.status?.includes(status)
-        ? prev.status.filter((s) => s !== status)
-        : [status],
+      status: prev.status?.includes(status) ? prev.status.filter((s) => s !== status) : [status],
     }));
   }, []);
 
-  const handleSiteClick = useCallback((site: SiteData) => {
-    onSiteSelect?.(site);
-  }, [onSiteSelect]);
+  const handleSiteClick = useCallback(
+    (site: SiteData) => {
+      onSiteSelect?.(site);
+    },
+    [onSiteSelect]
+  );
 
   return (
     <div className="portfolio-dashboard">
@@ -266,20 +264,13 @@ export const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({
       <div className="dashboard-body">
         {showFilters && (
           <aside className="dashboard-sidebar">
-            <FilterPanel
-              filters={filters}
-              onFiltersChange={setFilters}
-              sites={sites}
-            />
+            <FilterPanel filters={filters} onFiltersChange={setFilters} sites={sites} />
           </aside>
         )}
 
         <div className="dashboard-main">
           <div className="summary-row">
-            <PortfolioSummary
-              summary={summary}
-              onStatusClick={handleStatusFilter}
-            />
+            <PortfolioSummary summary={summary} onStatusClick={handleStatusFilter} />
           </div>
 
           <div className="content-area">
@@ -304,10 +295,7 @@ export const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({
             )}
 
             {viewMode === 'pipeline' && (
-              <PipelineKanban
-                sites={filteredSites}
-                onSiteClick={handleSiteClick}
-              />
+              <PipelineKanban sites={filteredSites} onSiteClick={handleSiteClick} />
             )}
           </div>
         </div>

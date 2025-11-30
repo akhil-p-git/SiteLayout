@@ -16,7 +16,7 @@ export enum AssetType {
 }
 
 export interface AssetDimensions {
-  width: number;  // meters
+  width: number; // meters
   length: number; // meters
   height: number; // meters
 }
@@ -212,17 +212,11 @@ export function calculateAssetFootprint(asset: PlacedAsset): Polygon {
     const rad = (rotation * Math.PI) / 180;
     const cos = Math.cos(rad);
     const sin = Math.sin(rad);
-    corners = corners.map(([x, y]) => [
-      x * cos - y * sin,
-      x * sin + y * cos,
-    ]);
+    corners = corners.map(([x, y]) => [x * cos - y * sin, x * sin + y * cos]);
   }
 
   // Translate to position
-  const coordinates = corners.map(([x, y]) => [
-    position.x + x,
-    position.y + y,
-  ]);
+  const coordinates = corners.map(([x, y]) => [position.x + x, position.y + y]);
 
   // Close the polygon
   coordinates.push(coordinates[0]);

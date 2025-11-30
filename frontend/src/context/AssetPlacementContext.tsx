@@ -1,11 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import React, {
-  createContext,
-  useContext,
-  useReducer,
-  useCallback,
-  type ReactNode,
-} from 'react';
+import React, { createContext, useContext, useReducer, useCallback, type ReactNode } from 'react';
 import {
   type PlacedAsset,
   type AssetType,
@@ -40,10 +34,7 @@ const initialHistory: HistoryState = {
   future: [],
 };
 
-function assetReducer(
-  state: AssetPlacementState,
-  action: AssetAction
-): AssetPlacementState {
+function assetReducer(state: AssetPlacementState, action: AssetAction): AssetPlacementState {
   switch (action.type) {
     case 'ADD_ASSET':
       return {
@@ -54,18 +45,16 @@ function assetReducer(
     case 'UPDATE_ASSET':
       return {
         ...state,
-        assets: state.assets.map(asset =>
-          asset.id === action.payload.id
-            ? { ...asset, ...action.payload.updates }
-            : asset
+        assets: state.assets.map((asset) =>
+          asset.id === action.payload.id ? { ...asset, ...action.payload.updates } : asset
         ),
       };
 
     case 'REMOVE_ASSET':
       return {
         ...state,
-        assets: state.assets.filter(asset => asset.id !== action.payload),
-        selectedAssetIds: state.selectedAssetIds.filter(id => id !== action.payload),
+        assets: state.assets.filter((asset) => asset.id !== action.payload),
+        selectedAssetIds: state.selectedAssetIds.filter((id) => id !== action.payload),
       };
 
     case 'SELECT_ASSET':
@@ -74,7 +63,7 @@ function assetReducer(
         selectedAssetIds: state.selectedAssetIds.includes(action.payload)
           ? state.selectedAssetIds
           : [...state.selectedAssetIds, action.payload],
-        assets: state.assets.map(asset => ({
+        assets: state.assets.map((asset) => ({
           ...asset,
           isSelected: asset.id === action.payload ? true : asset.isSelected,
         })),
@@ -83,8 +72,8 @@ function assetReducer(
     case 'DESELECT_ASSET':
       return {
         ...state,
-        selectedAssetIds: state.selectedAssetIds.filter(id => id !== action.payload),
-        assets: state.assets.map(asset => ({
+        selectedAssetIds: state.selectedAssetIds.filter((id) => id !== action.payload),
+        assets: state.assets.map((asset) => ({
           ...asset,
           isSelected: asset.id === action.payload ? false : asset.isSelected,
         })),
@@ -93,15 +82,15 @@ function assetReducer(
     case 'SELECT_ALL':
       return {
         ...state,
-        selectedAssetIds: state.assets.map(a => a.id),
-        assets: state.assets.map(asset => ({ ...asset, isSelected: true })),
+        selectedAssetIds: state.assets.map((a) => a.id),
+        assets: state.assets.map((asset) => ({ ...asset, isSelected: true })),
       };
 
     case 'DESELECT_ALL':
       return {
         ...state,
         selectedAssetIds: [],
-        assets: state.assets.map(asset => ({ ...asset, isSelected: false })),
+        assets: state.assets.map((asset) => ({ ...asset, isSelected: false })),
       };
 
     case 'SET_DRAGGED_TYPE':
@@ -232,10 +221,7 @@ interface AssetPlacementProviderProps {
   onValidate?: (asset: PlacedAsset) => Promise<PlacedAsset>;
 }
 
-export function AssetPlacementProvider({
-  children,
-  onValidate,
-}: AssetPlacementProviderProps) {
+export function AssetPlacementProvider({ children, onValidate }: AssetPlacementProviderProps) {
   const [state, dispatch] = useReducer(assetReducer, initialState);
   const [history, dispatchHistory] = useReducer(historyReducer, initialHistory);
 
@@ -248,7 +234,10 @@ export function AssetPlacementProvider({
   const addAsset = useCallback(
     (type: AssetType, position: { x: number; y: number }): PlacedAsset => {
       const snappedPosition = state.snapToGrid
-        ? { x: snapToGridFn(position.x, state.gridSize), y: snapToGridFn(position.y, state.gridSize) }
+        ? {
+            x: snapToGridFn(position.x, state.gridSize),
+            y: snapToGridFn(position.y, state.gridSize),
+          }
         : position;
 
       const asset = createPlacedAsset(type, snappedPosition);
@@ -285,7 +274,7 @@ export function AssetPlacementProvider({
   const removeSelectedAssets = useCallback(() => {
     if (state.selectedAssetIds.length === 0) return;
     pushHistory();
-    state.selectedAssetIds.forEach(id => {
+    state.selectedAssetIds.forEach((id) => {
       dispatch({ type: 'REMOVE_ASSET', payload: id });
     });
   }, [state.selectedAssetIds, pushHistory]);
@@ -367,8 +356,8 @@ export function AssetPlacementProvider({
     (degrees: number) => {
       if (state.selectedAssetIds.length === 0) return;
       pushHistory();
-      state.selectedAssetIds.forEach(id => {
-        const asset = state.assets.find(a => a.id === id);
+      state.selectedAssetIds.forEach((id) => {
+        const asset = state.assets.find((a) => a.id === id);
         if (asset) {
           dispatch({
             type: 'UPDATE_ASSET',
@@ -387,8 +376,8 @@ export function AssetPlacementProvider({
     (dx: number, dy: number) => {
       if (state.selectedAssetIds.length === 0) return;
       pushHistory();
-      state.selectedAssetIds.forEach(id => {
-        const asset = state.assets.find(a => a.id === id);
+      state.selectedAssetIds.forEach((id) => {
+        const asset = state.assets.find((a) => a.id === id);
         if (asset) {
           dispatch({
             type: 'UPDATE_ASSET',
@@ -412,8 +401,8 @@ export function AssetPlacementProvider({
     if (state.selectedAssetIds.length === 0) return;
     pushHistory();
     const offset = 10; // meters offset for duplicates
-    state.selectedAssetIds.forEach(id => {
-      const asset = state.assets.find(a => a.id === id);
+    state.selectedAssetIds.forEach((id) => {
+      const asset = state.assets.find((a) => a.id === id);
       if (asset) {
         const newAsset = createPlacedAsset(asset.type, {
           x: asset.position.x + offset,
@@ -426,25 +415,22 @@ export function AssetPlacementProvider({
   }, [state.selectedAssetIds, state.assets, pushHistory]);
 
   // Validation
-  const validateAsset = useCallback(
-    (asset: PlacedAsset): PlacedAsset => {
-      // Basic validation - in production, call the constraint API
-      const violations: PlacedAsset['violations'] = [];
+  const validateAsset = useCallback((asset: PlacedAsset): PlacedAsset => {
+    // Basic validation - in production, call the constraint API
+    const violations: PlacedAsset['violations'] = [];
 
-      // This would be replaced with actual constraint checking
-      // For now, just return the asset as valid
-      return {
-        ...asset,
-        isValid: violations.length === 0,
-        violations,
-      };
-    },
-    []
-  );
+    // This would be replaced with actual constraint checking
+    // For now, just return the asset as valid
+    return {
+      ...asset,
+      isValid: violations.length === 0,
+      violations,
+    };
+  }, []);
 
   const validateAllAssets = useCallback(async () => {
     const validatedAssets = await Promise.all(
-      state.assets.map(async asset => {
+      state.assets.map(async (asset) => {
         if (onValidate) {
           return onValidate(asset);
         }
@@ -481,11 +467,7 @@ export function AssetPlacementProvider({
     validateAllAssets,
   };
 
-  return (
-    <AssetPlacementContext.Provider value={value}>
-      {children}
-    </AssetPlacementContext.Provider>
-  );
+  return <AssetPlacementContext.Provider value={value}>{children}</AssetPlacementContext.Provider>;
 }
 
 export function useAssetPlacement(): AssetPlacementContextValue {

@@ -32,14 +32,14 @@ export function LayoutMetricsPanel({
       { label: 'Hauling', value: metrics.cost.haulCost, color: '#f59e0b' },
       { label: 'Import', value: metrics.cost.importCost, color: '#8b5cf6' },
       { label: 'Export', value: metrics.cost.exportCost, color: '#6b7280' },
-    ].filter(d => d.value > 0);
+    ].filter((d) => d.value > 0);
   }, [metrics]);
 
   const assetChartData = useMemo((): ChartDataPoint[] => {
     if (!metrics) return [];
     const colors = ['#22c55e', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'];
     return Object.entries(metrics.assets.byType).map(([type, count], i) => ({
-      label: type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()),
+      label: type.replace('_', ' ').replace(/\b\w/g, (l) => l.toUpperCase()),
       value: count,
       color: colors[i % colors.length],
     }));
@@ -294,7 +294,7 @@ export function LayoutMetricsPanel({
         {Object.entries(metrics.assets.byType).map(([type, count]) => (
           <MetricRow
             key={type}
-            label={type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+            label={type.replace('_', ' ').replace(/\b\w/g, (l) => l.toUpperCase())}
             value={count}
             format={{ type: 'number' }}
           />

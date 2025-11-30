@@ -1,11 +1,7 @@
 import { useEffect, useCallback, useRef } from 'react';
 import { useMapContext } from '../../context/MapContext';
 import { useAssetPlacement } from '../../context/AssetPlacementContext';
-import {
-  ASSET_DEFINITIONS,
-  calculateAssetFootprint,
-  type AssetType,
-} from '../../types/asset';
+import { ASSET_DEFINITIONS, calculateAssetFootprint, type AssetType } from '../../types/asset';
 
 const ASSETS_SOURCE_ID = 'placed-assets-source';
 const ASSETS_FILL_LAYER_ID = 'placed-assets-fill';
@@ -15,14 +11,8 @@ const VIOLATIONS_LAYER_ID = 'placed-assets-violations';
 
 export function PlacedAssetRenderer() {
   const { map, isLoaded } = useMapContext();
-  const {
-    assets,
-    selectedAssetIds,
-    showConstraints,
-    selectAsset,
-    updateAsset,
-    deselectAll,
-  } = useAssetPlacement();
+  const { assets, selectedAssetIds, showConstraints, selectAsset, updateAsset, deselectAll } =
+    useAssetPlacement();
 
   const isDragging = useRef(false);
   const dragAssetId = useRef<string | null>(null);
@@ -30,7 +20,7 @@ export function PlacedAssetRenderer() {
 
   // Convert assets to GeoJSON
   const assetsToGeoJSON = useCallback(() => {
-    const features = assets.map(asset => {
+    const features = assets.map((asset) => {
       const footprint = calculateAssetFootprint(asset);
       const definition = ASSET_DEFINITIONS[asset.type];
 
@@ -59,8 +49,8 @@ export function PlacedAssetRenderer() {
 
   // Violations GeoJSON (shows invalid areas)
   const violationsToGeoJSON = useCallback(() => {
-    const invalidAssets = assets.filter(a => !a.isValid);
-    const features = invalidAssets.map(asset => {
+    const invalidAssets = assets.filter((a) => !a.isValid);
+    const features = invalidAssets.map((asset) => {
       const footprint = calculateAssetFootprint(asset);
       return {
         type: 'Feature' as const,
@@ -105,12 +95,7 @@ export function PlacedAssetRenderer() {
         source: ASSETS_SOURCE_ID,
         paint: {
           'fill-color': ['get', 'color'],
-          'fill-opacity': [
-            'case',
-            ['get', 'isSelected'],
-            0.7,
-            0.5,
-          ],
+          'fill-opacity': ['case', ['get', 'isSelected'], 0.7, 0.5],
         },
       });
     }
@@ -122,18 +107,8 @@ export function PlacedAssetRenderer() {
         type: 'line',
         source: ASSETS_SOURCE_ID,
         paint: {
-          'line-color': [
-            'case',
-            ['get', 'isSelected'],
-            '#ffffff',
-            ['get', 'color'],
-          ],
-          'line-width': [
-            'case',
-            ['get', 'isSelected'],
-            3,
-            2,
-          ],
+          'line-color': ['case', ['get', 'isSelected'], '#ffffff', ['get', 'color']],
+          'line-width': ['case', ['get', 'isSelected'], 3, 2],
         },
       });
     }
@@ -171,7 +146,8 @@ export function PlacedAssetRenderer() {
       if (map.getLayer(VIOLATIONS_LAYER_ID)) map.removeLayer(VIOLATIONS_LAYER_ID);
       if (map.getLayer(ASSETS_OUTLINE_LAYER_ID)) map.removeLayer(ASSETS_OUTLINE_LAYER_ID);
       if (map.getLayer(ASSETS_FILL_LAYER_ID)) map.removeLayer(ASSETS_FILL_LAYER_ID);
-      if (map.getSource(`${ASSETS_SOURCE_ID}-violations`)) map.removeSource(`${ASSETS_SOURCE_ID}-violations`);
+      if (map.getSource(`${ASSETS_SOURCE_ID}-violations`))
+        map.removeSource(`${ASSETS_SOURCE_ID}-violations`);
       if (map.getSource(ASSETS_SOURCE_ID)) map.removeSource(ASSETS_SOURCE_ID);
     };
   }, [map, isLoaded]);
@@ -198,7 +174,15 @@ export function PlacedAssetRenderer() {
         showConstraints ? 'visible' : 'none'
       );
     }
-  }, [map, isLoaded, assets, selectedAssetIds, showConstraints, assetsToGeoJSON, violationsToGeoJSON]);
+  }, [
+    map,
+    isLoaded,
+    assets,
+    selectedAssetIds,
+    showConstraints,
+    assetsToGeoJSON,
+    violationsToGeoJSON,
+  ]);
 
   // Click handler for selection
   useEffect(() => {
@@ -254,8 +238,8 @@ export function PlacedAssetRenderer() {
       const dy = e.lngLat.lat - dragStartPos.current.lat;
 
       // Update all selected assets
-      selectedAssetIds.forEach(id => {
-        const asset = assets.find(a => a.id === id);
+      selectedAssetIds.forEach((id) => {
+        const asset = assets.find((a) => a.id === id);
         if (asset) {
           updateAsset(id, {
             position: {

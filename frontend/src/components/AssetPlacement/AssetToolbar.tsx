@@ -32,12 +32,7 @@ export function AssetToolbar({ className = '' }: AssetToolbarProps) {
     <div className={`asset-toolbar ${className}`}>
       {/* Undo/Redo */}
       <div className="toolbar-group">
-        <button
-          className="toolbar-btn"
-          onClick={undo}
-          disabled={!canUndo}
-          title="Undo (Ctrl+Z)"
-        >
+        <button className="toolbar-btn" onClick={undo} disabled={!canUndo} title="Undo (Ctrl+Z)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M3 10h10a5 5 0 0 1 5 5v2" />
             <polyline points="3 10 9 4" />
@@ -62,11 +57,7 @@ export function AssetToolbar({ className = '' }: AssetToolbarProps) {
 
       {/* Selection operations */}
       <div className="toolbar-group">
-        <button
-          className="toolbar-btn"
-          onClick={selectAll}
-          title="Select All (Ctrl+A)"
-        >
+        <button className="toolbar-btn" onClick={selectAll} title="Select All (Ctrl+A)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <rect x="3" y="3" width="18" height="18" rx="2" />
             <path d="M9 9h6v6H9z" />
@@ -155,7 +146,7 @@ export function AssetToolbar({ className = '' }: AssetToolbarProps) {
           <select
             className="grid-size-select"
             value={gridSize}
-            onChange={e => setGridSize(Number(e.target.value))}
+            onChange={(e) => setGridSize(Number(e.target.value))}
             title="Grid Size"
           >
             <option value="1">1m</option>

@@ -118,7 +118,14 @@ export interface FilterCriteria {
 }
 
 export interface SortConfig {
-  field: keyof SiteData | keyof SiteMetrics | keyof SiteScores | 'name' | 'status' | 'capacity' | 'score';
+  field:
+    | keyof SiteData
+    | keyof SiteMetrics
+    | keyof SiteScores
+    | 'name'
+    | 'status'
+    | 'capacity'
+    | 'score';
   direction: SortDirection;
 }
 
@@ -143,7 +150,10 @@ export const STATUS_CONFIG: Record<SiteStatus, { label: string; color: string; o
 };
 
 // Helper functions
-export function calculateCompositeScore(scores: Omit<SiteScores, 'composite'>, weights: ScoreWeights): number {
+export function calculateCompositeScore(
+  scores: Omit<SiteScores, 'composite'>,
+  weights: ScoreWeights
+): number {
   const weighted =
     scores.terrain * weights.terrain +
     scores.earthwork * weights.earthwork +
@@ -152,7 +162,11 @@ export function calculateCompositeScore(scores: Omit<SiteScores, 'composite'>, w
     scores.cost * weights.cost;
 
   const totalWeight =
-    weights.terrain + weights.earthwork + weights.accessibility + weights.environmental + weights.cost;
+    weights.terrain +
+    weights.earthwork +
+    weights.accessibility +
+    weights.environmental +
+    weights.cost;
 
   return Math.round(weighted / totalWeight);
 }

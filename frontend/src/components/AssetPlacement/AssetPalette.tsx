@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-  AssetType,
-  ASSET_DEFINITIONS,
-  type AssetDefinition,
-} from '../../types/asset';
+import { AssetType, ASSET_DEFINITIONS, type AssetDefinition } from '../../types/asset';
 import './AssetPalette.css';
 
 interface AssetPaletteProps {
@@ -58,10 +54,7 @@ function AssetItem({ definition, onDragStart, onDragEnd, disabled }: AssetItemPr
       onDragEnd={handleDragEnd}
       title={`${definition.name}\nSize: ${definition.dimensions.width}m × ${definition.dimensions.length}m\nMax slope: ${definition.maxSlope}°`}
     >
-      <div
-        className="asset-icon"
-        style={{ backgroundColor: definition.color }}
-      >
+      <div className="asset-icon" style={{ backgroundColor: definition.color }}>
         <span>{definition.icon}</span>
       </div>
       <div className="asset-info">
@@ -92,7 +85,7 @@ export function AssetPalette({
         <div className="asset-group">
           <div className="group-label">Infrastructure</div>
           <div className="asset-grid">
-            {[AssetType.SUBSTATION, AssetType.BESS, AssetType.O_AND_M].map(type => (
+            {[AssetType.SUBSTATION, AssetType.BESS, AssetType.O_AND_M].map((type) => (
               <AssetItem
                 key={type}
                 definition={ASSET_DEFINITIONS[type]}
@@ -108,7 +101,7 @@ export function AssetPalette({
         <div className="asset-group">
           <div className="group-label">Site Facilities</div>
           <div className="asset-grid">
-            {[AssetType.PARKING, AssetType.LAYDOWN].map(type => (
+            {[AssetType.PARKING, AssetType.LAYDOWN].map((type) => (
               <AssetItem
                 key={type}
                 definition={ASSET_DEFINITIONS[type]}
@@ -124,15 +117,17 @@ export function AssetPalette({
         <div className="asset-group">
           <div className="group-label">Equipment</div>
           <div className="asset-grid">
-            {[AssetType.INVERTER_PAD, AssetType.TRANSFORMER_PAD, AssetType.WEATHER_STATION].map(type => (
-              <AssetItem
-                key={type}
-                definition={ASSET_DEFINITIONS[type]}
-                onDragStart={onDragStart}
-                onDragEnd={onDragEnd}
-                disabled={disabled}
-              />
-            ))}
+            {[AssetType.INVERTER_PAD, AssetType.TRANSFORMER_PAD, AssetType.WEATHER_STATION].map(
+              (type) => (
+                <AssetItem
+                  key={type}
+                  definition={ASSET_DEFINITIONS[type]}
+                  onDragStart={onDragStart}
+                  onDragEnd={onDragEnd}
+                  disabled={disabled}
+                />
+              )
+            )}
           </div>
         </div>
       </div>

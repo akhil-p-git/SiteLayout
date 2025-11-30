@@ -26,7 +26,7 @@ import {
  * Round coordinates to specified precision
  */
 function roundCoordinates(coords: number[], precision: number): number[] {
-  return coords.map(c => Number(c.toFixed(precision)));
+  return coords.map((c) => Number(c.toFixed(precision)));
 }
 
 /**
@@ -49,10 +49,7 @@ function roundGeometryCoordinates(geometry: Geometry, precision: number): Geomet
 /**
  * Export layout data to GeoJSON format
  */
-export function exportToGeoJSON(
-  data: LayoutExportData,
-  options: ExportOptions
-): FeatureCollection {
+export function exportToGeoJSON(data: LayoutExportData, options: ExportOptions): FeatureCollection {
   const features: Feature[] = [];
   const precision = options.coordinatePrecision ?? 6;
 
@@ -205,19 +202,27 @@ function generateKMLStyle(style: KMLStyle): string {
         <color>${style.fillColor}</color>
         <outline>1</outline>
       </PolyStyle>
-      ${style.iconHref ? `
+      ${
+        style.iconHref
+          ? `
       <IconStyle>
         <scale>${style.iconScale ?? 1}</scale>
         <Icon>
           <href>${style.iconHref}</href>
         </Icon>
       </IconStyle>
-      ` : ''}
-      ${style.labelColor ? `
+      `
+          : ''
+      }
+      ${
+        style.labelColor
+          ? `
       <LabelStyle>
         <color>${style.labelColor}</color>
       </LabelStyle>
-      ` : ''}
+      `
+          : ''
+      }
     </Style>`;
 }
 
@@ -225,7 +230,7 @@ function generateKMLStyle(style: KMLStyle): string {
  * Convert coordinates array to KML coordinate string
  */
 function coordsToKML(coords: number[][]): string {
-  return coords.map(c => `${c[0]},${c[1]},${c[2] ?? 0}`).join(' ');
+  return coords.map((c) => `${c[0]},${c[1]},${c[2] ?? 0}`).join(' ');
 }
 
 /**
@@ -254,13 +259,17 @@ function generatePolygonPlacemark(
             <coordinates>${coordsToKML(outerRing)}</coordinates>
           </LinearRing>
         </outerBoundaryIs>
-        ${innerRings.map(ring => `
+        ${innerRings
+          .map(
+            (ring) => `
         <innerBoundaryIs>
           <LinearRing>
             <coordinates>${coordsToKML(ring)}</coordinates>
           </LinearRing>
         </innerBoundaryIs>
-        `).join('')}
+        `
+          )
+          .join('')}
       </Polygon>
     </Placemark>`;
 }
@@ -326,45 +335,45 @@ function escapeXml(str: string): string {
 /**
  * Export layout data to KML format
  */
-export function exportToKML(
-  data: LayoutExportData,
-  options: ExportOptions
-): string {
+export function exportToKML(data: LayoutExportData, options: ExportOptions): string {
   const styles: string[] = [];
   const folders: string[] = [];
 
   // Generate styles
   if (options.includeStyles) {
     // Default layer styles
-    Object.values(DEFAULT_KML_STYLES).forEach(style => {
+    Object.values(DEFAULT_KML_STYLES).forEach((style) => {
       styles.push(generateKMLStyle(style));
     });
 
     // Asset-specific styles
     Object.entries(ASSET_KML_COLORS).forEach(([assetType, color]) => {
-      styles.push(generateKMLStyle({
-        id: `asset-${assetType}`,
-        lineColor: color,
-        lineWidth: 2,
-        fillColor: `66${color.substring(2)}`, // Add transparency
-      }));
+      styles.push(
+        generateKMLStyle({
+          id: `asset-${assetType}`,
+          lineColor: color,
+          lineWidth: 2,
+          fillColor: `66${color.substring(2)}`, // Add transparency
+        })
+      );
     });
   }
 
   // Boundary folder
   if (options.layers.includes(ExportLayerType.BOUNDARY)) {
     const boundaryPlacemarks: string[] = [];
-    const coords = data.boundary.type === 'Polygon'
-      ? data.boundary.coordinates
-      : data.boundary.coordinates[0];
+    const coords =
+      data.boundary.type === 'Polygon' ? data.boundary.coordinates : data.boundary.coordinates[0];
 
-    boundaryPlacemarks.push(generatePolygonPlacemark(
-      'boundary',
-      'Site Boundary',
-      `Project: ${data.projectName}<br>Total Area: ${data.metadata.totalArea.toFixed(2)} m²`,
-      coords,
-      'boundary-style'
-    ));
+    boundaryPlacemarks.push(
+      generatePolygonPlacemark(
+        'boundary',
+        'Site Boundary',
+        `Project: ${data.projectName}<br>Total Area: ${data.metadata.totalArea.toFixed(2)} m²`,
+        coords,
+        'boundary-style'
+      )
+    );
 
     folders.push(`
       <Folder>
@@ -387,17 +396,17 @@ export function exportToKML(
         ${asset.earthworkVolume !== undefined ? `Earthwork: ${asset.earthworkVolume.toFixed(1)} m³` : ''}
       `;
 
-      const styleId = options.includeStyles
-        ? `asset-${asset.type}`
-        : 'asset-style';
+      const styleId = options.includeStyles ? `asset-${asset.type}` : 'asset-style';
 
-      assetPlacemarks.push(generatePolygonPlacemark(
-        asset.id,
-        asset.name,
-        description,
-        asset.footprint.coordinates,
-        styleId
-      ));
+      assetPlacemarks.push(
+        generatePolygonPlacemark(
+          asset.id,
+          asset.name,
+          description,
+          asset.footprint.coordinates,
+          styleId
+        )
+      );
     }
 
     folders.push(`
@@ -414,13 +423,15 @@ export function exportToKML(
     const roadPlacemarks: string[] = [];
 
     // Entry point
-    roadPlacemarks.push(generatePointPlacemark(
-      'entry-point',
-      'Entry Point',
-      'Site access entry point',
-      data.roads.entryPoint.coordinates,
-      'road-style'
-    ));
+    roadPlacemarks.push(
+      generatePointPlacemark(
+        'entry-point',
+        'Entry Point',
+        'Site access entry point',
+        data.roads.entryPoint.coordinates,
+        'road-style'
+      )
+    );
 
     // Road segments
     for (let i = 0; i < data.roads.segments.length; i++) {
@@ -431,13 +442,15 @@ export function exportToKML(
         Width: ${segment.width}m
       `;
 
-      roadPlacemarks.push(generateLinePlacemark(
-        segment.id,
-        `Road Segment ${i + 1}`,
-        description,
-        segment.geometry.coordinates,
-        'road-style'
-      ));
+      roadPlacemarks.push(
+        generateLinePlacemark(
+          segment.id,
+          `Road Segment ${i + 1}`,
+          description,
+          segment.geometry.coordinates,
+          'road-style'
+        )
+      );
     }
 
     folders.push(`
@@ -461,17 +474,12 @@ export function exportToKML(
         ${zone.reason ? `Reason: ${zone.reason}` : ''}
       `;
 
-      const coords = zone.geometry.type === 'Polygon'
-        ? zone.geometry.coordinates
-        : zone.geometry.coordinates[0];
+      const coords =
+        zone.geometry.type === 'Polygon' ? zone.geometry.coordinates : zone.geometry.coordinates[0];
 
-      zonePlacemarks.push(generatePolygonPlacemark(
-        zone.id,
-        zone.name,
-        description,
-        coords,
-        'exclusion-style'
-      ));
+      zonePlacemarks.push(
+        generatePolygonPlacemark(zone.id, zone.name, description, coords, 'exclusion-style')
+      );
     }
 
     folders.push(`
@@ -506,10 +514,7 @@ export function exportToKML(
 /**
  * Create KMZ file (zipped KML) as Buffer
  */
-export async function exportToKMZ(
-  data: LayoutExportData,
-  options: ExportOptions
-): Promise<Buffer> {
+export async function exportToKMZ(data: LayoutExportData, options: ExportOptions): Promise<Buffer> {
   const kml = exportToKML(data, options);
 
   return new Promise((resolve, reject) => {

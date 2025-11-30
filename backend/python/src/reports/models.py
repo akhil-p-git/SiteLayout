@@ -4,11 +4,11 @@ Report Models
 Data models for PDF report generation.
 """
 
+import base64
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Optional, List, Dict, Any, Tuple
-import base64
+from typing import Any
 
 
 class ReportSection(Enum):
@@ -43,12 +43,12 @@ class ProjectInfo:
 
     project_id: str
     project_name: str
-    client_name: Optional[str] = None
-    location: Optional[str] = None
-    coordinates: Optional[Tuple[float, float]] = None
+    client_name: str | None = None
+    location: str | None = None
+    coordinates: tuple[float, float] | None = None
     total_area_m2: float = 0.0
     report_date: str = field(default_factory=lambda: datetime.now().isoformat())
-    prepared_by: Optional[str] = None
+    prepared_by: str | None = None
     revision: str = "1.0"
 
 
@@ -61,8 +61,8 @@ class MapImage:
     image_data: bytes  # PNG or JPEG bytes
     width_inches: float = 6.5
     height_inches: float = 4.5
-    caption: Optional[str] = None
-    scale: Optional[str] = None
+    caption: str | None = None
+    scale: str | None = None
     north_arrow: bool = True
 
     def to_base64(self) -> str:
@@ -83,7 +83,7 @@ class TerrainSummary:
     mean_slope: float
     dominant_aspect: str
     buildable_area_percent: float
-    slope_class_distribution: Dict[str, float]
+    slope_class_distribution: dict[str, float]
 
 
 @dataclass
@@ -93,15 +93,15 @@ class AssetInfo:
     asset_id: str
     asset_type: str
     name: str
-    dimensions: Tuple[float, float, float]  # width, length, height
+    dimensions: tuple[float, float, float]  # width, length, height
     area_m2: float
-    position: Tuple[float, float]
+    position: tuple[float, float]
     rotation: float
     cut_volume: float
     fill_volume: float
     net_earthwork: float
     is_valid: bool
-    violations: List[str] = field(default_factory=list)
+    violations: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -144,7 +144,7 @@ class CostBreakdown:
     import_cost: float
     export_cost: float
     total_earthwork_cost: float
-    road_cost: Optional[float] = None
+    road_cost: float | None = None
     contingency_percent: float = 10.0
     contingency_amount: float = 0.0
     total_cost: float = 0.0
@@ -163,7 +163,7 @@ class CostBreakdown:
 class ReportConfig:
     """Configuration for report generation."""
 
-    sections: List[ReportSection] = field(
+    sections: list[ReportSection] = field(
         default_factory=lambda: [
             ReportSection.COVER,
             ReportSection.EXECUTIVE_SUMMARY,
@@ -175,7 +175,7 @@ class ReportConfig:
             ReportSection.COST_ESTIMATE,
         ]
     )
-    include_maps: List[MapType] = field(
+    include_maps: list[MapType] = field(
         default_factory=lambda: [
             MapType.SITE_BOUNDARY,
             MapType.SLOPE_ANALYSIS,
@@ -186,9 +186,9 @@ class ReportConfig:
     orientation: str = "portrait"
     include_page_numbers: bool = True
     include_toc: bool = True
-    company_logo: Optional[bytes] = None
+    company_logo: bytes | None = None
     company_name: str = "Site Layouts"
-    footer_text: Optional[str] = None
+    footer_text: str | None = None
 
 
 @dataclass
@@ -197,13 +197,13 @@ class ReportData:
 
     project: ProjectInfo
     config: ReportConfig
-    terrain: Optional[TerrainSummary] = None
-    assets: List[AssetInfo] = field(default_factory=list)
-    roads: List[RoadInfo] = field(default_factory=list)
-    earthwork: Optional[EarthworkSummary] = None
-    costs: Optional[CostBreakdown] = None
-    maps: List[MapImage] = field(default_factory=list)
-    notes: List[str] = field(default_factory=list)
+    terrain: TerrainSummary | None = None
+    assets: list[AssetInfo] = field(default_factory=list)
+    roads: list[RoadInfo] = field(default_factory=list)
+    earthwork: EarthworkSummary | None = None
+    costs: CostBreakdown | None = None
+    maps: list[MapImage] = field(default_factory=list)
+    notes: list[str] = field(default_factory=list)
     exclusion_zone_count: int = 0
     total_road_length: float = 0.0
 
@@ -217,10 +217,10 @@ class ReportResult:
     file_size: int
     page_count: int
     generation_time_ms: float
-    pdf_data: Optional[bytes] = None
-    error: Optional[str] = None
+    pdf_data: bytes | None = None
+    error: str | None = None
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary (without PDF data)."""
         return {
             "success": self.success,

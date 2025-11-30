@@ -4,24 +4,22 @@ Earthwork Volume Calculator
 Calculates cut/fill volumes for asset pads and road alignments.
 """
 
-import math
-from typing import List, Optional, Tuple, Dict, Any
 import numpy as np
-from shapely.geometry import Polygon, LineString, box
 from shapely.affinity import rotate, translate
+from shapely.geometry import LineString, Polygon, box
 
 from .models import (
+    DEFAULT_COST_FACTORS,
+    DEFAULT_SOIL_PROPERTIES,
+    CostFactors,
+    CostResult,
+    EarthworkSummary,
+    GradingMethod,
+    HaulRoute,
     PadDesign,
     RoadDesign,
-    VolumeResult,
-    CostResult,
-    HaulRoute,
-    EarthworkSummary,
     SoilProperties,
-    CostFactors,
-    GradingMethod,
-    DEFAULT_SOIL_PROPERTIES,
-    DEFAULT_COST_FACTORS,
+    VolumeResult,
 )
 
 
@@ -36,7 +34,7 @@ class VolumeCalculator:
     def __init__(
         self,
         dem_data: np.ndarray,
-        dem_bounds: Tuple[float, float, float, float],  # (min_x, min_y, max_x, max_y)
+        dem_bounds: tuple[float, float, float, float],  # (min_x, min_y, max_x, max_y)
         dem_resolution: float,
         soil_properties: SoilProperties = DEFAULT_SOIL_PROPERTIES,
         nodata_value: float = -9999.0,
@@ -61,19 +59,19 @@ class VolumeCalculator:
         self.min_x, self.min_y, self.max_x, self.max_y = dem_bounds
         self.height, self.width = dem_data.shape
 
-    def _world_to_pixel(self, x: float, y: float) -> Tuple[int, int]:
+    def _world_to_pixel(self, x: float, y: float) -> tuple[int, int]:
         """Convert world coordinates to pixel indices."""
         col = int((x - self.min_x) / self.dem_resolution)
         row = int((self.max_y - y) / self.dem_resolution)
         return row, col
 
-    def _pixel_to_world(self, row: int, col: int) -> Tuple[float, float]:
+    def _pixel_to_world(self, row: int, col: int) -> tuple[float, float]:
         """Convert pixel indices to world coordinates (cell center)."""
         x = self.min_x + (col + 0.5) * self.dem_resolution
         y = self.max_y - (row + 0.5) * self.dem_resolution
         return x, y
 
-    def _get_elevation_at(self, x: float, y: float) -> Optional[float]:
+    def _get_elevation_at(self, x: float, y: float) -> float | None:
         """Get elevation at world coordinates."""
         row, col = self._world_to_pixel(x, y)
         if 0 <= row < self.height and 0 <= col < self.width:
@@ -385,9 +383,9 @@ class VolumeCalculator:
 
 
 def calculate_haul_routes(
-    results: List[VolumeResult],
+    results: list[VolumeResult],
     max_haul_distance: float = 1000.0,
-) -> List[HaulRoute]:
+) -> list[HaulRoute]:
     """
     Calculate optimal haul routes between cut and fill areas.
 
@@ -496,10 +494,10 @@ def calculate_costs(
 def calculate_earthwork(
     project_id: str,
     dem_data: np.ndarray,
-    dem_bounds: Tuple[float, float, float, float],
+    dem_bounds: tuple[float, float, float, float],
     dem_resolution: float,
-    pads: List[PadDesign],
-    roads: List[RoadDesign],
+    pads: list[PadDesign],
+    roads: list[RoadDesign],
     soil_properties: SoilProperties = DEFAULT_SOIL_PROPERTIES,
     cost_factors: CostFactors = DEFAULT_COST_FACTORS,
     nodata_value: float = -9999.0,

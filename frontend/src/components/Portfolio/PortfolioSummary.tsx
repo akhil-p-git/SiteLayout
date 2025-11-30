@@ -51,11 +51,7 @@ const StatusPill: React.FC<{ status: SiteStatus; count: number; onClick?: () => 
 }) => {
   const config = STATUS_CONFIG[status];
   return (
-    <button
-      className="status-pill"
-      style={{ borderColor: config.color }}
-      onClick={onClick}
-    >
+    <button className="status-pill" style={{ borderColor: config.color }} onClick={onClick}>
       <span className="status-dot" style={{ backgroundColor: config.color }} />
       <span className="status-label">{config.label}</span>
       <span className="status-count">{count}</span>
@@ -96,15 +92,8 @@ export const PortfolioSummary: React.FC<PortfolioSummaryProps> = ({ summary, onS
           value={formatCapacity(summary.totalCapacityMw)}
           subValue={`${summary.totalAreaHa.toFixed(0)} hectares`}
         />
-        <KPICard
-          label="Average Score"
-          value={summary.averageScore}
-          subValue="out of 100"
-        />
-        <KPICard
-          label="Est. Investment"
-          value={formatCurrency(summary.totalEstimatedCost)}
-        />
+        <KPICard label="Average Score" value={summary.averageScore} subValue="out of 100" />
+        <KPICard label="Est. Investment" value={formatCurrency(summary.totalEstimatedCost)} />
         <KPICard
           label="Carbon Offset"
           value={`${(summary.totalCarbonOffset / 1000).toFixed(1)}K`}
@@ -144,10 +133,7 @@ export const PortfolioSummary: React.FC<PortfolioSummaryProps> = ({ summary, onS
                       <span className="region-count">{count} sites</span>
                     </div>
                     <div className="region-bar-track">
-                      <div
-                        className="region-bar-fill"
-                        style={{ width: `${percent}%` }}
-                      />
+                      <div className="region-bar-fill" style={{ width: `${percent}%` }} />
                     </div>
                   </div>
                 );

@@ -79,10 +79,13 @@ export interface ExclusionZoneSummary {
   totalExcludedArea: number;
   totalBufferedArea: number;
   excludedPercentage: number;
-  byType: Record<ExclusionZoneType, {
-    count: number;
-    area: number;
-  }>;
+  byType: Record<
+    ExclusionZoneType,
+    {
+      count: number;
+      area: number;
+    }
+  >;
 }
 
 export interface ZoneImportResult {
@@ -105,15 +108,18 @@ export interface BuildableAreaResult {
   buildablePercentage: number;
 }
 
-export type ExclusionZoneFeature = Feature<Polygon | MultiPolygon, {
-  id: string;
-  name: string;
-  type: ExclusionZoneType;
-  bufferDistance: number;
-  area: number;
-  isActive: boolean;
-  isBuffered?: boolean;
-}>;
+export type ExclusionZoneFeature = Feature<
+  Polygon | MultiPolygon,
+  {
+    id: string;
+    name: string;
+    type: ExclusionZoneType;
+    bufferDistance: number;
+    area: number;
+    isActive: boolean;
+    isBuffered?: boolean;
+  }
+>;
 
 export type ExclusionZoneFeatureCollection = FeatureCollection<Polygon | MultiPolygon>;
 

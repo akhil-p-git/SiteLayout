@@ -5,26 +5,26 @@ Implements a genetic algorithm to optimize asset placement on solar sites,
 considering terrain, exclusion zones, and various constraints.
 """
 
-import numpy as np
-import uuid
 import time
-from typing import List, Tuple, Optional, Dict, Any
+import uuid
 from dataclasses import dataclass
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from shapely.geometry import Polygon, Point, MultiPolygon
+from typing import Any
+
+import numpy as np
+from shapely.geometry import Point
 from shapely.ops import unary_union
 from shapely.prepared import prep
 
 from .models import (
-    AssetType,
+    DEFAULT_ASSET_DEFINITIONS,
     AssetDefinition,
-    PlacedAsset,
+    AssetType,
+    LayoutSolution,
     OptimizationConfig,
     OptimizationObjective,
-    SiteContext,
-    LayoutSolution,
     OptimizationResult,
-    DEFAULT_ASSET_DEFINITIONS,
+    PlacedAsset,
+    SiteContext,
 )
 
 
@@ -34,8 +34,8 @@ class Individual:
 
     genes: np.ndarray  # Encoded asset positions and rotations
     fitness: float = 0.0
-    objective_scores: Dict[str, float] = None
-    constraint_violations: List[str] = None
+    objective_scores: dict[str, float] = None
+    constraint_violations: list[str] = None
     is_valid: bool = False
 
     def __post_init__(self):
@@ -56,7 +56,7 @@ class GeneticOptimizer:
     def __init__(
         self,
         site_context: SiteContext,
-        assets_to_place: List[AssetDefinition],
+        assets_to_place: list[AssetDefinition],
         config: OptimizationConfig = None,
     ):
         self.site = site_context
@@ -78,7 +78,7 @@ class GeneticOptimizer:
         self.gene_length = self.total_assets * self.genes_per_asset
 
         # Expand assets by quantity
-        self.expanded_assets: List[Tuple[int, AssetDefinition]] = []
+        self.expanded_assets: list[tuple[int, AssetDefinition]] = []
         for asset in self.assets:
             for i in range(asset.quantity):
                 self.expanded_assets.append((i, asset))
@@ -191,7 +191,7 @@ class GeneticOptimizer:
             config=self.config,
         )
 
-    def _initialize_population(self) -> List[Individual]:
+    def _initialize_population(self) -> list[Individual]:
         """Create initial population with random and heuristic solutions."""
         population = []
 
@@ -232,7 +232,7 @@ class GeneticOptimizer:
 
         return genes
 
-    def _evaluate_population(self, population: List[Individual]):
+    def _evaluate_population(self, population: list[Individual]):
         """Evaluate fitness for all individuals in population."""
         for individual in population:
             self._evaluate_individual(individual)
@@ -278,7 +278,7 @@ class GeneticOptimizer:
 
         individual.fitness = fitness
 
-    def _decode_genes(self, genes: np.ndarray) -> List[PlacedAsset]:
+    def _decode_genes(self, genes: np.ndarray) -> list[PlacedAsset]:
         """Decode genes into asset placements."""
         placements = []
 
@@ -312,7 +312,7 @@ class GeneticOptimizer:
 
         return placements
 
-    def _check_constraints(self, placements: List[PlacedAsset]) -> List[str]:
+    def _check_constraints(self, placements: list[PlacedAsset]) -> list[str]:
         """Check all constraints for placements."""
         violations = []
 
@@ -338,7 +338,8 @@ class GeneticOptimizer:
             boundary_distance = self.site.boundary.exterior.distance(footprint.centroid)
             if boundary_distance < constraints.min_setback:
                 violations.append(
-                    f"ERROR: {placement.asset_id} setback {boundary_distance:.1f}m < {constraints.min_setback}m required"
+                    f"ERROR: {placement.asset_id} setback {boundary_distance:.1f}m "
+                    f"< {constraints.min_setback}m required"
                 )
 
             # Check exclusion zones
@@ -383,7 +384,7 @@ class GeneticOptimizer:
 
         return violations
 
-    def _calculate_objectives(self, placements: List[PlacedAsset]) -> Dict[str, float]:
+    def _calculate_objectives(self, placements: list[PlacedAsset]) -> dict[str, float]:
         """Calculate objective scores (normalized 0-1, lower is better for costs)."""
         scores = {}
 
@@ -409,7 +410,7 @@ class GeneticOptimizer:
 
         return scores
 
-    def _calculate_earthwork_score(self, placements: List[PlacedAsset]) -> float:
+    def _calculate_earthwork_score(self, placements: list[PlacedAsset]) -> float:
         """Estimate earthwork based on slopes at placement locations."""
         if self.site.slope_data is None:
             return 0.5  # Neutral if no slope data
@@ -430,7 +431,7 @@ class GeneticOptimizer:
         # Normalize: 0 slope = 0, 15+ degrees = 1
         return min(1.0, avg_slope / 15.0)
 
-    def _calculate_cable_length_score(self, placements: List[PlacedAsset]) -> float:
+    def _calculate_cable_length_score(self, placements: list[PlacedAsset]) -> float:
         """Calculate normalized cable length score."""
         if not placements:
             return 0.5
@@ -454,7 +455,7 @@ class GeneticOptimizer:
         max_distance = np.sqrt(self.width**2 + self.height**2) * len(placements)
         return min(1.0, total_distance / max_distance) if max_distance > 0 else 0.5
 
-    def _calculate_road_length_score(self, placements: List[PlacedAsset]) -> float:
+    def _calculate_road_length_score(self, placements: list[PlacedAsset]) -> float:
         """Calculate normalized road access score."""
         if not placements:
             return 0.5
@@ -474,7 +475,7 @@ class GeneticOptimizer:
         max_distance = np.sqrt(self.width**2 + self.height**2) * len(placements)
         return min(1.0, total_distance / max_distance) if max_distance > 0 else 0.5
 
-    def _calculate_compactness_score(self, placements: List[PlacedAsset]) -> float:
+    def _calculate_compactness_score(self, placements: list[PlacedAsset]) -> float:
         """Calculate how compact/clustered the layout is."""
         if len(placements) < 2:
             return 1.0
@@ -488,7 +489,7 @@ class GeneticOptimizer:
         max_distance = np.sqrt(self.width**2 + self.height**2) / 2
         return 1.0 - min(1.0, avg_distance / max_distance) if max_distance > 0 else 0.5
 
-    def _calculate_capacity_score(self, placements: List[PlacedAsset]) -> float:
+    def _calculate_capacity_score(self, placements: list[PlacedAsset]) -> float:
         """Calculate capacity utilization score."""
         valid_placements = [
             p
@@ -497,7 +498,7 @@ class GeneticOptimizer:
         ]
         return len(valid_placements) / len(placements) if placements else 0.0
 
-    def _get_slope_at_position(self, position: Tuple[float, float]) -> Optional[float]:
+    def _get_slope_at_position(self, position: tuple[float, float]) -> float | None:
         """Get slope value at a position from slope raster."""
         if self.site.slope_data is None:
             return None
@@ -511,7 +512,7 @@ class GeneticOptimizer:
             return float(self.site.slope_data[row, col])
         return None
 
-    def _select_parents(self, population: List[Individual]) -> List[Individual]:
+    def _select_parents(self, population: list[Individual]) -> list[Individual]:
         """Select parents using tournament selection."""
         parents = []
         tournament_size = 3
@@ -523,7 +524,7 @@ class GeneticOptimizer:
 
         return parents
 
-    def _crossover(self, parents: List[Individual]) -> List[Individual]:
+    def _crossover(self, parents: list[Individual]) -> list[Individual]:
         """Perform crossover to create offspring."""
         offspring = []
 
@@ -556,7 +557,7 @@ class GeneticOptimizer:
 
         return offspring
 
-    def _mutate(self, population: List[Individual]):
+    def _mutate(self, population: list[Individual]):
         """Apply mutation to population."""
         for individual in population:
             for i in range(self.gene_length):
@@ -567,9 +568,9 @@ class GeneticOptimizer:
 
     def _select_survivors(
         self,
-        population: List[Individual],
-        offspring: List[Individual],
-    ) -> List[Individual]:
+        population: list[Individual],
+        offspring: list[Individual],
+    ) -> list[Individual]:
         """Select survivors for next generation using elitism."""
         combined = population + offspring
         combined.sort(key=lambda i: i.fitness, reverse=True)
@@ -610,9 +611,9 @@ class GeneticOptimizer:
 
     def _generate_alternatives(
         self,
-        population: List[Individual],
+        population: list[Individual],
         generation: int,
-    ) -> List[LayoutSolution]:
+    ) -> list[LayoutSolution]:
         """Generate alternative layout solutions."""
         # Sort by fitness and get diverse solutions
         sorted_pop = sorted(population, key=lambda i: i.fitness, reverse=True)
@@ -635,12 +636,12 @@ class GeneticOptimizer:
 
 
 def optimize_layout(
-    site_boundary: Dict[str, Any],
-    exclusion_zones: List[Dict[str, Any]] = None,
-    assets_to_place: List[Dict[str, Any]] = None,
+    site_boundary: dict[str, Any],
+    exclusion_zones: list[dict[str, Any]] = None,
+    assets_to_place: list[dict[str, Any]] = None,
     slope_data: np.ndarray = None,
-    config: Dict[str, Any] = None,
-) -> Dict[str, Any]:
+    config: dict[str, Any] = None,
+) -> dict[str, Any]:
     """
     Main entry point for layout optimization.
 

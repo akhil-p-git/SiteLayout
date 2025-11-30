@@ -33,85 +33,91 @@ export function ElevationProfile({
   const unitLabel = unit === 'feet' ? 'ft' : 'm';
 
   // Calculate data bounds and scales
-  const { minElevation, maxElevation, maxDistance, pathData, gradientStops, stats } = useMemo(() => {
-    if (data.length === 0) {
+  const { minElevation, maxElevation, maxDistance, pathData, gradientStops, stats } =
+    useMemo(() => {
+      if (data.length === 0) {
+        return {
+          minElevation: 0,
+          maxElevation: 100,
+          maxDistance: 1000,
+          pathData: '',
+          gradientStops: [],
+          stats: { min: 0, max: 0, avg: 0, totalGain: 0, maxSlope: 0 },
+        };
+      }
+
+      const elevations = data.map((p) => p.elevation * conversionFactor);
+      const distances = data.map((p) => p.distance);
+
+      const minElev = Math.min(...elevations);
+      const maxElev = Math.max(...elevations);
+      const maxDist = Math.max(...distances);
+
+      // Add padding to elevation range
+      const elevRange = maxElev - minElev || 10;
+      const paddedMin = minElev - elevRange * 0.1;
+      const paddedMax = maxElev + elevRange * 0.1;
+
+      // Scale functions
+      const xScale = (d: number) => (d / maxDist) * chartWidth;
+      const yScale = (e: number) =>
+        chartHeight - ((e - paddedMin) / (paddedMax - paddedMin)) * chartHeight;
+
+      // Generate path
+      const points = data.map((p, i) => {
+        const x = xScale(p.distance);
+        const y = yScale(p.elevation * conversionFactor);
+        return `${i === 0 ? 'M' : 'L'}${x},${y}`;
+      });
+
+      // Generate area path (for fill)
+      const areaPoints = [...points, `L${chartWidth},${chartHeight}`, `L0,${chartHeight}`, 'Z'];
+
+      // Calculate gradient stops based on slope
+      const stops: { offset: string; color: string }[] = [];
+      data.forEach((p, i) => {
+        if (i === 0) return;
+        const slope = Math.abs(
+          ((data[i].elevation - data[i - 1].elevation) /
+            (data[i].distance - data[i - 1].distance)) *
+            100
+        );
+        const offset = `${(p.distance / maxDist) * 100}%`;
+        let color = '#22c55e'; // Green for flat
+        if (slope > 15)
+          color = '#dc2626'; // Red for steep
+        else if (slope > 10)
+          color = '#f97316'; // Orange
+        else if (slope > 5) color = '#eab308'; // Yellow
+        stops.push({ offset, color });
+      });
+
+      // Calculate statistics
+      let totalGain = 0;
+      let maxSlope = 0;
+      for (let i = 1; i < data.length; i++) {
+        const elevDiff = data[i].elevation - data[i - 1].elevation;
+        if (elevDiff > 0) totalGain += elevDiff;
+        const slope = Math.abs((elevDiff / (data[i].distance - data[i - 1].distance)) * 100);
+        maxSlope = Math.max(maxSlope, slope);
+      }
+
       return {
-        minElevation: 0,
-        maxElevation: 100,
-        maxDistance: 1000,
-        pathData: '',
-        gradientStops: [],
-        stats: { min: 0, max: 0, avg: 0, totalGain: 0, maxSlope: 0 },
+        minElevation: paddedMin,
+        maxElevation: paddedMax,
+        maxDistance: maxDist,
+        pathData: points.join(' '),
+        areaPathData: areaPoints.join(' '),
+        gradientStops: stops,
+        stats: {
+          min: minElev,
+          max: maxElev,
+          avg: elevations.reduce((a, b) => a + b, 0) / elevations.length,
+          totalGain: totalGain * conversionFactor,
+          maxSlope,
+        },
       };
-    }
-
-    const elevations = data.map((p) => p.elevation * conversionFactor);
-    const distances = data.map((p) => p.distance);
-
-    const minElev = Math.min(...elevations);
-    const maxElev = Math.max(...elevations);
-    const maxDist = Math.max(...distances);
-
-    // Add padding to elevation range
-    const elevRange = maxElev - minElev || 10;
-    const paddedMin = minElev - elevRange * 0.1;
-    const paddedMax = maxElev + elevRange * 0.1;
-
-    // Scale functions
-    const xScale = (d: number) => (d / maxDist) * chartWidth;
-    const yScale = (e: number) => chartHeight - ((e - paddedMin) / (paddedMax - paddedMin)) * chartHeight;
-
-    // Generate path
-    const points = data.map((p, i) => {
-      const x = xScale(p.distance);
-      const y = yScale(p.elevation * conversionFactor);
-      return `${i === 0 ? 'M' : 'L'}${x},${y}`;
-    });
-
-    // Generate area path (for fill)
-    const areaPoints = [...points, `L${chartWidth},${chartHeight}`, `L0,${chartHeight}`, 'Z'];
-
-    // Calculate gradient stops based on slope
-    const stops: { offset: string; color: string }[] = [];
-    data.forEach((p, i) => {
-      if (i === 0) return;
-      const slope = Math.abs(
-        ((data[i].elevation - data[i - 1].elevation) / (data[i].distance - data[i - 1].distance)) * 100
-      );
-      const offset = `${(p.distance / maxDist) * 100}%`;
-      let color = '#22c55e'; // Green for flat
-      if (slope > 15) color = '#dc2626'; // Red for steep
-      else if (slope > 10) color = '#f97316'; // Orange
-      else if (slope > 5) color = '#eab308'; // Yellow
-      stops.push({ offset, color });
-    });
-
-    // Calculate statistics
-    let totalGain = 0;
-    let maxSlope = 0;
-    for (let i = 1; i < data.length; i++) {
-      const elevDiff = data[i].elevation - data[i - 1].elevation;
-      if (elevDiff > 0) totalGain += elevDiff;
-      const slope = Math.abs((elevDiff / (data[i].distance - data[i - 1].distance)) * 100);
-      maxSlope = Math.max(maxSlope, slope);
-    }
-
-    return {
-      minElevation: paddedMin,
-      maxElevation: paddedMax,
-      maxDistance: maxDist,
-      pathData: points.join(' '),
-      areaPathData: areaPoints.join(' '),
-      gradientStops: stops,
-      stats: {
-        min: minElev,
-        max: maxElev,
-        avg: elevations.reduce((a, b) => a + b, 0) / elevations.length,
-        totalGain: totalGain * conversionFactor,
-        maxSlope,
-      },
-    };
-  }, [data, conversionFactor, chartWidth, chartHeight]);
+    }, [data, conversionFactor, chartWidth, chartHeight]);
 
   // Handle mouse move for tooltip
   const handleMouseMove = useCallback(
@@ -187,7 +193,10 @@ export function ElevationProfile({
             Max: {stats.max.toFixed(1)}
             {unitLabel}
           </span>
-          <span>Gain: {stats.totalGain.toFixed(1)}{unitLabel}</span>
+          <span>
+            Gain: {stats.totalGain.toFixed(1)}
+            {unitLabel}
+          </span>
           <span>Max Slope: {stats.maxSlope.toFixed(1)}%</span>
         </div>
       </div>

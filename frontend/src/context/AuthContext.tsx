@@ -139,14 +139,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, []);
 
   // Store auth data
-  const storeAuth = useCallback(
-    (accessToken: string, refreshToken: string, user: User) => {
-      localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
-      localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
-      localStorage.setItem(USER_KEY, JSON.stringify(user));
-    },
-    []
-  );
+  const storeAuth = useCallback((accessToken: string, refreshToken: string, user: User) => {
+    localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
+    localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+    localStorage.setItem(USER_KEY, JSON.stringify(user));
+  }, []);
 
   // Clear stored auth
   const clearStoredAuth = useCallback(() => {

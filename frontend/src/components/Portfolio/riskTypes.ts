@@ -84,7 +84,10 @@ export const DEFAULT_RISK_CONFIG: RiskConfiguration = {
   },
 };
 
-export const RISK_CATEGORY_CONFIG: Record<RiskCategory, { label: string; color: string; icon: string }> = {
+export const RISK_CATEGORY_CONFIG: Record<
+  RiskCategory,
+  { label: string; color: string; icon: string }
+> = {
   regulatory: { label: 'Regulatory', color: '#3B82F6', icon: '⚖️' },
   interconnection: { label: 'Interconnection', color: '#F59E0B', icon: '⚡' },
   community: { label: 'Community', color: '#10B981', icon: '👥' },
@@ -94,7 +97,10 @@ export const RISK_CATEGORY_CONFIG: Record<RiskCategory, { label: string; color: 
   land: { label: 'Land', color: '#6366F1', icon: '🗺️' },
 };
 
-export const SEVERITY_CONFIG: Record<RiskSeverity, { label: string; color: string; order: number }> = {
+export const SEVERITY_CONFIG: Record<
+  RiskSeverity,
+  { label: string; color: string; order: number }
+> = {
   low: { label: 'Low', color: '#10B981', order: 1 },
   medium: { label: 'Medium', color: '#F59E0B', order: 2 },
   high: { label: 'High', color: '#F97316', order: 3 },
@@ -102,7 +108,10 @@ export const SEVERITY_CONFIG: Record<RiskSeverity, { label: string; color: strin
 };
 
 // Risk calculation functions
-export function calculateRiskScore(factors: RiskFactor[], config: RiskConfiguration = DEFAULT_RISK_CONFIG): number {
+export function calculateRiskScore(
+  factors: RiskFactor[],
+  config: RiskConfiguration = DEFAULT_RISK_CONFIG
+): number {
   if (factors.length === 0) return 100;
 
   let totalImpact = 0;
@@ -113,8 +122,12 @@ export function calculateRiskScore(factors: RiskFactor[], config: RiskConfigurat
     const severityMultiplier = config.severityMultipliers[factor.severity];
 
     // Mitigated risks have reduced impact
-    const mitigationFactor = factor.mitigationStatus === 'mitigated' ? 0.3 :
-      factor.mitigationStatus === 'in_progress' ? 0.7 : 1.0;
+    const mitigationFactor =
+      factor.mitigationStatus === 'mitigated'
+        ? 0.3
+        : factor.mitigationStatus === 'in_progress'
+          ? 0.7
+          : 1.0;
 
     const impact = (1 - severityMultiplier) * categoryWeight * factor.weight * mitigationFactor;
     totalImpact += impact;
@@ -147,8 +160,12 @@ export function getCategoryRiskScore(
   let totalImpact = 0;
   categoryFactors.forEach((factor) => {
     const severityMultiplier = config.severityMultipliers[factor.severity];
-    const mitigationFactor = factor.mitigationStatus === 'mitigated' ? 0.3 :
-      factor.mitigationStatus === 'in_progress' ? 0.7 : 1.0;
+    const mitigationFactor =
+      factor.mitigationStatus === 'mitigated'
+        ? 0.3
+        : factor.mitigationStatus === 'in_progress'
+          ? 0.7
+          : 1.0;
     totalImpact += (1 - severityMultiplier) * factor.weight * mitigationFactor;
   });
 
@@ -164,7 +181,9 @@ export function generateRiskAlerts(
   const now = new Date().toISOString();
 
   // Check for critical risks
-  const criticalFactors = riskProfile.factors.filter((f) => f.severity === 'critical' && f.mitigationStatus !== 'mitigated');
+  const criticalFactors = riskProfile.factors.filter(
+    (f) => f.severity === 'critical' && f.mitigationStatus !== 'mitigated'
+  );
   if (criticalFactors.length >= config.alertThresholds.criticalRiskCount) {
     alerts.push({
       id: `${site.id}-critical-${Date.now()}`,
@@ -179,7 +198,9 @@ export function generateRiskAlerts(
   }
 
   // Check for high risk accumulation
-  const highFactors = riskProfile.factors.filter((f) => f.severity === 'high' && f.mitigationStatus !== 'mitigated');
+  const highFactors = riskProfile.factors.filter(
+    (f) => f.severity === 'high' && f.mitigationStatus !== 'mitigated'
+  );
   if (highFactors.length >= config.alertThresholds.highRiskCount) {
     alerts.push({
       id: `${site.id}-high-${Date.now()}`,
@@ -194,7 +215,8 @@ export function generateRiskAlerts(
   }
 
   // Check for score drop
-  const scoreDrop = ((site.scores.composite - riskProfile.riskAdjustedScore) / site.scores.composite) * 100;
+  const scoreDrop =
+    ((site.scores.composite - riskProfile.riskAdjustedScore) / site.scores.composite) * 100;
   if (scoreDrop >= config.alertThresholds.scoreDropPercent) {
     alerts.push({
       id: `${site.id}-score-${Date.now()}`,

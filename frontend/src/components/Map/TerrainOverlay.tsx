@@ -7,9 +7,7 @@ interface TerrainOverlayProps {
   demUrl?: string;
 }
 
-export function TerrainOverlay({
-  demUrl,
-}: TerrainOverlayProps) {
+export function TerrainOverlay({ demUrl }: TerrainOverlayProps) {
   const { map, isLoaded, terrainOverlay, layerVisibility } = useMapContext();
   const setupRef = useRef(false);
 

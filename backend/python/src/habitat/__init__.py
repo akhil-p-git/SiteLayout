@@ -5,25 +5,24 @@ Environmental habitat analysis for endangered species and wetlands.
 """
 
 from .models import (
-    SpeciesStatus,
-    TaxonomicGroup,
-    WetlandType,
+    BUFFER_DISTANCES,
+    PERMIT_TIMELINES,
+    BufferZone,
+    CriticalHabitat,
+    HabitatImpactScore,
+    HabitatOverlayResult,
     HabitatSensitivity,
     PermitType,
     Species,
-    CriticalHabitat,
+    SpeciesStatus,
+    TaxonomicGroup,
     Wetland,
-    BufferZone,
-    HabitatImpactScore,
-    HabitatOverlayResult,
-    BUFFER_DISTANCES,
-    PERMIT_TIMELINES,
+    WetlandType,
 )
-
 from .services import (
-    USFWSService,
-    NWIService,
     HabitatImpactCalculator,
+    NWIService,
+    USFWSService,
     analyze_habitat,
 )
 

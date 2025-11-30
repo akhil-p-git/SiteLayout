@@ -31,9 +31,8 @@ export function MetricCard({
   className = '',
 }: MetricCardProps) {
   const formattedValue = formatMetricValue(value, format);
-  const formattedChange = changeValue !== undefined && changeFormat
-    ? formatMetricValue(changeValue, changeFormat)
-    : null;
+  const formattedChange =
+    changeValue !== undefined && changeFormat ? formatMetricValue(changeValue, changeFormat) : null;
 
   const getTrendIcon = () => {
     switch (trend) {
@@ -126,9 +125,7 @@ export function MetricGroup({
       >
         {icon && <span className="metric-group-icon">{icon}</span>}
         <span className="metric-group-title">{title}</span>
-        {collapsible && (
-          <span className="metric-group-toggle">{expanded ? '−' : '+'}</span>
-        )}
+        {collapsible && <span className="metric-group-toggle">{expanded ? '−' : '+'}</span>}
       </div>
       {expanded && <div className="metric-group-content">{children}</div>}
     </div>

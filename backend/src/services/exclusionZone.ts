@@ -18,10 +18,7 @@ import type {
   ExclusionZoneFeature,
   ZoneImportResult,
 } from '../types/exclusionZone';
-import {
-  ExclusionZoneType,
-  DEFAULT_BUFFER_DISTANCES,
-} from '../types/exclusionZone';
+import { ExclusionZoneType, DEFAULT_BUFFER_DISTANCES } from '../types/exclusionZone';
 
 // In-memory storage (replace with database in production)
 const zonesStore = new Map<string, ExclusionZone>();
@@ -83,9 +80,7 @@ function calculateOverlapPercentage(
   const boundary = turf.feature(boundaryGeometry);
 
   try {
-    const intersection = turf.intersect(
-      turf.featureCollection([zone, boundary])
-    );
+    const intersection = turf.intersect(turf.featureCollection([zone, boundary]));
 
     if (!intersection) {
       return 0;
@@ -312,9 +307,13 @@ export async function validateExclusionZone(
       overlapPercentage = calculateOverlapPercentage(geometry, boundaryGeometry);
 
       if (overlapPercentage < 50) {
-        errors.push(`Zone is mostly outside site boundary (${overlapPercentage.toFixed(1)}% overlap)`);
+        errors.push(
+          `Zone is mostly outside site boundary (${overlapPercentage.toFixed(1)}% overlap)`
+        );
       } else {
-        warnings.push(`Zone extends beyond site boundary (${overlapPercentage.toFixed(1)}% within boundary)`);
+        warnings.push(
+          `Zone extends beyond site boundary (${overlapPercentage.toFixed(1)}% within boundary)`
+        );
       }
     }
   }
@@ -371,9 +370,7 @@ export async function getExclusionZoneSummary(
   }
 
   // Calculate excluded percentage
-  const excludedPercentage = siteBoundaryArea
-    ? (totalBufferedArea / siteBoundaryArea) * 100
-    : 0;
+  const excludedPercentage = siteBoundaryArea ? (totalBufferedArea / siteBoundaryArea) * 100 : 0;
 
   return {
     siteId,
@@ -421,8 +418,10 @@ export async function importExclusionZones(
       }
 
       // Validate geometry type
-      if (!feature.geometry ||
-          (feature.geometry.type !== 'Polygon' && feature.geometry.type !== 'MultiPolygon')) {
+      if (
+        !feature.geometry ||
+        (feature.geometry.type !== 'Polygon' && feature.geometry.type !== 'MultiPolygon')
+      ) {
         errors.push({
           index: i,
           name,
@@ -432,15 +431,18 @@ export async function importExclusionZones(
       }
 
       // Create the zone
-      const zone = await createExclusionZone({
-        siteId,
-        name,
-        type: zoneType,
-        description: props.description as string | undefined,
-        geometry: feature.geometry as Polygon | MultiPolygon,
-        properties: props,
-        source: 'imported',
-      }, userId);
+      const zone = await createExclusionZone(
+        {
+          siteId,
+          name,
+          type: zoneType,
+          description: props.description as string | undefined,
+          geometry: feature.geometry as Polygon | MultiPolygon,
+          properties: props,
+          source: 'imported',
+        },
+        userId
+      );
 
       zones.push(zone);
     } catch (error) {
@@ -524,8 +526,8 @@ export async function calculateExclusionUnion(
 
   // Collect all geometries (use buffered if available)
   const features = zones
-    .filter(z => z.isActive)
-    .map(z => turf.feature(z.bufferedGeometry || z.geometry));
+    .filter((z) => z.isActive)
+    .map((z) => turf.feature(z.bufferedGeometry || z.geometry));
 
   if (features.length === 0) {
     return null;
@@ -563,7 +565,7 @@ export async function calculateExclusionUnion(
 
     return {
       type: 'MultiPolygon',
-      coordinates: polygons.map(p => p.coordinates),
+      coordinates: polygons.map((p) => p.coordinates),
     };
   }
 }
@@ -596,9 +598,7 @@ export async function calculateBuildableArea(
 
   try {
     const exclusionFeature = turf.feature(exclusionUnion);
-    const difference = turf.difference(
-      turf.featureCollection([boundaryFeature, exclusionFeature])
-    );
+    const difference = turf.difference(turf.featureCollection([boundaryFeature, exclusionFeature]));
 
     if (!difference) {
       return {
@@ -629,9 +629,4 @@ export async function calculateBuildableArea(
 }
 
 // Export helper functions
-export {
-  calculateArea,
-  applyBuffer,
-  isWithinBoundary,
-  calculateOverlapPercentage,
-};
+export { calculateArea, applyBuffer, isWithinBoundary, calculateOverlapPercentage };

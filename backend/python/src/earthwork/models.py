@@ -6,8 +6,7 @@ Data models for cut/fill volume estimation and cost calculation.
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional, Dict, List, Any, Tuple
-import numpy as np
+from typing import Any
 
 
 class SoilType(Enum):
@@ -86,10 +85,10 @@ class PadDesign:
 
     asset_id: str
     asset_type: str
-    position: Tuple[float, float]  # Center position (x, y)
-    dimensions: Tuple[float, float]  # Width, length in meters
+    position: tuple[float, float]  # Center position (x, y)
+    dimensions: tuple[float, float]  # Width, length in meters
     rotation: float = 0.0  # Rotation in degrees
-    target_elevation: Optional[float] = None  # Target pad elevation (auto if None)
+    target_elevation: float | None = None  # Target pad elevation (auto if None)
     grading_method: GradingMethod = GradingMethod.LEVEL
     max_pad_slope: float = 2.0  # Max slope % for sloped pads
     buffer_distance: float = 2.0  # Additional grading around pad
@@ -100,10 +99,10 @@ class RoadDesign:
     """Design parameters for a road segment."""
 
     segment_id: str
-    start_point: Tuple[float, float]
-    end_point: Tuple[float, float]
+    start_point: tuple[float, float]
+    end_point: tuple[float, float]
     width: float = 6.0  # Road width in meters
-    target_grade: Optional[float] = None  # Target grade % (None = follow terrain)
+    target_grade: float | None = None  # Target grade % (None = follow terrain)
     max_grade: float = 10.0  # Maximum grade %
     shoulder_width: float = 1.0  # Shoulder width each side
     cross_slope: float = 2.0  # Cross slope % for drainage
@@ -126,10 +125,10 @@ class VolumeResult:
     average_fill_depth: float  # m
     max_cut_depth: float  # m
     max_fill_depth: float  # m
-    existing_elevation_range: Tuple[float, float]  # min, max
+    existing_elevation_range: tuple[float, float]  # min, max
     design_elevation: float  # Target elevation
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary."""
         return {
             "element_id": self.element_id,
@@ -162,7 +161,7 @@ class CostResult:
     export_cost: float
     total_cost: float
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary."""
         return {
             "cut_cost": round(self.cut_cost, 2),
@@ -183,7 +182,7 @@ class HaulRoute:
     distance_m: float
     volume_m3: float
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary."""
         return {
             "source_id": self.source_id,
@@ -207,12 +206,12 @@ class EarthworkSummary:
     import_required: float  # Fill needed from outside
     export_required: float  # Cut to be removed from site
     balance_on_site: float  # Material balanced on site
-    pad_results: List[VolumeResult] = field(default_factory=list)
-    road_results: List[VolumeResult] = field(default_factory=list)
-    haul_routes: List[HaulRoute] = field(default_factory=list)
-    cost_estimate: Optional[CostResult] = None
+    pad_results: list[VolumeResult] = field(default_factory=list)
+    road_results: list[VolumeResult] = field(default_factory=list)
+    haul_routes: list[HaulRoute] = field(default_factory=list)
+    cost_estimate: CostResult | None = None
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary."""
         return {
             "project_id": self.project_id,

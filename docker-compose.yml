@@ -1,0 +1,120 @@
+services:
+  # PostgreSQL with PostGIS
+  postgres:
+    image: postgis/postgis:16-3.4
+    platform: linux/amd64
+    container_name: site-layouts-db
+    environment:
+      POSTGRES_USER: sitelayouts
+      POSTGRES_PASSWORD: sitelayouts_dev
+      POSTGRES_DB: sitelayouts
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/sql/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sitelayouts -d sitelayouts"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis for caching and job queues
+  redis:
+    image: redis:7-alpine
+    container_name: site-layouts-redis
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend API (Node.js)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: site-layouts-api
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+      DATABASE_URL: postgresql://sitelayouts:sitelayouts_dev@postgres:5432/sitelayouts
+      REDIS_URL: redis://redis:6379
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./backend/src:/app/src
+      - ./shared:/app/shared
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: npm run dev
+
+  # Python Geospatial Worker
+  geo-worker:
+    build:
+      context: ./backend/python
+      dockerfile: Dockerfile
+    container_name: site-layouts-geo
+    environment:
+      DATABASE_URL: postgresql://sitelayouts:sitelayouts_dev@postgres:5432/sitelayouts
+      REDIS_URL: redis://redis:6379
+    volumes:
+      - ./backend/python/src:/app/src
+      - geo_data:/app/data
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  # Frontend (Vite dev server)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: site-layouts-frontend
+    environment:
+      VITE_API_URL: http://localhost:3001
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend/src:/app/src
+      - ./shared:/app/shared
+    depends_on:
+      - backend
+
+  # MinIO (S3-compatible storage for local development)
+  minio:
+    image: minio/minio:latest
+    container_name: site-layouts-minio
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin123
+    ports:
+      - "9002:9000"
+      - "9003:9001"
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+volumes:
+  postgres_data:
+  redis_data:
+  minio_data:
+  geo_data:
+
+networks:
+  default:
+    name: site-layouts-network

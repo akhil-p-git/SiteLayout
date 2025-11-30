@@ -1,0 +1,113 @@
+.asset-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  background: var(--bg-primary, #fff);
+  border: 1px solid var(--border-color, #e0e0e0);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 0.125rem;
+}
+
+.toolbar-divider {
+  width: 1px;
+  height: 24px;
+  background: var(--border-color, #e0e0e0);
+  margin: 0 0.375rem;
+}
+
+.toolbar-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--text-secondary, #666);
+  transition: all 0.15s ease;
+}
+
+.toolbar-btn:hover:not(:disabled) {
+  background: var(--bg-hover, #f0f0f0);
+  color: var(--text-primary, #333);
+}
+
+.toolbar-btn:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.toolbar-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.toolbar-btn.active {
+  background: var(--primary-bg, #e0efff);
+  color: var(--primary-color, #3b82f6);
+  border-color: var(--primary-color, #3b82f6);
+}
+
+.toolbar-btn.danger:hover:not(:disabled) {
+  background: var(--danger-bg, #fee2e2);
+  color: var(--danger-color, #dc2626);
+}
+
+.toolbar-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.grid-size-select {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  border: 1px solid var(--border-color, #ccc);
+  border-radius: 4px;
+  background: var(--bg-primary, #fff);
+  color: var(--text-primary, #333);
+  cursor: pointer;
+}
+
+.grid-size-select:focus {
+  outline: none;
+  border-color: var(--primary-color, #3b82f6);
+}
+
+.selection-info {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  color: var(--text-secondary, #666);
+  background: var(--bg-secondary, #f8f9fa);
+  border-radius: 4px;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  .asset-toolbar {
+    --bg-primary: #1a1a1a;
+    --bg-secondary: #242424;
+    --bg-hover: #333;
+    --text-primary: #f0f0f0;
+    --text-secondary: #aaa;
+    --border-color: #444;
+    --primary-color: #60a5fa;
+    --primary-bg: #1e3a5f;
+    --danger-color: #ef4444;
+    --danger-bg: #3f1f1f;
+  }
+
+  .grid-size-select {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+  }
+}

@@ -1,0 +1,114 @@
+.exclusion-zone-map-integration {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Form overlay */
+.zone-form-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 1rem;
+  z-index: 1000;
+}
+
+.zone-form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+}
+
+/* Drawing instructions */
+.drawing-instructions {
+  background: var(--bg-primary, #fff);
+  border: 1px solid var(--border-color, #e0e0e0);
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+  max-width: 400px;
+}
+
+.instruction-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.75rem;
+}
+
+.instruction-icon svg {
+  width: 48px;
+  height: 48px;
+  color: var(--primary-color, #3b82f6);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.drawing-instructions p {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.875rem;
+  color: var(--text-primary, #333);
+}
+
+.drawing-instructions .hint {
+  font-size: 0.75rem;
+  color: var(--text-secondary, #666);
+  margin-bottom: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .zone-form-overlay {
+    padding: 0;
+    align-items: flex-end;
+    justify-content: stretch;
+  }
+
+  .zone-form-container {
+    width: 100%;
+    max-height: 70vh;
+    border-radius: 16px 16px 0 0;
+    overflow: hidden;
+  }
+
+  .zone-form-container .zone-form {
+    border-radius: 16px 16px 0 0;
+    max-width: none;
+  }
+
+  .drawing-instructions {
+    max-width: none;
+    border-radius: 0;
+  }
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  .zone-form-overlay {
+    background: rgba(0, 0, 0, 0.7);
+  }
+
+  .drawing-instructions {
+    --bg-primary: #1a1a1a;
+    --border-color: #444;
+    --text-primary: #f0f0f0;
+    --text-secondary: #aaa;
+    --primary-color: #60a5fa;
+  }
+}

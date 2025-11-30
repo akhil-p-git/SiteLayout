@@ -1,0 +1,173 @@
+.drawing-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  padding: 8px 12px;
+}
+
+.drawing-toolbar.vertical {
+  flex-direction: column;
+  padding: 12px 8px;
+}
+
+.toolbar-section {
+  display: flex;
+  gap: 4px;
+}
+
+.drawing-toolbar.vertical .toolbar-section {
+  flex-direction: column;
+}
+
+.toolbar-divider {
+  width: 1px;
+  height: 32px;
+  background: #e5e7eb;
+}
+
+.drawing-toolbar.vertical .toolbar-divider {
+  width: 100%;
+  height: 1px;
+}
+
+.tool-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  min-width: 56px;
+}
+
+.tool-button:hover:not(:disabled) {
+  background: #f3f4f6;
+}
+
+.tool-button.active {
+  background: #eff6ff;
+}
+
+.tool-button.dimmed {
+  opacity: 0.5;
+}
+
+.tool-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.tool-button.danger:hover:not(:disabled) {
+  background: #fef2f2;
+}
+
+.tool-button.danger:hover:not(:disabled) .tool-button-icon {
+  color: #ef4444;
+}
+
+.tool-button-icon {
+  width: 24px;
+  height: 24px;
+  color: #6b7280;
+  transition: color 0.15s ease;
+}
+
+.tool-button:hover:not(:disabled) .tool-button-icon {
+  color: #374151;
+}
+
+.tool-button.active .tool-button-icon {
+  color: #3b82f6;
+}
+
+.tool-button-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.tool-button-label {
+  font-size: 10px;
+  font-weight: 500;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.tool-button:hover:not(:disabled) .tool-button-label {
+  color: #374151;
+}
+
+.tool-button.active .tool-button-label {
+  color: #3b82f6;
+}
+
+/* Drawing help */
+.drawing-help {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 20px;
+  background: rgba(31, 41, 55, 0.95);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.drawing-help-text {
+  font-size: 13px;
+  color: white;
+}
+
+.drawing-help-hint {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .drawing-toolbar {
+    padding: 6px 8px;
+    gap: 6px;
+  }
+
+  .tool-button {
+    padding: 6px 8px;
+    min-width: 48px;
+  }
+
+  .tool-button-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .tool-button-label {
+    font-size: 9px;
+  }
+
+  .toolbar-divider {
+    height: 28px;
+  }
+
+  .drawing-help {
+    bottom: 16px;
+    padding: 10px 16px;
+  }
+
+  .drawing-help-text {
+    font-size: 12px;
+  }
+}

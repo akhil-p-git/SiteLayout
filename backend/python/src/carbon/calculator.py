@@ -4,7 +4,6 @@ Carbon Calculator
 Construction carbon footprint and lifetime impact calculations.
 """
 
-
 from .models import (
     DEFAULT_EQUIPMENT_PROFILES,
     CarbonBreakdown,

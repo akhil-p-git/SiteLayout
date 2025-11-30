@@ -238,18 +238,16 @@ export function ExclusionZoneMapIntegration({
   }, []);
 
   // Handle delete zone
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleDeleteZone = useCallback(
-    (zoneId: string) => {
+    (_zoneId: string) => {
       fetchZones();
     },
     [fetchZones]
   );
 
   // Handle form save
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleFormSave = useCallback(
-    (zone: ExclusionZone) => {
+    (_zone: ExclusionZone) => {
       setIsFormOpen(false);
       setDrawnGeometry(undefined);
       setEditingZone(undefined);

@@ -591,8 +591,8 @@ class PDFReportGenerator:
             generation_time = (time.time() - start_time) * 1000
 
             # Generate filename
-            project_name = self.data.project.project_name.replace(' ', '_')
-            date_str = datetime.now().strftime('%Y%m%d')
+            project_name = self.data.project.project_name.replace(" ", "_")
+            date_str = datetime.now().strftime("%Y%m%d")
             filename = f"{project_name}_Report_{date_str}.pdf"
 
             return ReportResult(

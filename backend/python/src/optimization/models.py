@@ -202,7 +202,12 @@ class PlacedAsset:
         half_l = self.definition.dimensions.length / 2
 
         # Create rectangle centered at origin
-        corners = [(-half_w, -half_l), (half_w, -half_l), (half_w, half_l), (-half_w, half_l)]
+        corners = [
+            (-half_w, -half_l),
+            (half_w, -half_l),
+            (half_w, half_l),
+            (-half_w, half_l),
+        ]
 
         # Rotate if needed
         if self.rotation != 0:

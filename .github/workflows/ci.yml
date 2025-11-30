@@ -168,10 +168,12 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y gdal-bin libgdal-dev
 
-      - name: Install dependencies
-        run: |
-          cd backend/python
-          pip install -r requirements.txt
+      -  name: Install dependencies
+          run: |
+            cd backend/python
+            GDAL_VERSION=$(gdal-config --version)
+            pip install gdal==$GDAL_VERSION || pip install gdal
+            pip install -r requirements.txt
 
       - name: Run tests
         run: cd backend/python && pytest --cov=src --cov-report=xml

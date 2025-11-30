@@ -121,6 +121,7 @@ class VolumeCalculator:
             for col in range(max(0, col_start), min(self.width, col_end + 1)):
                 x, y = self._pixel_to_world(row, col)
                 from shapely.geometry import Point
+
                 if polygon.contains(Point(x, y)):
                     elev = self.dem_data[row, col]
                     if elev != self.nodata_value:
@@ -163,7 +164,7 @@ class VolumeCalculator:
         cut_depths = []
         fill_depths = []
         existing_elevations = []
-        cell_area = self.dem_resolution ** 2
+        cell_area = self.dem_resolution**2
         cell_count = 0
 
         row_start, col_start = self._world_to_pixel(minx, maxy)
@@ -268,10 +269,17 @@ class VolumeCalculator:
             return VolumeResult(
                 element_id=road.segment_id,
                 element_type="road",
-                cut_volume=0, fill_volume=0, net_volume=0,
-                adjusted_cut=0, adjusted_fill=0, adjusted_net=0,
-                area=0, average_cut_depth=0, average_fill_depth=0,
-                max_cut_depth=0, max_fill_depth=0,
+                cut_volume=0,
+                fill_volume=0,
+                net_volume=0,
+                adjusted_cut=0,
+                adjusted_fill=0,
+                adjusted_net=0,
+                area=0,
+                average_cut_depth=0,
+                average_fill_depth=0,
+                max_cut_depth=0,
+                max_fill_depth=0,
                 existing_elevation_range=(0, 0),
                 design_elevation=0,
             )
@@ -302,7 +310,7 @@ class VolumeCalculator:
         cut_depths = []
         fill_depths = []
         existing_elevations = []
-        cell_area = self.dem_resolution ** 2
+        cell_area = self.dem_resolution**2
         cell_count = 0
 
         row_start, col_start = self._world_to_pixel(minx, maxy)
@@ -393,16 +401,20 @@ def calculate_haul_routes(
     for result in results:
         if result.adjusted_net > 0:
             # Excess cut available
-            cut_sources.append({
-                "id": result.element_id,
-                "volume": result.adjusted_net,
-            })
+            cut_sources.append(
+                {
+                    "id": result.element_id,
+                    "volume": result.adjusted_net,
+                }
+            )
         elif result.adjusted_net < 0:
             # Fill required
-            fill_destinations.append({
-                "id": result.element_id,
-                "volume": abs(result.adjusted_net),
-            })
+            fill_destinations.append(
+                {
+                    "id": result.element_id,
+                    "volume": abs(result.adjusted_net),
+                }
+            )
 
     haul_routes = []
 
@@ -422,12 +434,14 @@ def calculate_haul_routes(
             haul_volume = min(source["volume"], remaining_fill)
 
             if haul_distance <= max_haul_distance:
-                haul_routes.append(HaulRoute(
-                    source_id=source["id"],
-                    destination_id=dest["id"],
-                    distance_m=haul_distance,
-                    volume_m3=haul_volume,
-                ))
+                haul_routes.append(
+                    HaulRoute(
+                        source_id=source["id"],
+                        destination_id=dest["id"],
+                        distance_m=haul_distance,
+                        volume_m3=haul_volume,
+                    )
+                )
 
                 source["volume"] -= haul_volume
                 remaining_fill -= haul_volume

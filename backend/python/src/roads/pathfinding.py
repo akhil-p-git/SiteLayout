@@ -16,6 +16,7 @@ from shapely.ops import unary_union
 
 class CostFactorType(Enum):
     """Types of cost factors for pathfinding."""
+
     DISTANCE = "distance"
     SLOPE = "slope"
     TURN = "turn"
@@ -25,6 +26,7 @@ class CostFactorType(Enum):
 @dataclass
 class PathfindingConfig:
     """Configuration for A* pathfinding."""
+
     grid_resolution: float = 5.0  # meters per grid cell
     max_gradient: float = 12.0  # percent (rise/run * 100)
     road_width: float = 6.0  # meters
@@ -37,7 +39,7 @@ class PathfindingConfig:
 
     # Penalties
     steep_slope_penalty: float = 10.0  # Applied when slope > max_gradient * 0.8
-    exclusion_penalty: float = float('inf')  # Cannot cross exclusion zones
+    exclusion_penalty: float = float("inf")  # Cannot cross exclusion zones
 
     # Algorithm settings
     diagonal_movement: bool = True
@@ -48,18 +50,19 @@ class PathfindingConfig:
 @dataclass
 class PathNode:
     """Node in the pathfinding grid."""
+
     x: int
     y: int
-    g_cost: float = float('inf')  # Cost from start
+    g_cost: float = float("inf")  # Cost from start
     h_cost: float = 0.0  # Heuristic cost to end
-    parent: Optional['PathNode'] = None
+    parent: Optional["PathNode"] = None
 
     @property
     def f_cost(self) -> float:
         """Total cost (g + h)."""
         return self.g_cost + self.h_cost
 
-    def __lt__(self, other: 'PathNode') -> bool:
+    def __lt__(self, other: "PathNode") -> bool:
         return self.f_cost < other.f_cost
 
     def __hash__(self) -> int:
@@ -74,6 +77,7 @@ class PathNode:
 @dataclass
 class RoadSegment:
     """A segment of road between two points."""
+
     start: Tuple[float, float]
     end: Tuple[float, float]
     length: float
@@ -93,6 +97,7 @@ class RoadSegment:
 @dataclass
 class RoadPath:
     """A complete road path from start to end."""
+
     path_id: str
     start_point: Tuple[float, float]
     end_point: Tuple[float, float]
@@ -123,6 +128,7 @@ class RoadPath:
 @dataclass
 class RoadNetwork:
     """Complete road network for a site."""
+
     network_id: str
     entry_point: Tuple[float, float]
     paths: List[RoadPath]
@@ -195,7 +201,10 @@ class TerrainAwarePathfinder:
                 x, y = self._grid_to_world(col, row)
                 # Check if point is in exclusion zone (with buffer for road width)
                 point = Point(x, y)
-                if exclusion_union.contains(point) or exclusion_union.distance(point) < self.config.road_width / 2:
+                if (
+                    exclusion_union.contains(point)
+                    or exclusion_union.distance(point) < self.config.road_width / 2
+                ):
                     self.exclusion_mask[row, col] = True
 
         # Also mask areas outside boundary
@@ -238,10 +247,19 @@ class TerrainAwarePathfinder:
                     self.cost_grid[row, col] = self.config.steep_slope_penalty
                 elif slope_percent > self.config.max_gradient * 0.8:
                     # Moderate penalty for slopes approaching limit
-                    self.cost_grid[row, col] = 1.0 + (slope_percent / self.config.max_gradient) * self.config.slope_weight
+                    self.cost_grid[row, col] = (
+                        1.0
+                        + (slope_percent / self.config.max_gradient)
+                        * self.config.slope_weight
+                    )
                 else:
                     # Normal cost based on slope
-                    self.cost_grid[row, col] = 1.0 + (slope_percent / self.config.max_gradient) * self.config.slope_weight * 0.5
+                    self.cost_grid[row, col] = (
+                        1.0
+                        + (slope_percent / self.config.max_gradient)
+                        * self.config.slope_weight
+                        * 0.5
+                    )
 
     def _grid_to_world(self, col: int, row: int) -> Tuple[float, float]:
         """Convert grid coordinates to world coordinates."""
@@ -264,9 +282,14 @@ class TerrainAwarePathfinder:
         # 8-directional movement if diagonal allowed, else 4-directional
         if self.config.diagonal_movement:
             directions = [
-                (-1, -1), (0, -1), (1, -1),
-                (-1, 0),          (1, 0),
-                (-1, 1),  (0, 1),  (1, 1),
+                (-1, -1),
+                (0, -1),
+                (1, -1),
+                (-1, 0),
+                (1, 0),
+                (-1, 1),
+                (0, 1),
+                (1, 1),
             ]
         else:
             directions = [(0, -1), (-1, 0), (1, 0), (0, 1)]
@@ -300,8 +323,9 @@ class TerrainAwarePathfinder:
                 if (dx, dy) != (prev_dx, prev_dy):
                     turn_cost = self.config.turn_weight * base_cost
 
-            total_cost = (base_cost * terrain_cost * self.config.distance_weight +
-                         turn_cost)
+            total_cost = (
+                base_cost * terrain_cost * self.config.distance_weight + turn_cost
+            )
 
             neighbor = PathNode(nx, ny)
             neighbors.append((neighbor, total_cost))
@@ -409,7 +433,9 @@ class TerrainAwarePathfinder:
 
         return path
 
-    def _smooth_path(self, path: List[Tuple[float, float]]) -> List[Tuple[float, float]]:
+    def _smooth_path(
+        self, path: List[Tuple[float, float]]
+    ) -> List[Tuple[float, float]]:
         """Smooth path using iterative averaging."""
         if len(path) < 3:
             return path
@@ -466,13 +492,15 @@ class TerrainAwarePathfinder:
                     elev_change = end_elev - start_elev
                     gradient = (elev_change / length) * 100 if length > 0 else 0.0
 
-            segments.append(RoadSegment(
-                start=start,
-                end=end,
-                length=length,
-                gradient=gradient,
-                direction=direction,
-            ))
+            segments.append(
+                RoadSegment(
+                    start=start,
+                    end=end,
+                    length=length,
+                    gradient=gradient,
+                    direction=direction,
+                )
+            )
 
         return segments
 
@@ -574,7 +602,9 @@ def generate_road_network(
 
     # Calculate coverage area (buffer around roads)
     if paths:
-        road_geometries = [p.geometry.buffer(pathfinding_config.road_width / 2) for p in paths]
+        road_geometries = [
+            p.geometry.buffer(pathfinding_config.road_width / 2) for p in paths
+        ]
         coverage = unary_union(road_geometries)
         coverage_area = coverage.area
     else:

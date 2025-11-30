@@ -20,6 +20,7 @@ from .dem_generator import DEMResult, save_dem_as_geotiff
 
 class SlopeUnit(str, Enum):
     """Units for slope measurement."""
+
     DEGREES = "degrees"
     PERCENT = "percent"
     RATIO = "ratio"
@@ -28,6 +29,7 @@ class SlopeUnit(str, Enum):
 @dataclass
 class SlopeClassBreakpoint:
     """Defines a slope classification breakpoint."""
+
     max_slope: float  # Maximum slope for this class (in degrees)
     label: str
     color: tuple[int, int, int]  # RGB color for visualization
@@ -36,17 +38,31 @@ class SlopeClassBreakpoint:
 
 # Default slope classification for solar sites
 DEFAULT_SLOPE_CLASSES: list[SlopeClassBreakpoint] = [
-    SlopeClassBreakpoint(max_slope=3.0, label="Flat (0-3%)", color=(0, 128, 0), buildable=True),
-    SlopeClassBreakpoint(max_slope=5.0, label="Gentle (3-5%)", color=(144, 238, 144), buildable=True),
-    SlopeClassBreakpoint(max_slope=10.0, label="Moderate (5-10%)", color=(255, 255, 0), buildable=True),
-    SlopeClassBreakpoint(max_slope=15.0, label="Steep (10-15%)", color=(255, 165, 0), buildable=False),
-    SlopeClassBreakpoint(max_slope=float('inf'), label="Very Steep (>15%)", color=(255, 0, 0), buildable=False),
+    SlopeClassBreakpoint(
+        max_slope=3.0, label="Flat (0-3%)", color=(0, 128, 0), buildable=True
+    ),
+    SlopeClassBreakpoint(
+        max_slope=5.0, label="Gentle (3-5%)", color=(144, 238, 144), buildable=True
+    ),
+    SlopeClassBreakpoint(
+        max_slope=10.0, label="Moderate (5-10%)", color=(255, 255, 0), buildable=True
+    ),
+    SlopeClassBreakpoint(
+        max_slope=15.0, label="Steep (10-15%)", color=(255, 165, 0), buildable=False
+    ),
+    SlopeClassBreakpoint(
+        max_slope=float("inf"),
+        label="Very Steep (>15%)",
+        color=(255, 0, 0),
+        buildable=False,
+    ),
 ]
 
 
 @dataclass
 class TerrainMetrics:
     """Elevation and terrain metrics for an area."""
+
     min_elevation: float
     max_elevation: float
     mean_elevation: float
@@ -68,6 +84,7 @@ class TerrainMetrics:
 @dataclass
 class SlopeResult:
     """Result of slope calculation."""
+
     data: NDArray[np.float64]
     unit: SlopeUnit
     transform: Affine
@@ -96,6 +113,7 @@ class SlopeResult:
 @dataclass
 class AspectResult:
     """Result of aspect calculation."""
+
     data: NDArray[np.float64]  # 0-360 degrees, -1 for flat
     transform: Affine
     crs: CRS
@@ -121,6 +139,7 @@ class AspectResult:
 @dataclass
 class ClassifiedSlopeResult:
     """Result of slope classification."""
+
     data: NDArray[np.int32]  # Class indices
     classes: list[SlopeClassBreakpoint]
     transform: Affine
@@ -157,7 +176,7 @@ def calculate_slope(
     data = np.where(data == nodata, np.nan, data)
 
     # Pad array to handle edges
-    padded = np.pad(data, 1, mode='edge')
+    padded = np.pad(data, 1, mode="edge")
 
     # Extract 3x3 neighborhood values using Horn's method
     # z1 z2 z3
@@ -173,8 +192,8 @@ def calculate_slope(
     z9 = padded[2:, 2:]
 
     # Calculate dz/dx and dz/dy using Horn's method
-    dz_dx = ((z3 + 2*z6 + z9) - (z1 + 2*z4 + z7)) / (8 * cell_size_x)
-    dz_dy = ((z7 + 2*z8 + z9) - (z1 + 2*z2 + z3)) / (8 * cell_size_y)
+    dz_dx = ((z3 + 2 * z6 + z9) - (z1 + 2 * z4 + z7)) / (8 * cell_size_x)
+    dz_dy = ((z7 + 2 * z8 + z9) - (z1 + 2 * z2 + z3)) / (8 * cell_size_y)
 
     # Calculate slope
     slope_radians = np.arctan(np.sqrt(dz_dx**2 + dz_dy**2))
@@ -229,7 +248,7 @@ def calculate_aspect(dem: DEMResult) -> AspectResult:
     data = np.where(data == nodata, np.nan, data)
 
     # Pad array
-    padded = np.pad(data, 1, mode='edge')
+    padded = np.pad(data, 1, mode="edge")
 
     # Extract neighborhood
     z1 = padded[:-2, :-2]
@@ -242,8 +261,8 @@ def calculate_aspect(dem: DEMResult) -> AspectResult:
     z9 = padded[2:, 2:]
 
     # Calculate gradients
-    dz_dx = ((z3 + 2*z6 + z9) - (z1 + 2*z4 + z7)) / (8 * cell_size_x)
-    dz_dy = ((z7 + 2*z8 + z9) - (z1 + 2*z2 + z3)) / (8 * cell_size_y)
+    dz_dx = ((z3 + 2 * z6 + z9) - (z1 + 2 * z4 + z7)) / (8 * cell_size_x)
+    dz_dy = ((z7 + 2 * z8 + z9) - (z1 + 2 * z2 + z3)) / (8 * cell_size_y)
 
     # Calculate aspect (in radians, then convert to degrees)
     # atan2 returns -pi to pi, we need 0 to 360
@@ -275,7 +294,9 @@ def calculate_aspect(dem: DEMResult) -> AspectResult:
     )
 
 
-def _calculate_aspect_distribution(aspect_data: NDArray[np.float64]) -> dict[str, float]:
+def _calculate_aspect_distribution(
+    aspect_data: NDArray[np.float64],
+) -> dict[str, float]:
     """Calculate percentage of area facing each cardinal direction."""
     if len(aspect_data) == 0:
         return {d: 0.0 for d in ["N", "NE", "E", "SE", "S", "SW", "W", "NW", "Flat"]}
@@ -396,7 +417,7 @@ def calculate_terrain_metrics(
     dominant = max(
         [(k, v) for k, v in aspect_dist.items() if k != "Flat"],
         key=lambda x: x[1],
-        default=("N", 0)
+        default=("N", 0),
     )
 
     return TerrainMetrics(
@@ -456,7 +477,7 @@ def generate_slope_visualization(
         plt.imshow(rgb)
         plt.colorbar(label="Slope Class")
         plt.title("Slope Classification")
-        plt.savefig(output_path, dpi=150, bbox_inches='tight')
+        plt.savefig(output_path, dpi=150, bbox_inches="tight")
         plt.close()
     else:
         # Continuous slope visualization
@@ -468,7 +489,7 @@ def generate_slope_visualization(
         im = plt.imshow(data, cmap=cmap, vmin=0, vmax=min(30, slope.max_slope))
         plt.colorbar(im, label=f"Slope ({slope.unit.value})")
         plt.title("Slope Analysis")
-        plt.savefig(output_path, dpi=150, bbox_inches='tight')
+        plt.savefig(output_path, dpi=150, bbox_inches="tight")
         plt.close()
 
     return output_path
@@ -501,13 +522,13 @@ def generate_aspect_visualization(
 
     # Use circular colormap for aspect
     plt.figure(figsize=(12, 10))
-    cmap = cm.get_cmap('hsv')
+    cmap = cm.get_cmap("hsv")
     im = plt.imshow(data, cmap=cmap, vmin=0, vmax=360)
     cbar = plt.colorbar(im, label="Aspect (degrees from North)")
     cbar.set_ticks([0, 45, 90, 135, 180, 225, 270, 315, 360])
-    cbar.set_ticklabels(['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW', 'N'])
+    cbar.set_ticklabels(["N", "NE", "E", "SE", "S", "SW", "W", "NW", "N"])
     plt.title("Aspect Analysis")
-    plt.savefig(output_path, dpi=150, bbox_inches='tight')
+    plt.savefig(output_path, dpi=150, bbox_inches="tight")
     plt.close()
 
     return output_path

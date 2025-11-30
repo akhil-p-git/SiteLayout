@@ -44,17 +44,18 @@ UPLOAD_DIR = Path(os.getenv("UPLOAD_DIR", "./uploads"))
 class DEMConfigRequest(BaseModel):
     """Request model for DEM configuration."""
 
-    resolution: float = Field(default=1.0, ge=0.1, le=100.0, description="Pixel size in CRS units")
+    resolution: float = Field(
+        default=1.0, ge=0.1, le=100.0, description="Pixel size in CRS units"
+    )
     crs: str = Field(default="EPSG:4326", description="Coordinate reference system")
     interpolation_method: Literal["linear", "nearest"] = Field(
-        default="linear",
-        description="Interpolation method"
+        default="linear", description="Interpolation method"
     )
     sample_interval: float = Field(
         default=10.0,
         ge=0.1,
         le=100.0,
-        description="Distance between contour sample points"
+        description="Distance between contour sample points",
     )
     buffer: float = Field(default=0.0, ge=0, description="Buffer around bounds")
     create_cog: bool = Field(default=True, description="Create Cloud Optimized GeoTIFF")
@@ -128,14 +129,14 @@ dem_router = APIRouter()
 
 @dem_router.post("/dxf/info", response_model=DXFInfoResponse)
 async def get_dxf_file_info(
-    file: Annotated[UploadFile, File(description="DXF contour file")]
+    file: Annotated[UploadFile, File(description="DXF contour file")],
 ) -> DXFInfoResponse:
     """
     Get information about a DXF file without full parsing.
 
     Returns basic metadata including layers, entity counts, and version.
     """
-    if not file.filename or not file.filename.lower().endswith('.dxf'):
+    if not file.filename or not file.filename.lower().endswith(".dxf"):
         raise HTTPException(status_code=400, detail="File must be a DXF file")
 
     # Save uploaded file temporarily
@@ -154,14 +155,16 @@ async def get_dxf_file_info(
 @dem_router.post("/dxf/parse", response_model=ContourSetResponse)
 async def parse_dxf_contours(
     file: Annotated[UploadFile, File(description="DXF contour file")],
-    layers: Annotated[str | None, Form(description="Comma-separated layer names to include")] = None,
+    layers: Annotated[
+        str | None, Form(description="Comma-separated layer names to include")
+    ] = None,
 ) -> ContourSetResponse:
     """
     Parse a DXF file and extract contour information.
 
     Extracts elevation data from contour lines and returns metadata.
     """
-    if not file.filename or not file.filename.lower().endswith('.dxf'):
+    if not file.filename or not file.filename.lower().endswith(".dxf"):
         raise HTTPException(status_code=400, detail="File must be a DXF file")
 
     # Save uploaded file temporarily
@@ -199,9 +202,13 @@ async def generate_dem(
     resolution: Annotated[float, Form(description="Output resolution")] = 1.0,
     crs: Annotated[str, Form(description="Coordinate reference system")] = "EPSG:4326",
     interpolation: Annotated[str, Form(description="Interpolation method")] = "linear",
-    sample_interval: Annotated[float, Form(description="Contour sample interval")] = 10.0,
+    sample_interval: Annotated[
+        float, Form(description="Contour sample interval")
+    ] = 10.0,
     buffer: Annotated[float, Form(description="Buffer around bounds")] = 0.0,
-    create_cog: Annotated[bool, Form(description="Create Cloud Optimized GeoTIFF")] = True,
+    create_cog: Annotated[
+        bool, Form(description="Create Cloud Optimized GeoTIFF")
+    ] = True,
 ) -> DEMGenerationResponse:
     """
     Generate a DEM from a DXF contour file.
@@ -211,12 +218,13 @@ async def generate_dem(
     """
     filename = file.filename or "upload"
 
-    if not (filename.lower().endswith('.dxf') or
-            filename.lower().endswith('.tif') or
-            filename.lower().endswith('.tiff')):
+    if not (
+        filename.lower().endswith(".dxf")
+        or filename.lower().endswith(".tif")
+        or filename.lower().endswith(".tiff")
+    ):
         raise HTTPException(
-            status_code=400,
-            detail="File must be a DXF or GeoTIFF file"
+            status_code=400, detail="File must be a DXF or GeoTIFF file"
         )
 
     # Generate unique ID for this DEM
@@ -229,14 +237,18 @@ async def generate_dem(
         content = await file.read()
         temp_path.write_bytes(content)
 
-        if filename.lower().endswith('.dxf'):
+        if filename.lower().endswith(".dxf"):
             # Parse DXF and generate DEM
             contour_set = parse_dxf(temp_path)
 
             config = DEMConfig(
                 resolution=resolution,
                 crs=crs,
-                interpolation_method=interpolation if interpolation in ["linear", "nearest"] else "linear",
+                interpolation_method=(
+                    interpolation
+                    if interpolation in ["linear", "nearest"]
+                    else "linear"
+                ),
                 sample_interval=sample_interval,
                 buffer=buffer,
             )
@@ -319,7 +331,9 @@ async def get_dem_stats(dem_id: str) -> DEMStatsResponse:
 
 
 @dem_router.post("/dem/{dem_id}/elevation", response_model=ElevationQueryResponse)
-async def query_elevation(dem_id: str, query: ElevationQueryRequest) -> ElevationQueryResponse:
+async def query_elevation(
+    dem_id: str, query: ElevationQueryRequest
+) -> ElevationQueryResponse:
     """
     Query elevation at a specific coordinate.
 
@@ -362,8 +376,10 @@ async def delete_dem(dem_id: str) -> dict:
 # Terrain Analysis Endpoints
 # ============================================================================
 
+
 class SlopeResponse(BaseModel):
     """Response model for slope analysis."""
+
     slope_id: str
     min_slope: float
     max_slope: float
@@ -374,6 +390,7 @@ class SlopeResponse(BaseModel):
 
 class AspectResponse(BaseModel):
     """Response model for aspect analysis."""
+
     aspect_id: str
     distribution: dict[str, float]
     dominant_direction: str
@@ -382,6 +399,7 @@ class AspectResponse(BaseModel):
 
 class SlopeClassDistribution(BaseModel):
     """Slope class distribution."""
+
     class_name: str
     percentage: float
     buildable: bool
@@ -389,6 +407,7 @@ class SlopeClassDistribution(BaseModel):
 
 class ClassifiedSlopeResponse(BaseModel):
     """Response model for classified slope."""
+
     slope_id: str
     buildable_percent: float
     class_distribution: list[SlopeClassDistribution]
@@ -397,6 +416,7 @@ class ClassifiedSlopeResponse(BaseModel):
 
 class TerrainMetricsResponse(BaseModel):
     """Response model for terrain metrics."""
+
     min_elevation: float
     max_elevation: float
     mean_elevation: float
@@ -414,6 +434,7 @@ class TerrainMetricsResponse(BaseModel):
 
 class SteepAreasResponse(BaseModel):
     """Response model for steep areas identification."""
+
     threshold: float
     steep_pixel_count: int
     steep_area_percent: float
@@ -444,7 +465,11 @@ async def analyze_slope(
         dem = load_dem_from_geotiff(dem_path)
 
         # Calculate slope
-        slope_unit = SlopeUnit(unit) if unit in ["degrees", "percent", "ratio"] else SlopeUnit.DEGREES
+        slope_unit = (
+            SlopeUnit(unit)
+            if unit in ["degrees", "percent", "ratio"]
+            else SlopeUnit.DEGREES
+        )
         slope = calculate_slope(dem, slope_unit)
 
         # Save slope raster
@@ -489,7 +514,7 @@ async def analyze_aspect(dem_id: str) -> AspectResponse:
         dominant = max(
             [(k, v) for k, v in aspect.distribution.items() if k != "Flat"],
             key=lambda x: x[1],
-            default=("N", 0)
+            default=("N", 0),
         )
 
         return AspectResponse(
@@ -530,11 +555,36 @@ async def classify_dem_slope(
 
         # Create custom classes from thresholds
         classes = [
-            SlopeClassBreakpoint(max_slope=threshold_1, label=f"Flat (0-{threshold_1}%)", color=(0, 128, 0), buildable=True),
-            SlopeClassBreakpoint(max_slope=threshold_2, label=f"Gentle ({threshold_1}-{threshold_2}%)", color=(144, 238, 144), buildable=True),
-            SlopeClassBreakpoint(max_slope=threshold_3, label=f"Moderate ({threshold_2}-{threshold_3}%)", color=(255, 255, 0), buildable=True),
-            SlopeClassBreakpoint(max_slope=threshold_4, label=f"Steep ({threshold_3}-{threshold_4}%)", color=(255, 165, 0), buildable=False),
-            SlopeClassBreakpoint(max_slope=float('inf'), label=f"Very Steep (>{threshold_4}%)", color=(255, 0, 0), buildable=False),
+            SlopeClassBreakpoint(
+                max_slope=threshold_1,
+                label=f"Flat (0-{threshold_1}%)",
+                color=(0, 128, 0),
+                buildable=True,
+            ),
+            SlopeClassBreakpoint(
+                max_slope=threshold_2,
+                label=f"Gentle ({threshold_1}-{threshold_2}%)",
+                color=(144, 238, 144),
+                buildable=True,
+            ),
+            SlopeClassBreakpoint(
+                max_slope=threshold_3,
+                label=f"Moderate ({threshold_2}-{threshold_3}%)",
+                color=(255, 255, 0),
+                buildable=True,
+            ),
+            SlopeClassBreakpoint(
+                max_slope=threshold_4,
+                label=f"Steep ({threshold_3}-{threshold_4}%)",
+                color=(255, 165, 0),
+                buildable=False,
+            ),
+            SlopeClassBreakpoint(
+                max_slope=float("inf"),
+                label=f"Very Steep (>{threshold_4}%)",
+                color=(255, 0, 0),
+                buildable=False,
+            ),
         ]
 
         classified = classify_slope(slope, classes)
@@ -561,7 +611,9 @@ async def classify_dem_slope(
             filepath=str(viz_path),
         )
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Slope classification failed: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Slope classification failed: {str(e)}"
+        )
 
 
 @dem_router.get("/dem/{dem_id}/metrics", response_model=TerrainMetricsResponse)
@@ -596,7 +648,9 @@ async def get_terrain_metrics(dem_id: str) -> TerrainMetricsResponse:
             slope_class_distribution=metrics.slope_class_distribution,
         )
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Metrics calculation failed: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Metrics calculation failed: {str(e)}"
+        )
 
 
 @dem_router.get("/dem/{dem_id}/steep-areas", response_model=SteepAreasResponse)
@@ -627,11 +681,15 @@ async def identify_dem_steep_areas(
         return SteepAreasResponse(
             threshold=threshold,
             steep_pixel_count=steep_count,
-            steep_area_percent=float(steep_count / total_valid * 100) if total_valid > 0 else 0.0,
+            steep_area_percent=(
+                float(steep_count / total_valid * 100) if total_valid > 0 else 0.0
+            ),
             total_pixels=total_valid,
         )
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Steep area identification failed: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Steep area identification failed: {str(e)}"
+        )
 
 
 @dem_router.get("/dem/{dem_id}/slope/visualization")
@@ -651,7 +709,11 @@ async def get_slope_visualization(
 
     try:
         dem = load_dem_from_geotiff(dem_path)
-        slope_unit = SlopeUnit(unit) if unit in ["degrees", "percent", "ratio"] else SlopeUnit.DEGREES
+        slope_unit = (
+            SlopeUnit(unit)
+            if unit in ["degrees", "percent", "ratio"]
+            else SlopeUnit.DEGREES
+        )
         slope = calculate_slope(dem, slope_unit)
 
         viz_path = OUTPUT_DIR / f"{dem_id}_slope_viz.png"
@@ -708,33 +770,44 @@ from ..optimization import (
 
 class AssetToPlace(BaseModel):
     """Asset to place in optimization."""
-    type: str = Field(description="Asset type (bess, substation, o_and_m, parking, laydown)")
+
+    type: str = Field(
+        description="Asset type (bess, substation, o_and_m, parking, laydown)"
+    )
     quantity: int = Field(default=1, ge=1, description="Number of assets to place")
 
 
 class OptimizationRequest(BaseModel):
     """Request model for layout optimization."""
+
     site_boundary: dict = Field(description="GeoJSON polygon of site boundary")
     exclusion_zones: list[dict] | None = Field(
-        default=None,
-        description="List of GeoJSON polygons for exclusion zones"
+        default=None, description="List of GeoJSON polygons for exclusion zones"
     )
     assets_to_place: list[AssetToPlace] | None = Field(
-        default=None,
-        description="Assets to place (uses defaults if not specified)"
+        default=None, description="Assets to place (uses defaults if not specified)"
     )
     objective: str = Field(
         default="balanced",
-        description="Optimization objective: min_earthwork, max_capacity, balanced, min_cable_length"
+        description="Optimization objective: min_earthwork, max_capacity, balanced, min_cable_length",
     )
-    population_size: int = Field(default=50, ge=10, le=500, description="GA population size")
-    generations: int = Field(default=100, ge=10, le=1000, description="Number of generations")
-    generate_alternatives: int = Field(default=3, ge=0, le=10, description="Number of alternative layouts")
-    dem_id: str | None = Field(default=None, description="DEM ID for slope data (optional)")
+    population_size: int = Field(
+        default=50, ge=10, le=500, description="GA population size"
+    )
+    generations: int = Field(
+        default=100, ge=10, le=1000, description="Number of generations"
+    )
+    generate_alternatives: int = Field(
+        default=3, ge=0, le=10, description="Number of alternative layouts"
+    )
+    dem_id: str | None = Field(
+        default=None, description="DEM ID for slope data (optional)"
+    )
 
 
 class PlacedAssetResponse(BaseModel):
     """Placed asset in result."""
+
     asset_id: str
     asset_type: str
     name: str
@@ -746,6 +819,7 @@ class PlacedAssetResponse(BaseModel):
 
 class LayoutSolutionResponse(BaseModel):
     """Layout solution in result."""
+
     solution_id: str
     placed_assets: list[PlacedAssetResponse]
     fitness_score: float
@@ -759,6 +833,7 @@ class LayoutSolutionResponse(BaseModel):
 
 class OptimizationResponse(BaseModel):
     """Response model for optimization."""
+
     best_solution: LayoutSolutionResponse
     alternative_solutions: list[LayoutSolutionResponse]
     convergence_history: list[float]
@@ -769,6 +844,7 @@ class OptimizationResponse(BaseModel):
 
 class AssetTypeInfo(BaseModel):
     """Asset type information."""
+
     type: str
     name: str
     dimensions: dict
@@ -789,17 +865,19 @@ async def get_asset_types() -> list[AssetTypeInfo]:
     """
     asset_types = []
     for asset_type, definition in DEFAULT_ASSET_DEFINITIONS.items():
-        asset_types.append(AssetTypeInfo(
-            type=asset_type.value,
-            name=definition.name,
-            dimensions={
-                "width": definition.dimensions.width,
-                "length": definition.dimensions.length,
-                "height": definition.dimensions.height,
-            },
-            default_quantity=definition.quantity,
-            priority=definition.priority,
-        ))
+        asset_types.append(
+            AssetTypeInfo(
+                type=asset_type.value,
+                name=definition.name,
+                dimensions={
+                    "width": definition.dimensions.width,
+                    "length": definition.dimensions.length,
+                    "height": definition.dimensions.height,
+                },
+                default_quantity=definition.quantity,
+                priority=definition.priority,
+            )
+        )
     return asset_types
 
 
@@ -938,33 +1016,49 @@ from ..roads import (
 
 class RoadDestination(BaseModel):
     """Destination point for road network."""
+
     x: float = Field(description="X coordinate (longitude)")
     y: float = Field(description="Y coordinate (latitude)")
     name: str = Field(default="", description="Optional name for the destination")
-    priority: int = Field(default=1, ge=1, le=10, description="Connection priority (1=highest)")
+    priority: int = Field(
+        default=1, ge=1, le=10, description="Connection priority (1=highest)"
+    )
 
 
 class RoadNetworkRequest(BaseModel):
     """Request model for road network generation."""
+
     site_boundary: dict = Field(description="GeoJSON polygon of site boundary")
     entry_point: dict = Field(description="Entry point coordinates {x, y}")
-    destinations: list[RoadDestination] = Field(description="Destination points to connect")
+    destinations: list[RoadDestination] = Field(
+        description="Destination points to connect"
+    )
     exclusion_zones: list[dict] | None = Field(
-        default=None,
-        description="List of GeoJSON polygons for exclusion zones"
+        default=None, description="List of GeoJSON polygons for exclusion zones"
     )
     dem_id: str | None = Field(
-        default=None,
-        description="DEM ID for terrain-aware routing (optional)"
+        default=None, description="DEM ID for terrain-aware routing (optional)"
     )
-    road_width: float = Field(default=6.0, ge=3.0, le=20.0, description="Road width in meters")
-    max_gradient: float = Field(default=10.0, ge=1.0, le=25.0, description="Maximum road gradient in percent")
-    grid_resolution: float = Field(default=5.0, ge=1.0, le=50.0, description="Pathfinding grid resolution in meters")
-    smoothing_iterations: int = Field(default=3, ge=0, le=10, description="Path smoothing iterations")
+    road_width: float = Field(
+        default=6.0, ge=3.0, le=20.0, description="Road width in meters"
+    )
+    max_gradient: float = Field(
+        default=10.0, ge=1.0, le=25.0, description="Maximum road gradient in percent"
+    )
+    grid_resolution: float = Field(
+        default=5.0,
+        ge=1.0,
+        le=50.0,
+        description="Pathfinding grid resolution in meters",
+    )
+    smoothing_iterations: int = Field(
+        default=3, ge=0, le=10, description="Path smoothing iterations"
+    )
 
 
 class RoadSegmentResponse(BaseModel):
     """Road segment in response."""
+
     start: dict
     end: dict
     length: float
@@ -974,6 +1068,7 @@ class RoadSegmentResponse(BaseModel):
 
 class RoadPathResponse(BaseModel):
     """Road path in response."""
+
     destination_name: str
     segments: list[RoadSegmentResponse]
     total_length: float
@@ -985,6 +1080,7 @@ class RoadPathResponse(BaseModel):
 
 class RoadNetworkResponse(BaseModel):
     """Response model for road network generation."""
+
     success: bool
     entry_point: dict
     paths: list[RoadPathResponse]
@@ -1026,12 +1122,13 @@ async def generate_roads(request: RoadNetworkRequest) -> RoadNetworkResponse:
 
         # Convert destinations to tuples
         destinations = [
-            (d.x, d.y)
-            for d in sorted(request.destinations, key=lambda x: x.priority)
+            (d.x, d.y) for d in sorted(request.destinations, key=lambda x: x.priority)
         ]
         destination_names = [
             d.name or f"Destination {i+1}"
-            for i, d in enumerate(sorted(request.destinations, key=lambda x: x.priority))
+            for i, d in enumerate(
+                sorted(request.destinations, key=lambda x: x.priority)
+            )
         ]
 
         # Build config
@@ -1045,7 +1142,10 @@ async def generate_roads(request: RoadNetworkRequest) -> RoadNetworkResponse:
         # Generate road network
         result = generate_road_network(
             boundary=request.site_boundary,
-            entry_point=(request.entry_point.get("x", 0), request.entry_point.get("y", 0)),
+            entry_point=(
+                request.entry_point.get("x", 0),
+                request.entry_point.get("y", 0),
+            ),
             destinations=destinations,
             exclusion_zones=request.exclusion_zones,
             slope_data=slope_data,
@@ -1059,23 +1159,31 @@ async def generate_roads(request: RoadNetworkRequest) -> RoadNetworkResponse:
         for i, path in enumerate(result.get("paths", [])):
             segments = []
             for seg in path.get("segments", []):
-                segments.append(RoadSegmentResponse(
-                    start={"x": seg["start"][0], "y": seg["start"][1]},
-                    end={"x": seg["end"][0], "y": seg["end"][1]},
-                    length=seg["length"],
-                    gradient=seg["gradient"],
-                    is_valid=seg["is_valid"],
-                ))
+                segments.append(
+                    RoadSegmentResponse(
+                        start={"x": seg["start"][0], "y": seg["start"][1]},
+                        end={"x": seg["end"][0], "y": seg["end"][1]},
+                        length=seg["length"],
+                        gradient=seg["gradient"],
+                        is_valid=seg["is_valid"],
+                    )
+                )
 
-            paths.append(RoadPathResponse(
-                destination_name=destination_names[i] if i < len(destination_names) else f"Path {i+1}",
-                segments=segments,
-                total_length=path.get("total_length", 0),
-                max_gradient=path.get("max_gradient", 0),
-                average_gradient=path.get("average_gradient", 0),
-                is_complete=path.get("is_complete", False),
-                geojson=path.get("geojson"),
-            ))
+            paths.append(
+                RoadPathResponse(
+                    destination_name=(
+                        destination_names[i]
+                        if i < len(destination_names)
+                        else f"Path {i+1}"
+                    ),
+                    segments=segments,
+                    total_length=path.get("total_length", 0),
+                    max_gradient=path.get("max_gradient", 0),
+                    average_gradient=path.get("average_gradient", 0),
+                    is_complete=path.get("is_complete", False),
+                    geojson=path.get("geojson"),
+                )
+            )
 
         return RoadNetworkResponse(
             success=result.get("success", False),
@@ -1083,14 +1191,18 @@ async def generate_roads(request: RoadNetworkRequest) -> RoadNetworkResponse:
             paths=paths,
             total_road_length=result.get("total_road_length", 0),
             max_gradient_in_network=result.get("max_gradient_in_network", 0),
-            geojson=result.get("geojson", {"type": "FeatureCollection", "features": []}),
+            geojson=result.get(
+                "geojson", {"type": "FeatureCollection", "features": []}
+            ),
             statistics=result.get("statistics", {}),
         )
 
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Road network generation failed: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Road network generation failed: {str(e)}"
+        )
 
 
 @roads_router.post("/validate-gradient")
@@ -1129,6 +1241,7 @@ async def validate_road_gradient(
 
             # Calculate distance (approximate, in meters)
             import math
+
             dx = (p2["x"] - p1["x"]) * 111000  # degrees to meters approx
             dy = (p2["y"] - p1["y"]) * 111000
             distance = math.sqrt(dx * dx + dy * dy)
@@ -1141,13 +1254,15 @@ async def validate_road_gradient(
             max_found_gradient = max(max_found_gradient, gradient)
 
             if gradient > max_gradient:
-                violations.append({
-                    "segment_index": i,
-                    "start": p1,
-                    "end": p2,
-                    "gradient": gradient,
-                    "exceeds_by": gradient - max_gradient,
-                })
+                violations.append(
+                    {
+                        "segment_index": i,
+                        "start": p1,
+                        "end": p2,
+                        "gradient": gradient,
+                        "exceeds_by": gradient - max_gradient,
+                    }
+                )
 
         return {
             "is_valid": len(violations) == 0,
@@ -1157,7 +1272,9 @@ async def validate_road_gradient(
         }
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Gradient validation failed: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Gradient validation failed: {str(e)}"
+        )
 
 
 @roads_router.get("/config/defaults")
@@ -1232,6 +1349,7 @@ from ..earthwork import (
 
 class PadDesignRequest(BaseModel):
     """Pad design for earthwork calculation."""
+
     asset_id: str = Field(description="Unique asset identifier")
     asset_type: str = Field(description="Type of asset (bess, substation, etc.)")
     position_x: float = Field(description="X coordinate of pad center")
@@ -1239,51 +1357,89 @@ class PadDesignRequest(BaseModel):
     width: float = Field(description="Pad width in meters")
     length: float = Field(description="Pad length in meters")
     rotation: float = Field(default=0.0, description="Rotation in degrees")
-    target_elevation: float | None = Field(default=None, description="Target elevation (auto if None)")
-    grading_method: str = Field(default="level", description="Grading method: level, sloped, terraced")
-    buffer_distance: float = Field(default=2.0, ge=0, description="Buffer around pad for grading")
+    target_elevation: float | None = Field(
+        default=None, description="Target elevation (auto if None)"
+    )
+    grading_method: str = Field(
+        default="level", description="Grading method: level, sloped, terraced"
+    )
+    buffer_distance: float = Field(
+        default=2.0, ge=0, description="Buffer around pad for grading"
+    )
 
 
 class RoadDesignRequest(BaseModel):
     """Road segment design for earthwork calculation."""
+
     segment_id: str = Field(description="Unique segment identifier")
     start_x: float = Field(description="Start X coordinate")
     start_y: float = Field(description="Start Y coordinate")
     end_x: float = Field(description="End X coordinate")
     end_y: float = Field(description="End Y coordinate")
     width: float = Field(default=6.0, ge=3.0, description="Road width in meters")
-    max_grade: float = Field(default=10.0, ge=1.0, le=25.0, description="Maximum grade %")
-    shoulder_width: float = Field(default=1.0, ge=0, description="Shoulder width each side")
+    max_grade: float = Field(
+        default=10.0, ge=1.0, le=25.0, description="Maximum grade %"
+    )
+    shoulder_width: float = Field(
+        default=1.0, ge=0, description="Shoulder width each side"
+    )
 
 
 class SoilPropertiesRequest(BaseModel):
     """Soil properties for earthwork calculation."""
-    soil_type: str = Field(default="mixed", description="Soil type: rock, gravel, sand, clay, topsoil, mixed")
-    shrink_factor: float = Field(default=0.9, ge=0.5, le=1.0, description="Shrink factor for cut")
-    swell_factor: float = Field(default=1.2, ge=1.0, le=2.0, description="Swell factor for fill")
+
+    soil_type: str = Field(
+        default="mixed",
+        description="Soil type: rock, gravel, sand, clay, topsoil, mixed",
+    )
+    shrink_factor: float = Field(
+        default=0.9, ge=0.5, le=1.0, description="Shrink factor for cut"
+    )
+    swell_factor: float = Field(
+        default=1.2, ge=1.0, le=2.0, description="Swell factor for fill"
+    )
 
 
 class CostFactorsRequest(BaseModel):
     """Cost factors for earthwork estimation."""
-    cut_cost_per_m3: float = Field(default=5.0, ge=0, description="Cost per m³ for excavation")
-    fill_cost_per_m3: float = Field(default=8.0, ge=0, description="Cost per m³ for fill")
-    haul_cost_per_m3_km: float = Field(default=2.0, ge=0, description="Cost per m³/km for hauling")
-    import_cost_per_m3: float = Field(default=15.0, ge=0, description="Cost per m³ for importing")
-    export_cost_per_m3: float = Field(default=10.0, ge=0, description="Cost per m³ for exporting")
+
+    cut_cost_per_m3: float = Field(
+        default=5.0, ge=0, description="Cost per m³ for excavation"
+    )
+    fill_cost_per_m3: float = Field(
+        default=8.0, ge=0, description="Cost per m³ for fill"
+    )
+    haul_cost_per_m3_km: float = Field(
+        default=2.0, ge=0, description="Cost per m³/km for hauling"
+    )
+    import_cost_per_m3: float = Field(
+        default=15.0, ge=0, description="Cost per m³ for importing"
+    )
+    export_cost_per_m3: float = Field(
+        default=10.0, ge=0, description="Cost per m³ for exporting"
+    )
 
 
 class EarthworkRequest(BaseModel):
     """Request model for earthwork calculation."""
+
     project_id: str = Field(description="Project identifier")
     dem_id: str = Field(description="DEM ID for terrain data")
     pads: list[PadDesignRequest] = Field(default=[], description="List of pad designs")
-    roads: list[RoadDesignRequest] = Field(default=[], description="List of road designs")
-    soil_properties: SoilPropertiesRequest | None = Field(default=None, description="Soil properties")
-    cost_factors: CostFactorsRequest | None = Field(default=None, description="Cost factors")
+    roads: list[RoadDesignRequest] = Field(
+        default=[], description="List of road designs"
+    )
+    soil_properties: SoilPropertiesRequest | None = Field(
+        default=None, description="Soil properties"
+    )
+    cost_factors: CostFactorsRequest | None = Field(
+        default=None, description="Cost factors"
+    )
 
 
 class VolumeResultResponse(BaseModel):
     """Volume result for a single element."""
+
     element_id: str
     element_type: str
     cut_volume_m3: float
@@ -1301,6 +1457,7 @@ class VolumeResultResponse(BaseModel):
 
 class EarthworkSummaryResponse(BaseModel):
     """Response model for earthwork calculation."""
+
     project_id: str
     summary: dict
     pad_volumes: list[dict]
@@ -1314,7 +1471,9 @@ earthwork_router = APIRouter()
 
 
 @earthwork_router.post("/calculate", response_model=EarthworkSummaryResponse)
-async def calculate_earthwork_volumes(request: EarthworkRequest) -> EarthworkSummaryResponse:
+async def calculate_earthwork_volumes(
+    request: EarthworkRequest,
+) -> EarthworkSummaryResponse:
     """
     Calculate cut/fill volumes for asset pads and roads.
 
@@ -1338,7 +1497,11 @@ async def calculate_earthwork_volumes(request: EarthworkRequest) -> EarthworkSum
                 dimensions=(p.width, p.length),
                 rotation=p.rotation,
                 target_elevation=p.target_elevation,
-                grading_method=GradingMethod(p.grading_method) if p.grading_method else GradingMethod.LEVEL,
+                grading_method=(
+                    GradingMethod(p.grading_method)
+                    if p.grading_method
+                    else GradingMethod.LEVEL
+                ),
                 buffer_distance=p.buffer_distance,
             )
             for p in request.pads
@@ -1400,7 +1563,9 @@ async def calculate_earthwork_volumes(request: EarthworkRequest) -> EarthworkSum
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Earthwork calculation failed: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Earthwork calculation failed: {str(e)}"
+        )
 
 
 @earthwork_router.post("/calculate-single-pad")
@@ -1450,7 +1615,11 @@ async def calculate_single_pad_volume(
             dimensions=(pad.width, pad.length),
             rotation=pad.rotation,
             target_elevation=pad.target_elevation,
-            grading_method=GradingMethod(pad.grading_method) if pad.grading_method else GradingMethod.LEVEL,
+            grading_method=(
+                GradingMethod(pad.grading_method)
+                if pad.grading_method
+                else GradingMethod.LEVEL
+            ),
             buffer_distance=pad.buffer_distance,
         )
 
@@ -1536,6 +1705,7 @@ from ..reports import (
 
 class ProjectInfoRequest(BaseModel):
     """Project info for report."""
+
     project_id: str
     project_name: str
     client_name: str | None = None
@@ -1547,6 +1717,7 @@ class ProjectInfoRequest(BaseModel):
 
 class TerrainSummaryRequest(BaseModel):
     """Terrain summary for report."""
+
     min_elevation: float
     max_elevation: float
     mean_elevation: float
@@ -1561,6 +1732,7 @@ class TerrainSummaryRequest(BaseModel):
 
 class AssetInfoRequest(BaseModel):
     """Asset info for report."""
+
     asset_id: str
     asset_type: str
     name: str
@@ -1579,6 +1751,7 @@ class AssetInfoRequest(BaseModel):
 
 class RoadInfoRequest(BaseModel):
     """Road info for report."""
+
     segment_id: str
     length_m: float
     width_m: float = 6.0
@@ -1591,6 +1764,7 @@ class RoadInfoRequest(BaseModel):
 
 class EarthworkSummaryRequest(BaseModel):
     """Earthwork summary for report."""
+
     total_cut_volume: float
     total_fill_volume: float
     net_volume: float
@@ -1605,6 +1779,7 @@ class EarthworkSummaryRequest(BaseModel):
 
 class CostBreakdownRequest(BaseModel):
     """Cost breakdown for report."""
+
     cut_cost: float
     fill_cost: float
     haul_cost: float
@@ -1617,6 +1792,7 @@ class CostBreakdownRequest(BaseModel):
 
 class ReportConfigRequest(BaseModel):
     """Report configuration."""
+
     sections: list[str] | None = None
     page_size: str = "letter"
     include_toc: bool = True
@@ -1625,6 +1801,7 @@ class ReportConfigRequest(BaseModel):
 
 class ReportRequest(BaseModel):
     """Request model for report generation."""
+
     project: ProjectInfoRequest
     config: ReportConfigRequest | None = None
     terrain: TerrainSummaryRequest | None = None
@@ -1636,6 +1813,7 @@ class ReportRequest(BaseModel):
 
 class ReportResultResponse(BaseModel):
     """Response model for report generation."""
+
     success: bool
     filename: str
     file_size: int
@@ -1662,7 +1840,9 @@ async def generate_pdf_report(request: ReportRequest) -> ReportResultResponse:
         config = ReportConfig(
             page_size=request.config.page_size if request.config else "letter",
             include_toc=request.config.include_toc if request.config else True,
-            company_name=request.config.company_name if request.config else "Site Layouts",
+            company_name=(
+                request.config.company_name if request.config else "Site Layouts"
+            ),
         )
 
         if request.config and request.config.sections:
@@ -1789,7 +1969,9 @@ async def generate_pdf_report(request: ReportRequest) -> ReportResultResponse:
         )
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Report generation failed: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Report generation failed: {str(e)}"
+        )
 
 
 @reports_router.get("/download/{filename}")
@@ -1846,48 +2028,80 @@ from ..carbon import (
 
 class EquipmentOperationRequest(BaseModel):
     """Equipment operation for carbon calculation."""
-    equipment_type: str = Field(description="Equipment type: excavator, bulldozer, loader, grader, compactor, dump_truck, scraper")
+
+    equipment_type: str = Field(
+        description="Equipment type: excavator, bulldozer, loader, grader, compactor, dump_truck, scraper"
+    )
     operating_days: int = Field(ge=1, description="Number of operating days")
 
 
 class HaulingParametersRequest(BaseModel):
     """Hauling parameters for carbon calculation."""
+
     haul_distance_km: float = Field(ge=0, description="One-way haul distance in km")
-    truck_capacity_m3: float = Field(default=15.0, ge=5.0, description="Truck capacity in m³")
+    truck_capacity_m3: float = Field(
+        default=15.0, ge=5.0, description="Truck capacity in m³"
+    )
 
 
 class RoadConstructionRequest(BaseModel):
     """Road construction for carbon calculation."""
+
     total_length_m: float = Field(ge=0, description="Total road length in meters")
     width_m: float = Field(default=6.0, ge=3.0, description="Road width in meters")
     pavement_depth_m: float = Field(default=0.15, ge=0.05, description="Pavement depth")
-    material_type: str = Field(default="asphalt", description="Material: asphalt or concrete")
+    material_type: str = Field(
+        default="asphalt", description="Material: asphalt or concrete"
+    )
 
 
 class EnergyProfileRequest(BaseModel):
     """Energy generation profile for carbon offset calculation."""
+
     capacity_mw: float = Field(ge=0, description="Project capacity in MW")
-    capacity_factor: float = Field(default=0.25, ge=0.1, le=0.5, description="Capacity factor")
-    energy_source: str = Field(default="solar", description="Energy source: solar, wind")
-    project_lifetime_years: int = Field(default=25, ge=10, le=40, description="Project lifetime")
+    capacity_factor: float = Field(
+        default=0.25, ge=0.1, le=0.5, description="Capacity factor"
+    )
+    energy_source: str = Field(
+        default="solar", description="Energy source: solar, wind"
+    )
+    project_lifetime_years: int = Field(
+        default=25, ge=10, le=40, description="Project lifetime"
+    )
 
 
 class CarbonCalculationRequest(BaseModel):
     """Request model for carbon calculation."""
+
     project_id: str = Field(description="Project identifier")
     cut_volume_m3: float = Field(default=0.0, ge=0, description="Cut volume in m³")
     fill_volume_m3: float = Field(default=0.0, ge=0, description="Fill volume in m³")
-    import_volume_m3: float = Field(default=0.0, ge=0, description="Import volume in m³")
-    export_volume_m3: float = Field(default=0.0, ge=0, description="Export volume in m³")
-    equipment: list[EquipmentOperationRequest] = Field(default=[], description="Equipment operations")
-    hauling: HaulingParametersRequest | None = Field(default=None, description="Hauling parameters")
-    road_construction: RoadConstructionRequest | None = Field(default=None, description="Road construction")
-    energy_profile: EnergyProfileRequest | None = Field(default=None, description="Energy generation profile")
-    grid_baseline: str = Field(default="us_average_grid", description="Grid baseline for offset comparison")
+    import_volume_m3: float = Field(
+        default=0.0, ge=0, description="Import volume in m³"
+    )
+    export_volume_m3: float = Field(
+        default=0.0, ge=0, description="Export volume in m³"
+    )
+    equipment: list[EquipmentOperationRequest] = Field(
+        default=[], description="Equipment operations"
+    )
+    hauling: HaulingParametersRequest | None = Field(
+        default=None, description="Hauling parameters"
+    )
+    road_construction: RoadConstructionRequest | None = Field(
+        default=None, description="Road construction"
+    )
+    energy_profile: EnergyProfileRequest | None = Field(
+        default=None, description="Energy generation profile"
+    )
+    grid_baseline: str = Field(
+        default="us_average_grid", description="Grid baseline for offset comparison"
+    )
 
 
 class CarbonResultResponse(BaseModel):
     """Response model for carbon calculation."""
+
     project_id: str
     construction: dict
     offset: dict | None = None
@@ -1904,7 +2118,9 @@ carbon_router = APIRouter()
 
 
 @carbon_router.post("/calculate", response_model=CarbonResultResponse)
-async def calculate_carbon_footprint(request: CarbonCalculationRequest) -> CarbonResultResponse:
+async def calculate_carbon_footprint(
+    request: CarbonCalculationRequest,
+) -> CarbonResultResponse:
     """
     Calculate carbon footprint for a construction project.
 
@@ -1993,7 +2209,9 @@ async def calculate_carbon_footprint(request: CarbonCalculationRequest) -> Carbo
         return CarbonResultResponse(**result.to_dict())
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Carbon calculation failed: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Carbon calculation failed: {str(e)}"
+        )
 
 
 @carbon_router.post("/quick-estimate")
@@ -2105,15 +2323,17 @@ async def get_equipment_profiles() -> list[dict]:
 
     profiles = []
     for eq_type, profile in DEFAULT_EQUIPMENT_PROFILES.items():
-        profiles.append({
-            "equipment_type": eq_type.value,
-            "name": eq_type.value.replace("_", " ").title(),
-            "fuel_type": profile.fuel_type.value,
-            "fuel_consumption_per_hour": profile.fuel_consumption_per_hour,
-            "operating_hours_per_day": profile.operating_hours_per_day,
-            "utilization_factor": profile.utilization_factor,
-            "daily_fuel_gallons": profile.daily_fuel_consumption(),
-        })
+        profiles.append(
+            {
+                "equipment_type": eq_type.value,
+                "name": eq_type.value.replace("_", " ").title(),
+                "fuel_type": profile.fuel_type.value,
+                "fuel_consumption_per_hour": profile.fuel_consumption_per_hour,
+                "operating_hours_per_day": profile.operating_hours_per_day,
+                "utilization_factor": profile.utilization_factor,
+                "daily_fuel_gallons": profile.daily_fuel_consumption(),
+            }
+        )
     return profiles
 
 
@@ -2171,6 +2391,7 @@ from ..habitat import (
 
 class HabitatAnalysisRequest(BaseModel):
     """Request model for habitat analysis."""
+
     site_id: str = Field(description="Site identifier")
     boundary: dict = Field(description="GeoJSON polygon of site boundary")
     latitude: float = Field(description="Site centroid latitude")
@@ -2179,6 +2400,7 @@ class HabitatAnalysisRequest(BaseModel):
 
 class HabitatAnalysisResponse(BaseModel):
     """Response model for habitat analysis."""
+
     site_id: str
     analysis_date: str
     species: dict
@@ -2194,7 +2416,9 @@ habitat_router = APIRouter()
 
 
 @habitat_router.post("/analyze", response_model=HabitatAnalysisResponse)
-async def analyze_site_habitat(request: HabitatAnalysisRequest) -> HabitatAnalysisResponse:
+async def analyze_site_habitat(
+    request: HabitatAnalysisRequest,
+) -> HabitatAnalysisResponse:
     """
     Analyze habitat for endangered species and wetlands.
 
@@ -2218,18 +2442,40 @@ async def analyze_site_habitat(request: HabitatAnalysisRequest) -> HabitatAnalys
         return HabitatAnalysisResponse(**result_dict)
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Habitat analysis failed: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Habitat analysis failed: {str(e)}"
+        )
 
 
 @habitat_router.get("/species-status")
 async def get_species_status_types() -> list[dict]:
     """Get available species status types."""
     return [
-        {"value": "endangered", "label": "Endangered", "description": "In danger of extinction throughout all or a significant portion of its range"},
-        {"value": "threatened", "label": "Threatened", "description": "Likely to become endangered within the foreseeable future"},
-        {"value": "candidate", "label": "Candidate", "description": "Under review for listing"},
-        {"value": "proposed_endangered", "label": "Proposed Endangered", "description": "Proposed for endangered listing"},
-        {"value": "proposed_threatened", "label": "Proposed Threatened", "description": "Proposed for threatened listing"},
+        {
+            "value": "endangered",
+            "label": "Endangered",
+            "description": "In danger of extinction throughout all or a significant portion of its range",
+        },
+        {
+            "value": "threatened",
+            "label": "Threatened",
+            "description": "Likely to become endangered within the foreseeable future",
+        },
+        {
+            "value": "candidate",
+            "label": "Candidate",
+            "description": "Under review for listing",
+        },
+        {
+            "value": "proposed_endangered",
+            "label": "Proposed Endangered",
+            "description": "Proposed for endangered listing",
+        },
+        {
+            "value": "proposed_threatened",
+            "label": "Proposed Threatened",
+            "description": "Proposed for threatened listing",
+        },
     ]
 
 
@@ -2237,13 +2483,33 @@ async def get_species_status_types() -> list[dict]:
 async def get_wetland_types() -> list[dict]:
     """Get wetland classification types (Cowardin system)."""
     return [
-        {"code": "PEM", "label": "Freshwater Emergent Wetland", "description": "Herbaceous marsh vegetation"},
-        {"code": "PFO", "label": "Freshwater Forested Wetland", "description": "Forested swamp or bottomland"},
-        {"code": "PSS", "label": "Freshwater Shrub Wetland", "description": "Shrub-dominated wetland"},
-        {"code": "PUB", "label": "Freshwater Pond", "description": "Open water with unconsolidated bottom"},
+        {
+            "code": "PEM",
+            "label": "Freshwater Emergent Wetland",
+            "description": "Herbaceous marsh vegetation",
+        },
+        {
+            "code": "PFO",
+            "label": "Freshwater Forested Wetland",
+            "description": "Forested swamp or bottomland",
+        },
+        {
+            "code": "PSS",
+            "label": "Freshwater Shrub Wetland",
+            "description": "Shrub-dominated wetland",
+        },
+        {
+            "code": "PUB",
+            "label": "Freshwater Pond",
+            "description": "Open water with unconsolidated bottom",
+        },
         {"code": "L", "label": "Lake", "description": "Lacustrine system"},
         {"code": "R", "label": "River/Stream", "description": "Riverine system"},
-        {"code": "E", "label": "Estuarine", "description": "Tidal saltwater/brackish wetland"},
+        {
+            "code": "E",
+            "label": "Estuarine",
+            "description": "Tidal saltwater/brackish wetland",
+        },
         {"code": "M", "label": "Marine", "description": "Ocean and nearshore areas"},
     ]
 
@@ -2256,7 +2522,9 @@ async def get_permit_types() -> list[dict]:
             "type": "section_7",
             "name": "ESA Section 7 Consultation",
             "description": "Federal consultation for endangered species",
-            "typical_months": PERMIT_TIMELINES.get(PermitType.SECTION_7_CONSULTATION, 0),
+            "typical_months": PERMIT_TIMELINES.get(
+                PermitType.SECTION_7_CONSULTATION, 0
+            ),
             "triggers": ["Listed species in project area", "Federal funding or permit"],
         },
         {

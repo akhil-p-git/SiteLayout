@@ -134,10 +134,10 @@ class CarbonCalculator:
             Total emissions in kg CO2
         """
         return (
-            concrete_tons * self.emission_factors.concrete_kg_per_ton +
-            steel_tons * self.emission_factors.steel_kg_per_ton +
-            asphalt_tons * self.emission_factors.asphalt_kg_per_ton +
-            gravel_tons * self.emission_factors.gravel_kg_per_ton
+            concrete_tons * self.emission_factors.concrete_kg_per_ton
+            + steel_tons * self.emission_factors.steel_kg_per_ton
+            + asphalt_tons * self.emission_factors.asphalt_kg_per_ton
+            + gravel_tons * self.emission_factors.gravel_kg_per_ton
         )
 
     def calculate_road_construction_emissions(
@@ -161,10 +161,14 @@ class CarbonCalculator:
         # Asphalt: ~2.4 tons/m3, Concrete: ~2.4 tons/m3, Gravel: ~1.8 tons/m3
         if road_input.material_type == "concrete":
             pavement_tons = pavement_volume * 2.4
-            pavement_emissions = pavement_tons * self.emission_factors.concrete_kg_per_ton
+            pavement_emissions = (
+                pavement_tons * self.emission_factors.concrete_kg_per_ton
+            )
         else:  # asphalt
             pavement_tons = pavement_volume * 2.4
-            pavement_emissions = pavement_tons * self.emission_factors.asphalt_kg_per_ton
+            pavement_emissions = (
+                pavement_tons * self.emission_factors.asphalt_kg_per_ton
+            )
 
         base_tons = base_volume * 1.8
         base_emissions = base_tons * self.emission_factors.gravel_kg_per_ton
@@ -312,7 +316,9 @@ class CarbonCalculator:
         # Calculate earthwork emissions
         if earthwork:
             earthwork_breakdown = self.calculate_earthwork_emissions(earthwork)
-            breakdown.equipment_emissions_kg = earthwork_breakdown.equipment_emissions_kg
+            breakdown.equipment_emissions_kg = (
+                earthwork_breakdown.equipment_emissions_kg
+            )
             breakdown.hauling_emissions_kg = earthwork_breakdown.hauling_emissions_kg
 
         # Calculate road construction emissions
@@ -439,7 +445,11 @@ def calculate_project_carbon(
     calculator = CarbonCalculator()
 
     # Prepare inputs
-    hauling = HaulingParameters(haul_distance_km=haul_distance_km) if haul_distance_km > 0 else None
+    hauling = (
+        HaulingParameters(haul_distance_km=haul_distance_km)
+        if haul_distance_km > 0
+        else None
+    )
 
     earthwork = EarthworkCarbonInput(
         cut_volume_m3=cut_volume_m3,

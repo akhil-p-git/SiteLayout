@@ -15,6 +15,7 @@ from shapely.ops import unary_union
 
 class AssetType(Enum):
     """Types of assets that can be placed on a solar site."""
+
     BESS = "bess"  # Battery Energy Storage System
     SUBSTATION = "substation"
     O_AND_M = "o_and_m"  # Operations & Maintenance building
@@ -29,6 +30,7 @@ class AssetType(Enum):
 
 class OptimizationObjective(Enum):
     """Optimization objectives for layout generation."""
+
     MIN_EARTHWORK = "min_earthwork"  # Minimize grading/earthwork
     MAX_CAPACITY = "max_capacity"  # Maximize equipment capacity
     BALANCED = "balanced"  # Balance multiple objectives
@@ -40,6 +42,7 @@ class OptimizationObjective(Enum):
 @dataclass
 class AssetDimensions:
     """Physical dimensions of an asset."""
+
     width: float  # meters
     length: float  # meters
     height: float = 0.0  # meters (for clearance calculations)
@@ -50,6 +53,7 @@ class AssetDimensions:
 @dataclass
 class AssetConstraints:
     """Placement constraints for an asset."""
+
     min_setback: float = 10.0  # meters from boundary
     max_slope: float = 5.0  # degrees
     requires_road_access: bool = True
@@ -63,6 +67,7 @@ class AssetConstraints:
 @dataclass
 class AssetDefinition:
     """Complete definition of an asset for optimization."""
+
     asset_type: AssetType
     name: str
     dimensions: AssetDimensions
@@ -157,7 +162,9 @@ DEFAULT_ASSET_DEFINITIONS: Dict[AssetType, AssetDefinition] = {
     AssetType.WEATHER_STATION: AssetDefinition(
         asset_type=AssetType.WEATHER_STATION,
         name="Weather Station",
-        dimensions=AssetDimensions(width=3, length=3, height=10, rotation_allowed=False),
+        dimensions=AssetDimensions(
+            width=3, length=3, height=10, rotation_allowed=False
+        ),
         constraints=AssetConstraints(
             min_setback=20,
             max_slope=10,
@@ -175,6 +182,7 @@ DEFAULT_ASSET_DEFINITIONS: Dict[AssetType, AssetDefinition] = {
 @dataclass
 class PlacedAsset:
     """An asset that has been placed in the layout."""
+
     asset_id: str
     asset_type: AssetType
     definition: AssetDefinition
@@ -200,8 +208,7 @@ class PlacedAsset:
             angle_rad = np.radians(self.rotation)
             cos_a, sin_a = np.cos(angle_rad), np.sin(angle_rad)
             corners = [
-                (x * cos_a - y * sin_a, x * sin_a + y * cos_a)
-                for x, y in corners
+                (x * cos_a - y * sin_a, x * sin_a + y * cos_a) for x, y in corners
             ]
 
         # Translate to position
@@ -225,23 +232,30 @@ class PlacedAsset:
                 "length": self.definition.dimensions.length,
                 "height": self.definition.dimensions.height,
             },
-            "footprint": {
-                "type": "Polygon",
-                "coordinates": [list(self.footprint.exterior.coords)],
-            } if self.footprint else None,
+            "footprint": (
+                {
+                    "type": "Polygon",
+                    "coordinates": [list(self.footprint.exterior.coords)],
+                }
+                if self.footprint
+                else None
+            ),
         }
 
 
 @dataclass
 class OptimizationConfig:
     """Configuration for the optimization algorithm."""
+
     objective: OptimizationObjective = OptimizationObjective.BALANCED
-    objective_weights: Dict[str, float] = field(default_factory=lambda: {
-        "earthwork": 0.4,
-        "cable_length": 0.3,
-        "road_length": 0.2,
-        "compactness": 0.1,
-    })
+    objective_weights: Dict[str, float] = field(
+        default_factory=lambda: {
+            "earthwork": 0.4,
+            "cable_length": 0.3,
+            "road_length": 0.2,
+            "compactness": 0.1,
+        }
+    )
     population_size: int = 100
     generations: int = 200
     mutation_rate: float = 0.1
@@ -257,6 +271,7 @@ class OptimizationConfig:
 @dataclass
 class SiteContext:
     """Context information about the site for optimization."""
+
     boundary: Polygon
     exclusion_zones: List[Polygon] = field(default_factory=list)
     slope_data: Optional[np.ndarray] = None  # 2D array of slope values
@@ -289,6 +304,7 @@ class SiteContext:
 @dataclass
 class LayoutSolution:
     """A complete layout solution from the optimizer."""
+
     solution_id: str
     placed_assets: List[PlacedAsset]
     fitness_score: float
@@ -327,6 +343,7 @@ class LayoutSolution:
 @dataclass
 class OptimizationResult:
     """Result of running the optimization."""
+
     best_solution: LayoutSolution
     alternative_solutions: List[LayoutSolution]
     convergence_history: List[float]

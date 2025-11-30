@@ -91,9 +91,7 @@ class ContourSet:
         return np.array(all_points, dtype=np.float64)
 
     def filter_by_elevation(
-        self,
-        min_elev: float | None = None,
-        max_elev: float | None = None
+        self, min_elev: float | None = None, max_elev: float | None = None
     ) -> list[ContourLine]:
         """Filter contours by elevation range."""
         result = self.contours
@@ -116,20 +114,20 @@ def _extract_elevation_from_entity(entity: ezdxf.entities.DXFEntity) -> float | 
     3. Layer name parsing (e.g., "CONTOUR_100" -> 100)
     """
     # Try Z-coordinate
-    if hasattr(entity, 'vertices'):
+    if hasattr(entity, "vertices"):
         vertices = list(entity.vertices())
         if vertices and len(vertices[0]) >= 3:
             return float(vertices[0][2])
 
     # Try elevation attribute
-    if hasattr(entity, 'dxf') and hasattr(entity.dxf, 'elevation'):
+    if hasattr(entity, "dxf") and hasattr(entity.dxf, "elevation"):
         elev = entity.dxf.elevation
         if elev != 0:
             return float(elev)
 
     # Try to get from first point's Z
-    if hasattr(entity, 'dxf'):
-        if hasattr(entity.dxf, 'start') and len(entity.dxf.start) >= 3:
+    if hasattr(entity, "dxf"):
+        if hasattr(entity.dxf, "start") and len(entity.dxf.start) >= 3:
             return float(entity.dxf.start[2])
 
     return None
@@ -141,10 +139,10 @@ def _extract_elevation_from_layer(layer_name: str) -> float | None:
 
     # Common patterns: "CONTOUR_100", "ELEV-100", "100m", "C100"
     patterns = [
-        r'[-_](\d+(?:\.\d+)?)\s*$',  # suffix number
-        r'^(\d+(?:\.\d+)?)[-_m]',     # prefix number
-        r'[Cc](\d+(?:\.\d+)?)',       # C followed by number
-        r'(\d+(?:\.\d+)?)',           # any number
+        r"[-_](\d+(?:\.\d+)?)\s*$",  # suffix number
+        r"^(\d+(?:\.\d+)?)[-_m]",  # prefix number
+        r"[Cc](\d+(?:\.\d+)?)",  # C followed by number
+        r"(\d+(?:\.\d+)?)",  # any number
     ]
 
     for pattern in patterns:
@@ -225,7 +223,7 @@ def parse_dxf(
     elevations: set[float] = set()
 
     # Collect all line-type entities
-    entity_types = ['LWPOLYLINE', 'POLYLINE', 'LINE', 'SPLINE']
+    entity_types = ["LWPOLYLINE", "POLYLINE", "LINE", "SPLINE"]
 
     for entity_type in entity_types:
         for entity in msp.query(entity_type):
@@ -279,10 +277,12 @@ def parse_dxf(
     # Detect contour interval
     sorted_elevs = sorted(elevations)
     if len(sorted_elevs) > 1:
-        intervals = [sorted_elevs[i+1] - sorted_elevs[i]
-                     for i in range(len(sorted_elevs)-1)]
+        intervals = [
+            sorted_elevs[i + 1] - sorted_elevs[i] for i in range(len(sorted_elevs) - 1)
+        ]
         # Most common interval
         from collections import Counter
+
         rounded_intervals = [round(i, 1) for i in intervals]
         interval_counts = Counter(rounded_intervals)
         contour_interval = interval_counts.most_common(1)[0][0]
@@ -354,13 +354,13 @@ def get_dxf_info(filepath: str | Path) -> dict:
 
     # Get units if available
     units = None
-    if hasattr(doc.header, 'get'):
-        units = doc.header.get('$INSUNITS', None)
+    if hasattr(doc.header, "get"):
+        units = doc.header.get("$INSUNITS", None)
 
     return {
-        'filepath': str(filepath),
-        'version': doc.dxfversion,
-        'layers': layers,
-        'entity_counts': entity_counts,
-        'units': units,
+        "filepath": str(filepath),
+        "version": doc.dxfversion,
+        "layers": layers,
+        "entity_counts": entity_counts,
+        "units": units,
     }

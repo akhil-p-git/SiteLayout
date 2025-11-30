@@ -31,6 +31,7 @@ from .models import (
 @dataclass
 class Individual:
     """Represents a single solution in the population."""
+
     genes: np.ndarray  # Encoded asset positions and rotations
     fitness: float = 0.0
     objective_scores: Dict[str, float] = None
@@ -325,9 +326,13 @@ class GeneticOptimizer:
             # Check boundary containment
             if not self.prepared_boundary.contains(footprint):
                 if not self.site.boundary.intersects(footprint):
-                    violations.append(f"ERROR: {placement.asset_id} is outside site boundary")
+                    violations.append(
+                        f"ERROR: {placement.asset_id} is outside site boundary"
+                    )
                 else:
-                    violations.append(f"WARNING: {placement.asset_id} partially outside boundary")
+                    violations.append(
+                        f"WARNING: {placement.asset_id} partially outside boundary"
+                    )
 
             # Check setback
             boundary_distance = self.site.boundary.exterior.distance(footprint.centroid)
@@ -339,7 +344,9 @@ class GeneticOptimizer:
             # Check exclusion zones
             if constraints.avoid_exclusion_zones and self.prepared_exclusion:
                 if self.prepared_exclusion.intersects(footprint):
-                    violations.append(f"ERROR: {placement.asset_id} overlaps exclusion zone")
+                    violations.append(
+                        f"ERROR: {placement.asset_id} overlaps exclusion zone"
+                    )
 
             # Check slope (if slope data available)
             if self.site.slope_data is not None:
@@ -370,7 +377,9 @@ class GeneticOptimizer:
 
                 # Check for overlap
                 if p1.footprint.intersects(p2.footprint):
-                    violations.append(f"ERROR: {p1.asset_id} overlaps with {p2.asset_id}")
+                    violations.append(
+                        f"ERROR: {p1.asset_id} overlaps with {p2.asset_id}"
+                    )
 
         return violations
 
@@ -442,7 +451,7 @@ class GeneticOptimizer:
         )
 
         # Normalize by site diagonal
-        max_distance = np.sqrt(self.width ** 2 + self.height ** 2) * len(placements)
+        max_distance = np.sqrt(self.width**2 + self.height**2) * len(placements)
         return min(1.0, total_distance / max_distance) if max_distance > 0 else 0.5
 
     def _calculate_road_length_score(self, placements: List[PlacedAsset]) -> float:
@@ -450,7 +459,11 @@ class GeneticOptimizer:
         if not placements:
             return 0.5
 
-        entry = Point(self.entry_point.x, self.entry_point.y) if hasattr(self.entry_point, 'x') else Point(self.entry_point)
+        entry = (
+            Point(self.entry_point.x, self.entry_point.y)
+            if hasattr(self.entry_point, "x")
+            else Point(self.entry_point)
+        )
 
         total_distance = sum(
             entry.distance(Point(p.position))
@@ -458,7 +471,7 @@ class GeneticOptimizer:
             if p.definition.constraints.requires_road_access
         )
 
-        max_distance = np.sqrt(self.width ** 2 + self.height ** 2) * len(placements)
+        max_distance = np.sqrt(self.width**2 + self.height**2) * len(placements)
         return min(1.0, total_distance / max_distance) if max_distance > 0 else 0.5
 
     def _calculate_compactness_score(self, placements: List[PlacedAsset]) -> float:
@@ -472,12 +485,16 @@ class GeneticOptimizer:
         distances = [np.linalg.norm(np.array(p) - centroid) for p in positions]
         avg_distance = np.mean(distances)
 
-        max_distance = np.sqrt(self.width ** 2 + self.height ** 2) / 2
+        max_distance = np.sqrt(self.width**2 + self.height**2) / 2
         return 1.0 - min(1.0, avg_distance / max_distance) if max_distance > 0 else 0.5
 
     def _calculate_capacity_score(self, placements: List[PlacedAsset]) -> float:
         """Calculate capacity utilization score."""
-        valid_placements = [p for p in placements if p.footprint and self.prepared_buildable.contains(p.footprint)]
+        valid_placements = [
+            p
+            for p in placements
+            if p.footprint and self.prepared_buildable.contains(p.footprint)
+        ]
         return len(valid_placements) / len(placements) if placements else 0.0
 
     def _get_slope_at_position(self, position: Tuple[float, float]) -> Optional[float]:
@@ -516,16 +533,20 @@ class GeneticOptimizer:
             if np.random.random() < self.config.crossover_rate:
                 # Two-point crossover
                 points = sorted(np.random.choice(self.gene_length, 2, replace=False))
-                child1_genes = np.concatenate([
-                    parent1.genes[:points[0]],
-                    parent2.genes[points[0]:points[1]],
-                    parent1.genes[points[1]:],
-                ])
-                child2_genes = np.concatenate([
-                    parent2.genes[:points[0]],
-                    parent1.genes[points[0]:points[1]],
-                    parent2.genes[points[1]:],
-                ])
+                child1_genes = np.concatenate(
+                    [
+                        parent1.genes[: points[0]],
+                        parent2.genes[points[0] : points[1]],
+                        parent1.genes[points[1] :],
+                    ]
+                )
+                child2_genes = np.concatenate(
+                    [
+                        parent2.genes[: points[0]],
+                        parent1.genes[points[0] : points[1]],
+                        parent2.genes[points[1] :],
+                    ]
+                )
             else:
                 child1_genes = parent1.genes.copy()
                 child2_genes = parent2.genes.copy()
@@ -554,16 +575,18 @@ class GeneticOptimizer:
         combined.sort(key=lambda i: i.fitness, reverse=True)
 
         # Keep elite
-        survivors = combined[:self.config.elite_size]
+        survivors = combined[: self.config.elite_size]
 
         # Fill rest with tournament selection from remaining
-        remaining = combined[self.config.elite_size:]
+        remaining = combined[self.config.elite_size :]
         while len(survivors) < self.config.population_size:
-            tournament = np.random.choice(remaining, min(3, len(remaining)), replace=False)
+            tournament = np.random.choice(
+                remaining, min(3, len(remaining)), replace=False
+            )
             winner = max(tournament, key=lambda i: i.fitness)
             survivors.append(winner)
 
-        return survivors[:self.config.population_size]
+        return survivors[: self.config.population_size]
 
     def _decode_solution(
         self,

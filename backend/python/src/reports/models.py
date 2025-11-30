@@ -13,6 +13,7 @@ import base64
 
 class ReportSection(Enum):
     """Available report sections."""
+
     COVER = "cover"
     EXECUTIVE_SUMMARY = "executive_summary"
     SITE_OVERVIEW = "site_overview"
@@ -27,6 +28,7 @@ class ReportSection(Enum):
 
 class MapType(Enum):
     """Types of maps that can be included."""
+
     SITE_BOUNDARY = "site_boundary"
     SLOPE_ANALYSIS = "slope_analysis"
     ASPECT_ANALYSIS = "aspect_analysis"
@@ -38,6 +40,7 @@ class MapType(Enum):
 @dataclass
 class ProjectInfo:
     """Project information for report header."""
+
     project_id: str
     project_name: str
     client_name: Optional[str] = None
@@ -52,6 +55,7 @@ class ProjectInfo:
 @dataclass
 class MapImage:
     """Map image for inclusion in report."""
+
     map_type: MapType
     title: str
     image_data: bytes  # PNG or JPEG bytes
@@ -63,12 +67,13 @@ class MapImage:
 
     def to_base64(self) -> str:
         """Convert image data to base64."""
-        return base64.b64encode(self.image_data).decode('utf-8')
+        return base64.b64encode(self.image_data).decode("utf-8")
 
 
 @dataclass
 class TerrainSummary:
     """Terrain analysis summary."""
+
     min_elevation: float
     max_elevation: float
     mean_elevation: float
@@ -84,6 +89,7 @@ class TerrainSummary:
 @dataclass
 class AssetInfo:
     """Asset information for schedule."""
+
     asset_id: str
     asset_type: str
     name: str
@@ -101,6 +107,7 @@ class AssetInfo:
 @dataclass
 class RoadInfo:
     """Road segment information."""
+
     segment_id: str
     length_m: float
     width_m: float
@@ -114,6 +121,7 @@ class RoadInfo:
 @dataclass
 class EarthworkSummary:
     """Earthwork summary for report."""
+
     total_cut_volume: float
     total_fill_volume: float
     net_volume: float
@@ -129,6 +137,7 @@ class EarthworkSummary:
 @dataclass
 class CostBreakdown:
     """Cost estimate breakdown."""
+
     cut_cost: float
     fill_cost: float
     haul_cost: float
@@ -142,7 +151,9 @@ class CostBreakdown:
 
     def calculate_totals(self):
         """Calculate contingency and total."""
-        self.contingency_amount = self.total_earthwork_cost * (self.contingency_percent / 100)
+        self.contingency_amount = self.total_earthwork_cost * (
+            self.contingency_percent / 100
+        )
         self.total_cost = self.total_earthwork_cost + self.contingency_amount
         if self.road_cost:
             self.total_cost += self.road_cost
@@ -151,21 +162,26 @@ class CostBreakdown:
 @dataclass
 class ReportConfig:
     """Configuration for report generation."""
-    sections: List[ReportSection] = field(default_factory=lambda: [
-        ReportSection.COVER,
-        ReportSection.EXECUTIVE_SUMMARY,
-        ReportSection.SITE_OVERVIEW,
-        ReportSection.TERRAIN_ANALYSIS,
-        ReportSection.LAYOUT_PLAN,
-        ReportSection.ASSET_SCHEDULE,
-        ReportSection.EARTHWORK_SUMMARY,
-        ReportSection.COST_ESTIMATE,
-    ])
-    include_maps: List[MapType] = field(default_factory=lambda: [
-        MapType.SITE_BOUNDARY,
-        MapType.SLOPE_ANALYSIS,
-        MapType.LAYOUT_PLAN,
-    ])
+
+    sections: List[ReportSection] = field(
+        default_factory=lambda: [
+            ReportSection.COVER,
+            ReportSection.EXECUTIVE_SUMMARY,
+            ReportSection.SITE_OVERVIEW,
+            ReportSection.TERRAIN_ANALYSIS,
+            ReportSection.LAYOUT_PLAN,
+            ReportSection.ASSET_SCHEDULE,
+            ReportSection.EARTHWORK_SUMMARY,
+            ReportSection.COST_ESTIMATE,
+        ]
+    )
+    include_maps: List[MapType] = field(
+        default_factory=lambda: [
+            MapType.SITE_BOUNDARY,
+            MapType.SLOPE_ANALYSIS,
+            MapType.LAYOUT_PLAN,
+        ]
+    )
     page_size: str = "letter"  # letter, a4
     orientation: str = "portrait"
     include_page_numbers: bool = True
@@ -178,6 +194,7 @@ class ReportConfig:
 @dataclass
 class ReportData:
     """Complete data for report generation."""
+
     project: ProjectInfo
     config: ReportConfig
     terrain: Optional[TerrainSummary] = None
@@ -194,6 +211,7 @@ class ReportData:
 @dataclass
 class ReportResult:
     """Result of report generation."""
+
     success: bool
     filename: str
     file_size: int

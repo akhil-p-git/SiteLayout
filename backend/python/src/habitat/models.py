@@ -11,6 +11,7 @@ from typing import Optional, List, Dict, Any, Tuple
 
 class SpeciesStatus(Enum):
     """USFWS listing status for species."""
+
     ENDANGERED = "endangered"
     THREATENED = "threatened"
     CANDIDATE = "candidate"
@@ -22,6 +23,7 @@ class SpeciesStatus(Enum):
 
 class TaxonomicGroup(Enum):
     """Taxonomic groups for species classification."""
+
     MAMMALS = "mammals"
     BIRDS = "birds"
     REPTILES = "reptiles"
@@ -33,6 +35,7 @@ class TaxonomicGroup(Enum):
 
 class WetlandType(Enum):
     """NWI Wetland classification types (Cowardin system)."""
+
     PALUSTRINE_EMERGENT = "PEM"  # Freshwater emergent wetland
     PALUSTRINE_FORESTED = "PFO"  # Freshwater forested wetland
     PALUSTRINE_SCRUB_SHRUB = "PSS"  # Freshwater shrub wetland
@@ -45,6 +48,7 @@ class WetlandType(Enum):
 
 class HabitatSensitivity(Enum):
     """Habitat sensitivity levels."""
+
     CRITICAL = "critical"  # Critical habitat, no development
     HIGH = "high"  # Significant restrictions
     MODERATE = "moderate"  # Some restrictions, permits required
@@ -54,6 +58,7 @@ class HabitatSensitivity(Enum):
 
 class PermitType(Enum):
     """Environmental permit types."""
+
     SECTION_7_CONSULTATION = "section_7"  # ESA Section 7
     SECTION_10_PERMIT = "section_10"  # ESA Section 10 (incidental take)
     SECTION_404_PERMIT = "section_404"  # Clean Water Act wetlands
@@ -67,6 +72,7 @@ class PermitType(Enum):
 @dataclass
 class Species:
     """Endangered or threatened species record."""
+
     scientific_name: str
     common_name: str
     status: SpeciesStatus
@@ -82,6 +88,7 @@ class Species:
 @dataclass
 class CriticalHabitat:
     """Critical habitat designation area."""
+
     species_name: str
     unit_name: str
     unit_id: str
@@ -94,6 +101,7 @@ class CriticalHabitat:
 @dataclass
 class Wetland:
     """NWI Wetland record."""
+
     wetland_id: str
     wetland_type: WetlandType
     classification_code: str  # Full NWI code (e.g., PEM1A)
@@ -121,6 +129,7 @@ class Wetland:
 @dataclass
 class BufferZone:
     """Buffer zone around sensitive habitat."""
+
     source_type: str  # wetland, critical_habitat, etc.
     source_id: str
     buffer_distance_m: float
@@ -131,6 +140,7 @@ class BufferZone:
 @dataclass
 class HabitatImpactScore:
     """Calculated habitat impact score for a site."""
+
     site_id: str
     overall_score: float  # 0-100, lower = more impact
     sensitivity_level: HabitatSensitivity
@@ -156,6 +166,7 @@ class HabitatImpactScore:
 @dataclass
 class HabitatOverlayResult:
     """Result of habitat overlay analysis for a site."""
+
     site_id: str
     analysis_date: str
     site_boundary_geojson: Dict[str, Any]
@@ -187,8 +198,20 @@ class HabitatOverlayResult:
             "analysis_date": self.analysis_date,
             "species": {
                 "count": len(self.species_in_range),
-                "endangered": len([s for s in self.species_in_range if s.status == SpeciesStatus.ENDANGERED]),
-                "threatened": len([s for s in self.species_in_range if s.status == SpeciesStatus.THREATENED]),
+                "endangered": len(
+                    [
+                        s
+                        for s in self.species_in_range
+                        if s.status == SpeciesStatus.ENDANGERED
+                    ]
+                ),
+                "threatened": len(
+                    [
+                        s
+                        for s in self.species_in_range
+                        if s.status == SpeciesStatus.THREATENED
+                    ]
+                ),
                 "list": [
                     {
                         "scientific_name": s.scientific_name,
@@ -251,7 +274,7 @@ class HabitatOverlayResult:
 BUFFER_DISTANCES = {
     "critical_habitat": 500,
     "wetland_large": 100,  # > 0.5 ha
-    "wetland_small": 50,   # < 0.5 ha
+    "wetland_small": 50,  # < 0.5 ha
     "stream_perennial": 100,
     "stream_intermittent": 50,
     "eagle_nest": 200,

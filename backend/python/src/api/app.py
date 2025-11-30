@@ -12,7 +12,15 @@ from typing import AsyncGenerator
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .routes import dem_router, optimization_router, roads_router, earthwork_router, reports_router, carbon_router, habitat_router
+from .routes import (
+    dem_router,
+    optimization_router,
+    roads_router,
+    earthwork_router,
+    reports_router,
+    carbon_router,
+    habitat_router,
+)
 
 
 # Configuration
@@ -40,7 +48,9 @@ app = FastAPI(
 # CORS configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=os.getenv("CORS_ORIGINS", "http://localhost:5173,http://localhost:3001").split(","),
+    allow_origins=os.getenv(
+        "CORS_ORIGINS", "http://localhost:5173,http://localhost:3001"
+    ).split(","),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -48,7 +58,9 @@ app.add_middleware(
 
 # Include routers
 app.include_router(dem_router, prefix="/api/v1/terrain", tags=["terrain"])
-app.include_router(optimization_router, prefix="/api/v1/optimization", tags=["optimization"])
+app.include_router(
+    optimization_router, prefix="/api/v1/optimization", tags=["optimization"]
+)
 app.include_router(roads_router, prefix="/api/v1/roads", tags=["roads"])
 app.include_router(earthwork_router, prefix="/api/v1/earthwork", tags=["earthwork"])
 app.include_router(reports_router, prefix="/api/v1/reports", tags=["reports"])

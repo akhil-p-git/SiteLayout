@@ -84,49 +84,57 @@ class USFWSService:
             # Continental US - add some common listed species
 
             # Birds (common across many areas)
-            species.append(Species(
-                scientific_name="Mycteria americana",
-                common_name="Wood Stork",
-                status=SpeciesStatus.THREATENED,
-                taxonomic_group=TaxonomicGroup.BIRDS,
-                critical_habitat=False,
-                threats=["Habitat loss", "Water management"],
-            ))
+            species.append(
+                Species(
+                    scientific_name="Mycteria americana",
+                    common_name="Wood Stork",
+                    status=SpeciesStatus.THREATENED,
+                    taxonomic_group=TaxonomicGroup.BIRDS,
+                    critical_habitat=False,
+                    threats=["Habitat loss", "Water management"],
+                )
+            )
 
             # Desert tortoise in western states
             if longitude < -110:
-                species.append(Species(
-                    scientific_name="Gopherus agassizii",
-                    common_name="Desert Tortoise",
-                    status=SpeciesStatus.THREATENED,
-                    taxonomic_group=TaxonomicGroup.REPTILES,
-                    critical_habitat=True,
-                    critical_habitat_area_km2=26000,
-                    threats=["Habitat loss", "Disease", "Climate change"],
-                ))
+                species.append(
+                    Species(
+                        scientific_name="Gopherus agassizii",
+                        common_name="Desert Tortoise",
+                        status=SpeciesStatus.THREATENED,
+                        taxonomic_group=TaxonomicGroup.REPTILES,
+                        critical_habitat=True,
+                        critical_habitat_area_km2=26000,
+                        threats=["Habitat loss", "Disease", "Climate change"],
+                    )
+                )
 
             # California-specific species
             if -125 <= longitude <= -114 and 32 <= latitude <= 42:
-                species.append(Species(
-                    scientific_name="Dipodomys ingens",
-                    common_name="Giant Kangaroo Rat",
-                    status=SpeciesStatus.ENDANGERED,
-                    taxonomic_group=TaxonomicGroup.MAMMALS,
-                    critical_habitat=True,
-                    critical_habitat_area_km2=120,
-                    threats=["Agricultural conversion", "Development"],
-                ))
+                species.append(
+                    Species(
+                        scientific_name="Dipodomys ingens",
+                        common_name="Giant Kangaroo Rat",
+                        status=SpeciesStatus.ENDANGERED,
+                        taxonomic_group=TaxonomicGroup.MAMMALS,
+                        critical_habitat=True,
+                        critical_habitat_area_km2=120,
+                        threats=["Agricultural conversion", "Development"],
+                    )
+                )
 
             # Texas/Southwest species
             if -106 <= longitude <= -93 and 25 <= latitude <= 36:
-                species.append(Species(
-                    scientific_name="Thamnophis eques megalops",
-                    common_name="Northern Mexican Gartersnake",
-                    status=SpeciesStatus.THREATENED,
-                    taxonomic_group=TaxonomicGroup.REPTILES,
-                    critical_habitat=True,
-                    threats=["Habitat loss", "Non-native species"],
-                ))
+                species.append(
+                    Species(
+                        scientific_name="Thamnophis eques megalops",
+                        common_name="Northern Mexican Gartersnake",
+                        status=SpeciesStatus.THREATENED,
+                        taxonomic_group=TaxonomicGroup.REPTILES,
+                        critical_habitat=True,
+                        threats=["Habitat loss", "Non-native species"],
+                    )
+                )
 
         return species
 
@@ -174,7 +182,9 @@ class NWIService:
             return {}
 
         result = {
-            "system": code[0],  # P=Palustrine, L=Lacustrine, R=Riverine, E=Estuarine, M=Marine
+            "system": code[
+                0
+            ],  # P=Palustrine, L=Lacustrine, R=Riverine, E=Estuarine, M=Marine
             "full_code": code,
         }
 
@@ -237,25 +247,30 @@ class NWIService:
             # Estimate if area might have wetlands (random simulation)
             # Real implementation would use actual NWI data
             import random
+
             random.seed(hash(str(coords[0][0])) % 1000)
 
             if random.random() > 0.4:  # 60% chance of wetlands
-                wetlands.append(Wetland(
-                    wetland_id=f"NWI-{random.randint(10000, 99999)}",
-                    wetland_type=WetlandType.PALUSTRINE_EMERGENT,
-                    classification_code="PEM1C",
-                    area_m2=random.randint(500, 5000),
-                    water_regime="C",
-                ))
+                wetlands.append(
+                    Wetland(
+                        wetland_id=f"NWI-{random.randint(10000, 99999)}",
+                        wetland_type=WetlandType.PALUSTRINE_EMERGENT,
+                        classification_code="PEM1C",
+                        area_m2=random.randint(500, 5000),
+                        water_regime="C",
+                    )
+                )
 
             if random.random() > 0.7:  # 30% chance of second wetland
-                wetlands.append(Wetland(
-                    wetland_id=f"NWI-{random.randint(10000, 99999)}",
-                    wetland_type=WetlandType.RIVERINE,
-                    classification_code="R4SBC",
-                    area_m2=random.randint(200, 2000),
-                    water_regime="C",
-                ))
+                wetlands.append(
+                    Wetland(
+                        wetland_id=f"NWI-{random.randint(10000, 99999)}",
+                        wetland_type=WetlandType.RIVERINE,
+                        classification_code="R4SBC",
+                        area_m2=random.randint(200, 2000),
+                        water_regime="C",
+                    )
+                )
 
         return wetlands
 
@@ -342,23 +357,27 @@ class HabitatImpactCalculator:
                 if wetland.area_m2 > 5000
                 else BUFFER_DISTANCES["wetland_small"]
             )
-            zones.append(BufferZone(
-                source_type="wetland",
-                source_id=wetland.wetland_id,
-                buffer_distance_m=buffer_dist,
-                restriction_level=HabitatSensitivity.MODERATE,
-                notes=f"Buffer for {wetland.type_label}",
-            ))
+            zones.append(
+                BufferZone(
+                    source_type="wetland",
+                    source_id=wetland.wetland_id,
+                    buffer_distance_m=buffer_dist,
+                    restriction_level=HabitatSensitivity.MODERATE,
+                    notes=f"Buffer for {wetland.type_label}",
+                )
+            )
 
         # Critical habitat buffers
         for ch in critical_habitats:
-            zones.append(BufferZone(
-                source_type="critical_habitat",
-                source_id=ch.unit_id,
-                buffer_distance_m=BUFFER_DISTANCES["critical_habitat"],
-                restriction_level=HabitatSensitivity.CRITICAL,
-                notes=f"Critical habitat for {ch.species_name}",
-            ))
+            zones.append(
+                BufferZone(
+                    source_type="critical_habitat",
+                    source_id=ch.unit_id,
+                    buffer_distance_m=BUFFER_DISTANCES["critical_habitat"],
+                    restriction_level=HabitatSensitivity.CRITICAL,
+                    notes=f"Critical habitat for {ch.species_name}",
+                )
+            )
 
         return zones
 
@@ -372,21 +391,29 @@ class HabitatImpactCalculator:
     ) -> HabitatImpactScore:
         """Calculate overall habitat impact score."""
         # Count species by status
-        endangered_count = len([s for s in species if s.status == SpeciesStatus.ENDANGERED])
-        threatened_count = len([s for s in species if s.status == SpeciesStatus.THREATENED])
+        endangered_count = len(
+            [s for s in species if s.status == SpeciesStatus.ENDANGERED]
+        )
+        threatened_count = len(
+            [s for s in species if s.status == SpeciesStatus.THREATENED]
+        )
         species_with_critical = len([s for s in species if s.critical_habitat])
 
         # Calculate component impacts (0-100, 100 = no impact)
         # Species impact
         if endangered_count > 0:
-            species_impact = max(20, 100 - (endangered_count * 30) - (threatened_count * 15))
+            species_impact = max(
+                20, 100 - (endangered_count * 30) - (threatened_count * 15)
+            )
         elif threatened_count > 0:
             species_impact = max(40, 100 - (threatened_count * 20))
         else:
             species_impact = 100
 
         # Critical habitat impact
-        critical_habitat_area = sum(ch.area_km2 for ch in critical_habitats) * 1000000  # to m2
+        critical_habitat_area = (
+            sum(ch.area_km2 for ch in critical_habitats) * 1000000
+        )  # to m2
         if critical_habitat_area > 0 or species_with_critical > 0:
             critical_habitat_impact = max(10, 100 - min(90, species_with_critical * 25))
         else:
@@ -406,8 +433,20 @@ class HabitatImpactCalculator:
             wetland_impact = 100
 
         # Buffer zone impact
-        critical_buffers = len([bz for bz in buffer_zones if bz.restriction_level == HabitatSensitivity.CRITICAL])
-        high_buffers = len([bz for bz in buffer_zones if bz.restriction_level == HabitatSensitivity.HIGH])
+        critical_buffers = len(
+            [
+                bz
+                for bz in buffer_zones
+                if bz.restriction_level == HabitatSensitivity.CRITICAL
+            ]
+        )
+        high_buffers = len(
+            [
+                bz
+                for bz in buffer_zones
+                if bz.restriction_level == HabitatSensitivity.HIGH
+            ]
+        )
         if critical_buffers > 0:
             buffer_impact = max(20, 100 - (critical_buffers * 30))
         elif high_buffers > 0:
@@ -417,10 +456,10 @@ class HabitatImpactCalculator:
 
         # Calculate overall score (weighted average)
         overall = (
-            species_impact * 0.35 +
-            critical_habitat_impact * 0.25 +
-            wetland_impact * 0.25 +
-            buffer_impact * 0.15
+            species_impact * 0.35
+            + critical_habitat_impact * 0.25
+            + wetland_impact * 0.25
+            + buffer_impact * 0.15
         )
 
         # Determine sensitivity level
@@ -439,7 +478,11 @@ class HabitatImpactCalculator:
         permits = self._determine_permits(
             species, critical_habitats, wetlands, endangered_count, threatened_count
         )
-        review_time = sum(PERMIT_TIMELINES.get(p, 0) for p in permits) // max(1, len(permits)) if permits else 0
+        review_time = (
+            sum(PERMIT_TIMELINES.get(p, 0) for p in permits) // max(1, len(permits))
+            if permits
+            else 0
+        )
 
         return HabitatImpactScore(
             site_id=site_id,

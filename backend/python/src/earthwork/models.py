@@ -12,6 +12,7 @@ import numpy as np
 
 class SoilType(Enum):
     """Soil classification types."""
+
     ROCK = "rock"
     GRAVEL = "gravel"
     SAND = "sand"
@@ -22,19 +23,21 @@ class SoilType(Enum):
 
 class GradingMethod(Enum):
     """Grading method for pad preparation."""
-    LEVEL = "level"          # Level pad at single elevation
-    SLOPED = "sloped"        # Pad follows terrain with max slope
-    TERRACED = "terraced"    # Multiple level terraces
+
+    LEVEL = "level"  # Level pad at single elevation
+    SLOPED = "sloped"  # Pad follows terrain with max slope
+    TERRACED = "terraced"  # Multiple level terraces
 
 
 @dataclass
 class SoilProperties:
     """Properties of soil affecting earthwork calculations."""
+
     soil_type: SoilType
-    shrink_factor: float = 1.0      # Factor applied to cut volumes (< 1 = compaction)
-    swell_factor: float = 1.2       # Factor applied to fill volumes (> 1 = expansion)
-    max_slope_ratio: float = 2.0    # Maximum cut/fill slope ratio (H:V)
-    unit_weight: float = 1800.0     # kg/m³
+    shrink_factor: float = 1.0  # Factor applied to cut volumes (< 1 = compaction)
+    swell_factor: float = 1.2  # Factor applied to fill volumes (> 1 = expansion)
+    max_slope_ratio: float = 2.0  # Maximum cut/fill slope ratio (H:V)
+    unit_weight: float = 1800.0  # kg/m³
 
     @classmethod
     def get_default(cls, soil_type: SoilType) -> "SoilProperties":
@@ -53,12 +56,13 @@ class SoilProperties:
 @dataclass
 class CostFactors:
     """Cost factors for earthwork estimation."""
-    cut_cost_per_m3: float = 5.0           # $/m³ for excavation
-    fill_cost_per_m3: float = 8.0          # $/m³ for fill placement and compaction
-    haul_cost_per_m3_km: float = 2.0       # $/m³/km for hauling
-    import_cost_per_m3: float = 15.0       # $/m³ for importing fill material
-    export_cost_per_m3: float = 10.0       # $/m³ for exporting excess material
-    rock_multiplier: float = 3.0           # Multiplier for rock excavation
+
+    cut_cost_per_m3: float = 5.0  # $/m³ for excavation
+    fill_cost_per_m3: float = 8.0  # $/m³ for fill placement and compaction
+    haul_cost_per_m3_km: float = 2.0  # $/m³/km for hauling
+    import_cost_per_m3: float = 15.0  # $/m³ for importing fill material
+    export_cost_per_m3: float = 10.0  # $/m³ for exporting excess material
+    rock_multiplier: float = 3.0  # Multiplier for rock excavation
 
     def calculate_cut_cost(self, volume: float, is_rock: bool = False) -> float:
         """Calculate total cut cost."""
@@ -79,48 +83,51 @@ class CostFactors:
 @dataclass
 class PadDesign:
     """Design parameters for an asset pad."""
+
     asset_id: str
     asset_type: str
-    position: Tuple[float, float]      # Center position (x, y)
-    dimensions: Tuple[float, float]    # Width, length in meters
-    rotation: float = 0.0              # Rotation in degrees
+    position: Tuple[float, float]  # Center position (x, y)
+    dimensions: Tuple[float, float]  # Width, length in meters
+    rotation: float = 0.0  # Rotation in degrees
     target_elevation: Optional[float] = None  # Target pad elevation (auto if None)
     grading_method: GradingMethod = GradingMethod.LEVEL
-    max_pad_slope: float = 2.0         # Max slope % for sloped pads
-    buffer_distance: float = 2.0       # Additional grading around pad
+    max_pad_slope: float = 2.0  # Max slope % for sloped pads
+    buffer_distance: float = 2.0  # Additional grading around pad
 
 
 @dataclass
 class RoadDesign:
     """Design parameters for a road segment."""
+
     segment_id: str
     start_point: Tuple[float, float]
     end_point: Tuple[float, float]
-    width: float = 6.0                 # Road width in meters
+    width: float = 6.0  # Road width in meters
     target_grade: Optional[float] = None  # Target grade % (None = follow terrain)
-    max_grade: float = 10.0            # Maximum grade %
-    shoulder_width: float = 1.0        # Shoulder width each side
-    cross_slope: float = 2.0           # Cross slope % for drainage
+    max_grade: float = 10.0  # Maximum grade %
+    shoulder_width: float = 1.0  # Shoulder width each side
+    cross_slope: float = 2.0  # Cross slope % for drainage
 
 
 @dataclass
 class VolumeResult:
     """Result of volume calculation for a single element."""
+
     element_id: str
-    element_type: str                  # "pad" or "road"
-    cut_volume: float                  # m³
-    fill_volume: float                 # m³
-    net_volume: float                  # cut - fill (positive = excess cut)
-    adjusted_cut: float                # After shrink factor
-    adjusted_fill: float               # After swell factor
-    adjusted_net: float                # Adjusted net volume
-    area: float                        # m²
-    average_cut_depth: float           # m
-    average_fill_depth: float          # m
-    max_cut_depth: float               # m
-    max_fill_depth: float              # m
+    element_type: str  # "pad" or "road"
+    cut_volume: float  # m³
+    fill_volume: float  # m³
+    net_volume: float  # cut - fill (positive = excess cut)
+    adjusted_cut: float  # After shrink factor
+    adjusted_fill: float  # After swell factor
+    adjusted_net: float  # Adjusted net volume
+    area: float  # m²
+    average_cut_depth: float  # m
+    average_fill_depth: float  # m
+    max_cut_depth: float  # m
+    max_fill_depth: float  # m
     existing_elevation_range: Tuple[float, float]  # min, max
-    design_elevation: float            # Target elevation
+    design_elevation: float  # Target elevation
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary."""
@@ -147,6 +154,7 @@ class VolumeResult:
 @dataclass
 class CostResult:
     """Cost estimation result."""
+
     cut_cost: float
     fill_cost: float
     haul_cost: float
@@ -169,6 +177,7 @@ class CostResult:
 @dataclass
 class HaulRoute:
     """Haul route between cut and fill areas."""
+
     source_id: str
     destination_id: str
     distance_m: float
@@ -187,6 +196,7 @@ class HaulRoute:
 @dataclass
 class EarthworkSummary:
     """Summary of all earthwork calculations."""
+
     project_id: str
     total_cut_volume: float
     total_fill_volume: float
@@ -194,9 +204,9 @@ class EarthworkSummary:
     adjusted_total_cut: float
     adjusted_total_fill: float
     adjusted_net: float
-    import_required: float             # Fill needed from outside
-    export_required: float             # Cut to be removed from site
-    balance_on_site: float             # Material balanced on site
+    import_required: float  # Fill needed from outside
+    export_required: float  # Cut to be removed from site
+    balance_on_site: float  # Material balanced on site
     pad_results: List[VolumeResult] = field(default_factory=list)
     road_results: List[VolumeResult] = field(default_factory=list)
     haul_routes: List[HaulRoute] = field(default_factory=list)
@@ -220,7 +230,9 @@ class EarthworkSummary:
             "pad_volumes": [r.to_dict() for r in self.pad_results],
             "road_volumes": [r.to_dict() for r in self.road_results],
             "haul_routes": [r.to_dict() for r in self.haul_routes],
-            "cost_estimate": self.cost_estimate.to_dict() if self.cost_estimate else None,
+            "cost_estimate": (
+                self.cost_estimate.to_dict() if self.cost_estimate else None
+            ),
         }
 
 

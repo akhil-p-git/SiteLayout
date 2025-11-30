@@ -90,7 +90,7 @@ class DEMResult:
 
 def _create_tin_interpolator(
     points: NDArray[np.float64],
-    method: Literal["linear", "nearest", "cubic"] = "linear"
+    method: Literal["linear", "nearest", "cubic"] = "linear",
 ) -> LinearNDInterpolator | NearestNDInterpolator:
     """
     Create a TIN-based interpolator from 3D points.
@@ -103,7 +103,7 @@ def _create_tin_interpolator(
         Interpolator function
     """
     xy = points[:, :2]  # X, Y coordinates
-    z = points[:, 2]    # Elevation values
+    z = points[:, 2]  # Elevation values
 
     if method == "nearest":
         return NearestNDInterpolator(xy, z)
@@ -282,36 +282,36 @@ def save_dem_as_geotiff(
 
     # Build profile
     profile = {
-        'driver': 'GTiff',
-        'dtype': 'float64',
-        'width': dem.width,
-        'height': dem.height,
-        'count': 1,
-        'crs': dem.crs,
-        'transform': dem.transform,
-        'nodata': dem.nodata_value,
+        "driver": "GTiff",
+        "dtype": "float64",
+        "width": dem.width,
+        "height": dem.height,
+        "count": 1,
+        "crs": dem.crs,
+        "transform": dem.transform,
+        "nodata": dem.nodata_value,
     }
 
     if compress:
-        profile['compress'] = 'deflate'
-        profile['predictor'] = 2
+        profile["compress"] = "deflate"
+        profile["predictor"] = 2
 
     if create_cog:
         # COG-specific options
-        profile['tiled'] = True
-        profile['blockxsize'] = 512
-        profile['blockysize'] = 512
-        profile['interleave'] = 'band'
+        profile["tiled"] = True
+        profile["blockxsize"] = 512
+        profile["blockysize"] = 512
+        profile["interleave"] = "band"
 
     # Write the file
-    with rasterio.open(filepath, 'w', **profile) as dst:
+    with rasterio.open(filepath, "w", **profile) as dst:
         dst.write(dem.data, 1)
 
         # Add overviews for COG
         if create_cog:
             factors = [2, 4, 8, 16]
             dst.build_overviews(factors, Resampling.average)
-            dst.update_tags(ns='rio_overview', resampling='average')
+            dst.update_tags(ns="rio_overview", resampling="average")
 
     return filepath
 
@@ -384,9 +384,12 @@ def resample_dem(
     from rasterio.warp import reproject
 
     new_transform = from_bounds(
-        dem.bounds[0], dem.bounds[1],
-        dem.bounds[2], dem.bounds[3],
-        new_width, new_height
+        dem.bounds[0],
+        dem.bounds[1],
+        dem.bounds[2],
+        dem.bounds[3],
+        new_width,
+        new_height,
     )
 
     reproject(

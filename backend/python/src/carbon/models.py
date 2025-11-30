@@ -12,6 +12,7 @@ from typing import Optional, List, Dict, Any
 
 class EquipmentType(Enum):
     """Construction equipment types for emission calculations."""
+
     EXCAVATOR = "excavator"
     BULLDOZER = "bulldozer"
     LOADER = "loader"
@@ -26,6 +27,7 @@ class EquipmentType(Enum):
 
 class FuelType(Enum):
     """Fuel types for emission calculations."""
+
     DIESEL = "diesel"
     GASOLINE = "gasoline"
     BIODIESEL_B20 = "biodiesel_b20"
@@ -35,6 +37,7 @@ class FuelType(Enum):
 
 class EnergySource(Enum):
     """Energy sources for grid comparison."""
+
     SOLAR = "solar"
     WIND = "wind"
     NATURAL_GAS_GRID = "natural_gas_grid"
@@ -52,6 +55,7 @@ class EPAEmissionFactors:
     - EPA GHG Emission Factors Hub (2023)
     - EPA AP-42 Emission Factors
     """
+
     # Stationary combustion (kg CO2 per gallon)
     diesel_kg_per_gallon: float = 10.21
     gasoline_kg_per_gallon: float = 8.78
@@ -76,6 +80,7 @@ class EPAEmissionFactors:
 @dataclass
 class EquipmentEmissionProfile:
     """Emission profile for construction equipment."""
+
     equipment_type: EquipmentType
     fuel_type: FuelType
     fuel_consumption_per_hour: float  # gallons/hour
@@ -84,9 +89,11 @@ class EquipmentEmissionProfile:
 
     def daily_fuel_consumption(self) -> float:
         """Calculate daily fuel consumption in gallons."""
-        return (self.fuel_consumption_per_hour *
-                self.operating_hours_per_day *
-                self.utilization_factor)
+        return (
+            self.fuel_consumption_per_hour
+            * self.operating_hours_per_day
+            * self.utilization_factor
+        )
 
 
 # Default equipment profiles based on industry averages
@@ -118,6 +125,7 @@ DEFAULT_EQUIPMENT_PROFILES: Dict[EquipmentType, EquipmentEmissionProfile] = {
 @dataclass
 class HaulingParameters:
     """Parameters for material hauling emissions."""
+
     haul_distance_km: float  # one-way distance
     truck_capacity_m3: float = 15.0
     fuel_efficiency_km_per_liter: float = 2.5  # loaded
@@ -136,6 +144,7 @@ class HaulingParameters:
 @dataclass
 class EarthworkCarbonInput:
     """Input data for earthwork carbon calculations."""
+
     cut_volume_m3: float
     fill_volume_m3: float
     import_volume_m3: float = 0.0
@@ -148,6 +157,7 @@ class EarthworkCarbonInput:
 @dataclass
 class RoadConstructionInput:
     """Input data for road construction carbon calculations."""
+
     total_length_m: float
     width_m: float
     pavement_depth_m: float = 0.15
@@ -168,6 +178,7 @@ class RoadConstructionInput:
 @dataclass
 class ProjectEnergyProfile:
     """Energy generation profile for solar/wind projects."""
+
     capacity_mw: float  # nameplate capacity
     capacity_factor: float = 0.25  # typical for solar
     energy_source: EnergySource = EnergySource.SOLAR
@@ -190,16 +201,19 @@ class ProjectEnergyProfile:
 @dataclass
 class GridEmissionFactors:
     """Grid emission factors for carbon offset calculations."""
+
     # kg CO2 per MWh by energy source
-    source_factors: Dict[EnergySource, float] = field(default_factory=lambda: {
-        EnergySource.SOLAR: 0.0,
-        EnergySource.WIND: 0.0,
-        EnergySource.NATURAL_GAS_GRID: 410.0,
-        EnergySource.COAL: 820.0,
-        EnergySource.NUCLEAR: 12.0,
-        EnergySource.HYDRO: 24.0,
-        EnergySource.US_AVERAGE_GRID: 386.0,
-    })
+    source_factors: Dict[EnergySource, float] = field(
+        default_factory=lambda: {
+            EnergySource.SOLAR: 0.0,
+            EnergySource.WIND: 0.0,
+            EnergySource.NATURAL_GAS_GRID: 410.0,
+            EnergySource.COAL: 820.0,
+            EnergySource.NUCLEAR: 12.0,
+            EnergySource.HYDRO: 24.0,
+            EnergySource.US_AVERAGE_GRID: 386.0,
+        }
+    )
 
     def get_factor(self, source: EnergySource) -> float:
         """Get emission factor for energy source."""
@@ -209,6 +223,7 @@ class GridEmissionFactors:
 @dataclass
 class CarbonBreakdown:
     """Detailed carbon emissions breakdown."""
+
     equipment_emissions_kg: float = 0.0
     hauling_emissions_kg: float = 0.0
     material_emissions_kg: float = 0.0
@@ -217,10 +232,12 @@ class CarbonBreakdown:
     @property
     def total_construction_kg(self) -> float:
         """Total construction phase emissions."""
-        return (self.equipment_emissions_kg +
-                self.hauling_emissions_kg +
-                self.material_emissions_kg +
-                self.road_construction_kg)
+        return (
+            self.equipment_emissions_kg
+            + self.hauling_emissions_kg
+            + self.material_emissions_kg
+            + self.road_construction_kg
+        )
 
     @property
     def total_construction_metric_tons(self) -> float:
@@ -231,6 +248,7 @@ class CarbonBreakdown:
 @dataclass
 class CarbonOffsetResult:
     """Carbon offset from clean energy generation."""
+
     annual_offset_kg: float
     lifetime_offset_kg: float
     grid_baseline: EnergySource
@@ -248,6 +266,7 @@ class CarbonOffsetResult:
 @dataclass
 class LifetimeImpactResult:
     """Net carbon impact over project lifetime."""
+
     construction_emissions_kg: float
     operational_offset_kg: float
     net_impact_kg: float
@@ -268,6 +287,7 @@ class LifetimeImpactResult:
 @dataclass
 class CarbonCalculationResult:
     """Complete carbon calculation result."""
+
     project_id: str
     construction: CarbonBreakdown
     offset: Optional[CarbonOffsetResult] = None
@@ -288,11 +308,15 @@ class CarbonCalculationResult:
         """Calculate human-readable equivalents."""
         # Construction impact equivalents
         self.equivalent_car_years = self.total_construction_metric_tons / 4.6
-        self.equivalent_trees_planted = (self.total_construction_metric_tons * 1000) / 22
+        self.equivalent_trees_planted = (
+            self.total_construction_metric_tons * 1000
+        ) / 22
 
         # If we have offset data, calculate homes powered
         if self.offset:
-            annual_mwh = self.offset.annual_offset_kg / self.offset.grid_factor_kg_per_mwh
+            annual_mwh = (
+                self.offset.annual_offset_kg / self.offset.grid_factor_kg_per_mwh
+            )
             self.equivalent_homes_powered = annual_mwh / 7.5
 
     def to_dict(self) -> Dict[str, Any]:
@@ -326,8 +350,10 @@ class CarbonCalculationResult:
 
         if self.lifetime:
             result["lifetime"] = {
-                "construction_emissions_metric_tons": self.lifetime.construction_emissions_kg / 1000,
-                "operational_offset_metric_tons": self.lifetime.operational_offset_kg / 1000,
+                "construction_emissions_metric_tons": self.lifetime.construction_emissions_kg
+                / 1000,
+                "operational_offset_metric_tons": self.lifetime.operational_offset_kg
+                / 1000,
                 "net_impact_metric_tons": self.lifetime.net_impact_metric_tons,
                 "payback_years": self.lifetime.payback_years,
                 "project_lifetime_years": self.lifetime.project_lifetime_years,

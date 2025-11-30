@@ -1,9 +1,9 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, {
   createContext,
   useContext,
   useReducer,
   useCallback,
-  useRef,
   type ReactNode,
 } from 'react';
 import {
@@ -153,7 +153,7 @@ function historyReducer(
         future: [],
       };
 
-    case 'UNDO':
+    case 'UNDO': {
       if (state.past.length === 0) return state;
       const previous = state.past[state.past.length - 1];
       return {
@@ -161,8 +161,9 @@ function historyReducer(
         present: previous,
         future: [state.present, ...state.future],
       };
+    }
 
-    case 'REDO':
+    case 'REDO': {
       if (state.future.length === 0) return state;
       const next = state.future[0];
       return {
@@ -170,6 +171,7 @@ function historyReducer(
         present: next,
         future: state.future.slice(1),
       };
+    }
 
     case 'SET':
       return {
@@ -236,9 +238,6 @@ export function AssetPlacementProvider({
 }: AssetPlacementProviderProps) {
   const [state, dispatch] = useReducer(assetReducer, initialState);
   const [history, dispatchHistory] = useReducer(historyReducer, initialHistory);
-
-  // Track if we need to push to history
-  const shouldPushHistory = useRef(false);
 
   // Sync history with state
   const pushHistory = useCallback(() => {

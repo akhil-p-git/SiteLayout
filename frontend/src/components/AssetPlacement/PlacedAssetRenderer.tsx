@@ -1,10 +1,9 @@
-import React, { useEffect, useCallback, useRef } from 'react';
+import { useEffect, useCallback, useRef } from 'react';
 import { useMapContext } from '../../context/MapContext';
 import { useAssetPlacement } from '../../context/AssetPlacementContext';
 import {
   ASSET_DEFINITIONS,
   calculateAssetFootprint,
-  type PlacedAsset,
   type AssetType,
 } from '../../types/asset';
 

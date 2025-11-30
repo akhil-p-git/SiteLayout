@@ -4,7 +4,7 @@
  * Types for risk assessment and risk-adjusted scoring.
  */
 
-import { SiteData, SiteScores } from './types';
+import { SiteData } from './types';
 
 export type RiskCategory =
   | 'regulatory'

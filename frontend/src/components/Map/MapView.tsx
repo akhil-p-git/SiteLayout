@@ -10,7 +10,6 @@ import './MapView.css';
 
 interface MapViewProps {
   initialViewState?: Partial<MapViewState>;
-  siteId?: string;
   demUrl?: string;
   className?: string;
   showControls?: boolean;
@@ -22,7 +21,6 @@ interface MapViewProps {
 
 export function MapView({
   initialViewState,
-  siteId,
   demUrl,
   className = '',
   showControls = true,

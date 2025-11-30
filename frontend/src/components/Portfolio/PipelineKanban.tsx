@@ -80,8 +80,6 @@ interface StageColumnProps {
 }
 
 const StageColumn: React.FC<StageColumnProps> = ({ stage, onSiteClick }) => {
-  const config = STATUS_CONFIG[stage.status];
-
   return (
     <div className="pipeline-column">
       <div className="column-header" style={{ borderColor: stage.color }}>
@@ -117,7 +115,6 @@ const StageColumn: React.FC<StageColumnProps> = ({ stage, onSiteClick }) => {
 export const PipelineKanban: React.FC<PipelineKanbanProps> = ({
   sites,
   onSiteClick,
-  onStatusChange,
 }) => {
   const stages = useMemo<PipelineStage[]>(() => {
     const pipelineStatuses: SiteStatus[] = [

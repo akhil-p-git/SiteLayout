@@ -8,7 +8,6 @@ import React, { useState, useMemo } from 'react';
 import {
   SiteData,
   SortConfig,
-  SortDirection,
   FilterCriteria,
   STATUS_CONFIG,
   filterSites,

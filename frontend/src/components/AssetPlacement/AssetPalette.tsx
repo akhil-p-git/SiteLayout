@@ -80,8 +80,6 @@ export function AssetPalette({
   disabled = false,
   className = '',
 }: AssetPaletteProps) {
-  const assetTypes = Object.values(AssetType);
-
   return (
     <div className={`asset-palette ${className}`}>
       <div className="palette-header">

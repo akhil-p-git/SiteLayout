@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { MetricCard, MetricRow, MetricGroup } from './MetricCard';
 import { SimpleBarChart, SimplePieChart } from './Charts';
 import type { LayoutMetrics, ChartDataPoint } from './types';
@@ -7,14 +7,12 @@ import './LayoutMetricsPanel.css';
 interface LayoutMetricsPanelProps {
   metrics: LayoutMetrics | null;
   isLoading?: boolean;
-  comparisonMetrics?: LayoutMetrics | null;
   className?: string;
 }
 
 export function LayoutMetricsPanel({
   metrics,
   isLoading = false,
-  comparisonMetrics,
   className = '',
 }: LayoutMetricsPanelProps) {
   // Prepare chart data

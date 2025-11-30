@@ -2,7 +2,7 @@
  * Asset Types for Manual Placement
  */
 
-import type { Polygon, Point } from 'geojson';
+import type { Polygon } from 'geojson';
 
 export enum AssetType {
   BESS = 'bess',

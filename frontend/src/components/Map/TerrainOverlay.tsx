@@ -1,18 +1,14 @@
+/* eslint-disable react-refresh/only-export-components */
 import { useEffect, useRef } from 'react';
-import type { Map as MapboxMap } from 'mapbox-gl';
 import { useMapContext } from '../../context/MapContext';
 import { TERRAIN_COLOR_RAMPS } from '../../types/map';
 
 interface TerrainOverlayProps {
   demUrl?: string;
-  minElevation?: number;
-  maxElevation?: number;
 }
 
 export function TerrainOverlay({
   demUrl,
-  minElevation = 0,
-  maxElevation = 1000,
 }: TerrainOverlayProps) {
   const { map, isLoaded, terrainOverlay, layerVisibility } = useMapContext();
   const setupRef = useRef(false);

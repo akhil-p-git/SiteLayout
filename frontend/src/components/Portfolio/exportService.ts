@@ -9,7 +9,6 @@ import {
   PortfolioSummary,
   STATUS_CONFIG,
   formatCapacity,
-  formatArea,
   formatCurrency,
 } from './types';
 import { SiteRiskProfile, RISK_CATEGORY_CONFIG, SEVERITY_CONFIG } from './riskTypes';
@@ -396,7 +395,7 @@ Annual Carbon Offset: ${(summary.totalCarbonOffset / 1000).toFixed(1)}K tonnes C
 
 Status Breakdown:
 ${Object.entries(summary.statusBreakdown)
-  .filter(([_, count]) => count > 0)
+  .filter(([, count]) => count > 0)
   .map(([status, count]) => `  ${STATUS_CONFIG[status as keyof typeof STATUS_CONFIG].label}: ${count}`)
   .join('\n')}
 `.trim();

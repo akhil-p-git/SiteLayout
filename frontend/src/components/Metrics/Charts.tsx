@@ -1,4 +1,3 @@
-import React from 'react';
 import type { ChartDataPoint } from './types';
 import './Charts.css';
 
@@ -67,21 +66,21 @@ export function SimplePieChart({
   const total = data.reduce((sum, d) => sum + d.value, 0);
   if (total === 0) return null;
 
-  // Calculate pie segments
-  let currentAngle = 0;
-  const segments = data.map((item, index) => {
+  // Calculate pie segments using reduce to avoid mutable variable
+  const segments = data.reduce<Array<ChartDataPoint & { percentage: number; startAngle: number; endAngle: number }>>((acc, item) => {
     const percentage = (item.value / total) * 100;
     const angle = (item.value / total) * 360;
-    const startAngle = currentAngle;
-    currentAngle += angle;
+    const startAngle = acc.length > 0 ? acc[acc.length - 1].endAngle : 0;
+    const endAngle = startAngle + angle;
 
-    return {
+    acc.push({
       ...item,
       percentage,
       startAngle,
-      endAngle: currentAngle,
-    };
-  });
+      endAngle,
+    });
+    return acc;
+  }, []);
 
   // Generate SVG path for each segment
   const createArcPath = (startAngle: number, endAngle: number, radius: number) => {

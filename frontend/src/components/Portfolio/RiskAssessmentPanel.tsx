@@ -12,9 +12,6 @@ import {
   SiteRiskProfile,
   RISK_CATEGORY_CONFIG,
   SEVERITY_CONFIG,
-  DEFAULT_RISK_CONFIG,
-  calculateRiskScore,
-  calculateRiskAdjustedScore,
   getCategoryRiskScore,
   sortBySeverity,
 } from './riskTypes';

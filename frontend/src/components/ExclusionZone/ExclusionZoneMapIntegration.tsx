@@ -22,7 +22,7 @@ export function ExclusionZoneMapIntegration({
   className = '',
 }: ExclusionZoneMapIntegrationProps) {
   const { accessToken } = useAuth();
-  const { map, setDrawingMode, drawingMode, layerVisibility } = useMapContext();
+  const { map, setDrawingMode, layerVisibility } = useMapContext();
 
   const [zones, setZones] = useState<ExclusionZone[]>([]);
   const [selectedZone, setSelectedZone] = useState<ExclusionZone | null>(null);
@@ -183,6 +183,7 @@ export function ExclusionZoneMapIntegration({
 
   // Initial fetch
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchZones();
   }, [fetchZones]);
 
@@ -238,12 +239,12 @@ export function ExclusionZoneMapIntegration({
   }, []);
 
   // Handle delete zone
-  const handleDeleteZone = useCallback((zoneId: string) => {
+  const handleDeleteZone = useCallback((_zoneId: string) => {
     fetchZones();
   }, [fetchZones]);
 
   // Handle form save
-  const handleFormSave = useCallback((zone: ExclusionZone) => {
+  const handleFormSave = useCallback((_zone: ExclusionZone) => {
     setIsFormOpen(false);
     setDrawnGeometry(undefined);
     setEditingZone(undefined);

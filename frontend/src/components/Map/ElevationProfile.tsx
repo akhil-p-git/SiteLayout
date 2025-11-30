@@ -31,7 +31,6 @@ export function ElevationProfile({
   // Convert units if needed
   const conversionFactor = unit === 'feet' ? 3.28084 : 1;
   const unitLabel = unit === 'feet' ? 'ft' : 'm';
-  const distanceUnit = 'm';
 
   // Calculate data bounds and scales
   const { minElevation, maxElevation, maxDistance, pathData, gradientStops, stats } = useMemo(() => {

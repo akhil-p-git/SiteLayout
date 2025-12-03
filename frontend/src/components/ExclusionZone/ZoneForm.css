@@ -51,6 +51,7 @@
   gap: 1rem;
   overflow-y: auto;
   flex: 1;
+  min-height: 0;
 }
 
 .form-group {
@@ -146,9 +147,10 @@
 .form-actions {
   display: flex;
   gap: 0.75rem;
-  padding: 1rem;
+  padding: 1rem 1rem 6rem 1rem;
   border-top: 1px solid var(--border-color, #e0e0e0);
   background: var(--bg-secondary, #f8f9fa);
+  flex-shrink: 0;
 }
 
 .btn-cancel,

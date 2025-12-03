@@ -13,6 +13,12 @@ import exclusionZoneRoutes from './routes/exclusionZone';
 import constraintRoutes from './routes/constraint';
 import exportRoutes from './routes/export';
 import habitatRoutes from './routes/habitat';
+import entryPointRoutes from './routes/entryPoint';
+import roadRoutes from './routes/road';
+import assetRoutes from './routes/asset';
+import projectRoutes from './routes/project';
+import siteRoutes from './routes/site';
+import layoutRoutes from './routes/layout';
 
 dotenv.config();
 
@@ -88,18 +94,23 @@ app.use('/api/v1/export', exportRoutes);
 // Habitat overlay routes (USFWS/NWI)
 app.use('/api/v1/habitat', habitatRoutes);
 
-// Placeholder routes (to be implemented)
-app.use('/api/v1/projects', (_req, res) => {
-  res.json({ message: 'Projects API - Coming soon' });
-});
+// Entry Points routes
+app.use('/api/v1/entry-points', entryPointRoutes);
 
-app.use('/api/v1/sites', (_req, res) => {
-  res.json({ message: 'Sites API - Coming soon' });
-});
+// Roads routes
+app.use('/api/v1/roads', roadRoutes);
 
-app.use('/api/v1/layouts', (_req, res) => {
-  res.json({ message: 'Layouts API - Coming soon' });
-});
+// Assets routes
+app.use('/api/v1/assets', assetRoutes);
+
+// Projects routes
+app.use('/api/v1/projects', projectRoutes);
+
+// Sites routes
+app.use('/api/v1/sites', siteRoutes);
+
+// Layouts routes
+app.use('/api/v1/layouts', layoutRoutes);
 
 // Error handling middleware
 app.use((err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {

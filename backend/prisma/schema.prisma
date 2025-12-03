@@ -63,6 +63,14 @@ enum RoadType {
   emergency
 }
 
+enum EntryPointType {
+  primary
+  secondary
+  emergency
+  maintenance
+  construction
+}
+
 enum OptimizationObjective {
   min_earthwork
   max_capacity
@@ -175,6 +183,7 @@ model Site {
 
   project        Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
   exclusionZones ExclusionZone[]
+  entryPoints    EntryPoint[]
   layouts        Layout[]
 
   @@index([projectId])
@@ -198,6 +207,26 @@ model ExclusionZone {
 
   @@index([siteId])
   @@map("exclusion_zones")
+}
+
+model EntryPoint {
+  id           String         @id @default(uuid()) @db.Uuid
+  siteId       String         @map("site_id") @db.Uuid
+  name         String         @db.VarChar(255)
+  type         EntryPointType @default(primary)
+  capacity     Int?
+  restrictions Json?
+  createdAt    DateTime       @default(now()) @map("created_at")
+  updatedAt    DateTime       @updatedAt @map("updated_at")
+
+  // Note: geometry is a PostGIS POINT geometry column (SRID 4326)
+  // Added via raw SQL migration
+
+  site Site @relation(fields: [siteId], references: [id], onDelete: Cascade)
+
+  @@index([siteId])
+  @@index([type])
+  @@map("entry_points")
 }
 
 // =============================================================================
@@ -229,16 +258,17 @@ model Layout {
 }
 
 model AssetPlacement {
-  id          String    @id @default(uuid()) @db.Uuid
-  layoutId    String    @map("layout_id") @db.Uuid
-  assetType   AssetType @map("asset_type")
-  name        String    @db.VarChar(255)
-  dimensions  Json?
-  elevation   Json?
-  earthwork   Json?
-  constraints Json?
-  metadata    Json      @default("{}")
-  createdAt   DateTime  @default(now()) @map("created_at")
+  id                     String    @id @default(uuid()) @db.Uuid
+  layoutId               String    @map("layout_id") @db.Uuid
+  assetType              AssetType @map("asset_type")
+  name                   String    @db.VarChar(255)
+  dimensions             Json?
+  elevation              Json?
+  earthwork              Json?
+  constraints            Json?
+  constraintViolations   Json?     @map("constraint_violations")
+  metadata               Json      @default("{}")
+  createdAt              DateTime  @default(now()) @map("created_at")
 
   // Note: geometry and centroid are PostGIS geometry columns
   // Added via raw SQL migration
@@ -251,16 +281,17 @@ model AssetPlacement {
 }
 
 model RoadSegment {
-  id        String   @id @default(uuid()) @db.Uuid
-  layoutId  String   @map("layout_id") @db.Uuid
-  length    Float?
-  width     Float?
-  grade     Float[]  @default([])
-  maxGrade  Float?   @map("max_grade")
-  avgGrade  Float?   @map("avg_grade")
-  earthwork Json?
-  type      RoadType @default(access)
-  createdAt DateTime @default(now()) @map("created_at")
+  id                String   @id @default(uuid()) @db.Uuid
+  layoutId          String   @map("layout_id") @db.Uuid
+  length            Float?
+  width             Float?
+  grade             Float[]  @default([])
+  maxGrade          Float?   @map("max_grade")
+  avgGrade          Float?   @map("avg_grade")
+  elevationProfile  Json?    @map("elevation_profile")
+  earthwork         Json?
+  type              RoadType @default(access)
+  createdAt         DateTime @default(now()) @map("created_at")
 
   // Note: geometry is a PostGIS geometry column
   // Added via raw SQL migration

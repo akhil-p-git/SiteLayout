@@ -8,6 +8,7 @@ import {
   createPlacedAsset,
   snapToGrid as snapToGridFn,
 } from '../types/asset';
+import { assetApi } from '../api/siteLayoutApi';
 
 // History for undo/redo
 interface HistoryState {
@@ -212,6 +213,12 @@ interface AssetPlacementContextValue extends AssetPlacementState {
   // Validation
   validateAsset: (asset: PlacedAsset) => PlacedAsset;
   validateAllAssets: () => void;
+
+  // API persistence
+  loadAssetsFromApi: (layoutId: string) => Promise<void>;
+  saveAssetToApi: (layoutId: string, asset: PlacedAsset) => Promise<PlacedAsset>;
+  updateAssetInApi: (asset: PlacedAsset) => Promise<PlacedAsset>;
+  deleteAssetFromApi: (assetId: string) => Promise<void>;
 }
 
 const AssetPlacementContext = createContext<AssetPlacementContextValue | undefined>(undefined);
@@ -440,6 +447,69 @@ export function AssetPlacementProvider({ children, onValidate }: AssetPlacementP
     dispatch({ type: 'SET_ASSETS', payload: validatedAssets });
   }, [state.assets, onValidate, validateAsset]);
 
+  // API persistence
+  const loadAssetsFromApi = useCallback(async (layoutId: string) => {
+    try {
+      const data = await assetApi.listByLayout(layoutId);
+      const apiAssets = (data.data || []).map((a: any) => ({
+        ...a,
+        position: { x: a.geometry.coordinates[0][0][0], y: a.geometry.coordinates[0][0][1] },
+        isSelected: false,
+      }));
+      dispatch({ type: 'SET_ASSETS', payload: apiAssets });
+    } catch (error) {
+      console.error('Failed to load assets from API:', error);
+    }
+  }, []);
+
+  const saveAssetToApi = useCallback(async (layoutId: string, asset: PlacedAsset) => {
+    try {
+      const response = await assetApi.create(layoutId, {
+        name: asset.name || asset.type,
+        assetType: asset.type,
+        coordinates: [[
+          [asset.position.x, asset.position.y],
+          [asset.position.x + asset.width, asset.position.y],
+          [asset.position.x + asset.width, asset.position.y + asset.height],
+          [asset.position.x, asset.position.y + asset.height],
+          [asset.position.x, asset.position.y],
+        ]],
+      });
+      return response;
+    } catch (error) {
+      console.error('Failed to save asset to API:', error);
+      throw error;
+    }
+  }, []);
+
+  const updateAssetInApi = useCallback(async (asset: PlacedAsset) => {
+    try {
+      const response = await assetApi.update(asset.id, {
+        name: asset.name || asset.type,
+        coordinates: [[
+          [asset.position.x, asset.position.y],
+          [asset.position.x + asset.width, asset.position.y],
+          [asset.position.x + asset.width, asset.position.y + asset.height],
+          [asset.position.x, asset.position.y + asset.height],
+          [asset.position.x, asset.position.y],
+        ]],
+      });
+      return response;
+    } catch (error) {
+      console.error('Failed to update asset in API:', error);
+      throw error;
+    }
+  }, []);
+
+  const deleteAssetFromApi = useCallback(async (assetId: string) => {
+    try {
+      await assetApi.delete(assetId);
+    } catch (error) {
+      console.error('Failed to delete asset from API:', error);
+      throw error;
+    }
+  }, []);
+
   const value: AssetPlacementContextValue = {
     ...state,
     addAsset,
@@ -465,6 +535,10 @@ export function AssetPlacementProvider({ children, onValidate }: AssetPlacementP
     duplicateSelected,
     validateAsset,
     validateAllAssets,
+    loadAssetsFromApi,
+    saveAssetToApi,
+    updateAssetInApi,
+    deleteAssetFromApi,
   };
 
   return <AssetPlacementContext.Provider value={value}>{children}</AssetPlacementContext.Provider>;

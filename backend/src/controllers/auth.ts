@@ -357,7 +357,10 @@ export async function oauthLogin(req: AuthenticatedRequest, res: Response): Prom
     return;
   }
 
-  const redirectUri = `${req.protocol}://${req.get('host')}/api/auth/oauth/callback`;
+  // Build the redirect URI with proper protocol handling
+  // Use environment variable if provided, otherwise construct from request
+  const redirectUri = process.env.OAUTH_CALLBACK_URL ||
+    `${req.protocol}://${req.get('host')}/api/auth/oauth/callback`;
   const state = crypto.randomBytes(16).toString('hex');
 
   // In production, store state in session for CSRF protection
@@ -386,7 +389,10 @@ export async function oauthCallback(req: AuthenticatedRequest, res: Response): P
       return;
     }
 
-    const redirectUri = `${req.protocol}://${req.get('host')}/api/auth/oauth/callback`;
+    // Build the redirect URI with proper protocol handling
+    // Use environment variable if provided, otherwise construct from request
+    const redirectUri = process.env.OAUTH_CALLBACK_URL ||
+      `${req.protocol}://${req.get('host')}/api/auth/oauth/callback`;
     const tokens = await exchangeCodeForTokens(code, redirectUri);
 
     if (!tokens) {

@@ -19,6 +19,10 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// Trust proxy (required for AWS ALB, API Gateway, Heroku, etc.)
+// This allows req.protocol, req.hostname, req.ip to work correctly behind a reverse proxy
+app.set('trust proxy', 1);
+
 // CORS configuration
 const corsOptions = {
   origin: process.env.FRONTEND_URL || 'http://localhost:5173',

@@ -163,6 +163,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
           headers: {
             'Content-Type': 'application/json',
           },
+          credentials: 'include',
           body: JSON.stringify(credentials),
         });
 
@@ -206,6 +207,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({ refreshToken: currentRefreshToken }),
       });
 
@@ -239,6 +241,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
           'Content-Type': 'application/json',
           Authorization: state.accessToken ? `Bearer ${state.accessToken}` : '',
         },
+        credentials: 'include',
         body: JSON.stringify({ refreshToken: currentRefreshToken }),
       });
     } catch {
@@ -257,6 +260,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         headers: {
           Authorization: `Bearer ${state.accessToken}`,
         },
+        credentials: 'include',
       });
     } catch {
       // Ignore errors

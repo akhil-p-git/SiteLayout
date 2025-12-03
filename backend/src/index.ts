@@ -27,7 +27,18 @@ const corsOptions = {
 };
 
 // Middleware
-app.use(helmet());
+// Configure helmet with relaxed settings for development (no SSL)
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      upgradeInsecureRequests: null, // Disable upgrade-insecure-requests for HTTP
+    },
+  },
+  hsts: false, // Disable HSTS since we're using HTTP
+  crossOriginResourcePolicy: { policy: 'cross-origin' },
+  crossOriginOpenerPolicy: { policy: 'unsafe-none' },
+}));
 app.use(cors(corsOptions));
 app.use(compression());
 app.use(morgan('combined'));

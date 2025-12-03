@@ -1,10 +1,14 @@
+import { BrowserRouter, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { MapView } from './components/Map';
 import { LoginForm } from './components/Auth';
+import { ProjectsPage, AnalyticsPage, SettingsPage, HelpPage } from './pages';
 import './App.css';
 
 function AppContent() {
   const { isAuthenticated, isLoading, user, logout } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   // Default view centered on US
   const initialViewState = {
@@ -26,6 +30,8 @@ function AppContent() {
   const handleFeatureDelete = (featureIds: string[]) => {
     console.log('Features deleted:', featureIds);
   };
+
+  const isActive = (path: string) => location.pathname === path;
 
   // Show loading spinner while checking auth
   if (isLoading) {
@@ -54,18 +60,41 @@ function AppContent() {
           <span className="header-subtitle">MVP+ by Pacifico Energy</span>
         </div>
         <nav className="header-nav">
-          <button className="nav-button active">Map</button>
-          <button className="nav-button">Projects</button>
-          <button className="nav-button">Analytics</button>
+          <button
+            className={`nav-button ${isActive('/') ? 'active' : ''}`}
+            onClick={() => navigate('/')}
+          >
+            Map
+          </button>
+          <button
+            className={`nav-button ${isActive('/projects') ? 'active' : ''}`}
+            onClick={() => navigate('/projects')}
+          >
+            Projects
+          </button>
+          <button
+            className={`nav-button ${isActive('/analytics') ? 'active' : ''}`}
+            onClick={() => navigate('/analytics')}
+          >
+            Analytics
+          </button>
         </nav>
         <div className="header-actions">
-          <button className="action-button" title="Help">
+          <button
+            className={`action-button ${isActive('/help') ? 'active' : ''}`}
+            title="Help"
+            onClick={() => navigate('/help')}
+          >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <circle cx="12" cy="12" r="10" />
               <path d="M12 16v-4M12 8h.01" />
             </svg>
           </button>
-          <button className="action-button" title="Settings">
+          <button
+            className={`action-button ${isActive('/settings') ? 'active' : ''}`}
+            title="Settings"
+            onClick={() => navigate('/settings')}
+          >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <circle cx="12" cy="12" r="3" />
               <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
@@ -95,12 +124,20 @@ function AppContent() {
         </div>
       </header>
       <main className="app-main">
-        <MapView
-          initialViewState={initialViewState}
-          onFeatureCreate={handleFeatureCreate}
-          onFeatureUpdate={handleFeatureUpdate}
-          onFeatureDelete={handleFeatureDelete}
-        />
+        <Routes>
+          <Route path="/" element={
+            <MapView
+              initialViewState={initialViewState}
+              onFeatureCreate={handleFeatureCreate}
+              onFeatureUpdate={handleFeatureUpdate}
+              onFeatureDelete={handleFeatureDelete}
+            />
+          } />
+          <Route path="/projects" element={<ProjectsPage />} />
+          <Route path="/analytics" element={<AnalyticsPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/help" element={<HelpPage />} />
+        </Routes>
       </main>
     </div>
   );
@@ -108,9 +145,11 @@ function AppContent() {
 
 function App() {
   return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
+    <BrowserRouter>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
 

@@ -17,8 +17,8 @@ import type {
 } from '../types/auth';
 import { ROLE_PERMISSIONS } from '../types/auth';
 
-// API base URL
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+// API base URL - empty string means relative URLs (same origin)
+const API_URL = import.meta.env.VITE_API_URL ?? '';
 
 // Token storage keys
 const ACCESS_TOKEN_KEY = 'site_layouts_access_token';

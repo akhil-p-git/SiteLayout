@@ -9,8 +9,7 @@ generator client {
 
 datasource db {
   provider   = "postgresql"
-  url        = env("DATABASE_URL")
-  extensions = [postgis]
+  // extensions = [postgis] // Temporarily disabled for local dev without PostGIS
 }
 
 // =============================================================================

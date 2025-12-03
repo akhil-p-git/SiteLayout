@@ -142,7 +142,7 @@ export function ExportPanel({
     onExportStart?.();
 
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+      const apiUrl = import.meta.env.VITE_API_URL ?? '';
       const endpoint = `${apiUrl}/api/v1/export/${format}`;
 
       const response = await fetch(endpoint, {

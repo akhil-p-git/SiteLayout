@@ -72,3 +72,12 @@ data/
 *.key
 credentials.json
 secrets/
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+terraform.tfvars
+secrets.tfvars
+*.tfvars
+.terraform.lock.hcl

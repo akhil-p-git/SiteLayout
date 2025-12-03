@@ -72,18 +72,24 @@ export function PlacedAssetRenderer() {
   useEffect(() => {
     if (!map || !isLoaded) return;
 
-    // Add source
+    // Add source with empty data initially
     if (!map.getSource(ASSETS_SOURCE_ID)) {
       map.addSource(ASSETS_SOURCE_ID, {
         type: 'geojson',
-        data: assetsToGeoJSON(),
+        data: {
+          type: 'FeatureCollection' as const,
+          features: [],
+        },
       });
     }
 
     if (!map.getSource(`${ASSETS_SOURCE_ID}-violations`)) {
       map.addSource(`${ASSETS_SOURCE_ID}-violations`, {
         type: 'geojson',
-        data: violationsToGeoJSON(),
+        data: {
+          type: 'FeatureCollection' as const,
+          features: [],
+        },
       });
     }
 

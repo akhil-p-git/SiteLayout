@@ -27,7 +27,7 @@ export const EntryPointPanel: React.FC<{ siteId: string }> = ({ siteId }) => {
       });
       setFormData({ name: '', type: 'primary', coordinates: [0, 0] });
       setShowForm(false);
-    } catch (err) {
+    } catch {
       alert('Failed to create entry point');
     }
   };
@@ -36,7 +36,7 @@ export const EntryPointPanel: React.FC<{ siteId: string }> = ({ siteId }) => {
     if (confirm('Delete this entry point?')) {
       try {
         await deleteEntryPoint(id);
-      } catch (err) {
+      } catch {
         alert('Failed to delete entry point');
       }
     }
@@ -69,7 +69,7 @@ export const EntryPointPanel: React.FC<{ siteId: string }> = ({ siteId }) => {
           />
           <select
             value={formData.type}
-            onChange={(e) => setFormData({ ...formData, type: e.target.value as any })}
+            onChange={(e) => setFormData({ ...formData, type: e.target.value as 'primary' | 'secondary' | 'emergency' | 'maintenance' | 'construction' })}
             className="w-full px-2 py-1 border rounded"
           >
             <option>primary</option>

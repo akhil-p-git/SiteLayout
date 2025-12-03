@@ -2,7 +2,7 @@
  * Habitat Types for Frontend
  */
 
-import type { Polygon, MultiPolygon, Feature, FeatureCollection } from 'geojson';
+import type { Polygon, MultiPolygon, Feature } from 'geojson';
 
 export type SpeciesStatus =
   | 'endangered'

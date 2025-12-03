@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import { entryPointApi } from '../api/siteLayoutApi';
 
@@ -25,12 +26,16 @@ interface EntryPointContextType {
   loading: boolean;
   error: string | null;
   loadEntryPoints: (siteId: string) => Promise<void>;
-  createEntryPoint: (siteId: string, data: any) => Promise<EntryPoint>;
-  updateEntryPoint: (id: string, data: any) => Promise<EntryPoint>;
+  createEntryPoint: (siteId: string, data: Record<string, unknown>) => Promise<EntryPoint>;
+  updateEntryPoint: (id: string, data: Record<string, unknown>) => Promise<EntryPoint>;
   deleteEntryPoint: (id: string) => Promise<void>;
   selectEntryPoint: (ep: EntryPoint | null) => void;
   validateLocation: (siteId: string, coordinates: [number, number]) => Promise<ValidationResult>;
-  exportGeojson: (siteId: string) => Promise<any>;
+  exportGeojson: (siteId: string) => Promise<GeoJSON.FeatureCollection>;
+}
+
+interface GeoJSON {
+  FeatureCollection: unknown;
 }
 
 const EntryPointContext = createContext<EntryPointContextType | undefined>(undefined);
@@ -47,37 +52,40 @@ export const EntryPointProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     try {
       const data = await entryPointApi.listBySite(siteId);
       setEntryPoints(data.data || []);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      const error = err instanceof Error ? err : new Error(String(err));
+      setError(error.message);
     } finally {
       setLoading(false);
     }
   }, []);
 
-  const createEntryPoint = useCallback(async (siteId: string, data: any) => {
+  const createEntryPoint = useCallback(async (siteId: string, data: Record<string, unknown>) => {
     setLoading(true);
     try {
       const ep = await entryPointApi.create(siteId, data);
       setEntryPoints((prev) => [...prev, ep]);
       return ep;
-    } catch (err: any) {
-      setError(err.message);
-      throw err;
+    } catch (err: unknown) {
+      const error = err instanceof Error ? err : new Error(String(err));
+      setError(error.message);
+      throw error;
     } finally {
       setLoading(false);
     }
   }, []);
 
-  const updateEntryPoint = useCallback(async (id: string, data: any) => {
+  const updateEntryPoint = useCallback(async (id: string, data: Record<string, unknown>) => {
     setLoading(true);
     try {
       const ep = await entryPointApi.update(id, data);
       setEntryPoints((prev) => prev.map((e) => (e.id === id ? ep : e)));
       if (selectedEntryPoint?.id === id) setSelectedEntryPoint(ep);
       return ep;
-    } catch (err: any) {
-      setError(err.message);
-      throw err;
+    } catch (err: unknown) {
+      const error = err instanceof Error ? err : new Error(String(err));
+      setError(error.message);
+      throw error;
     } finally {
       setLoading(false);
     }
@@ -89,9 +97,10 @@ export const EntryPointProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       await entryPointApi.delete(id);
       setEntryPoints((prev) => prev.filter((e) => e.id !== id));
       if (selectedEntryPoint?.id === id) setSelectedEntryPoint(null);
-    } catch (err: any) {
-      setError(err.message);
-      throw err;
+    } catch (err: unknown) {
+      const error = err instanceof Error ? err : new Error(String(err));
+      setError(error.message);
+      throw error;
     } finally {
       setLoading(false);
     }
@@ -101,17 +110,19 @@ export const EntryPointProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     try {
       const result = await entryPointApi.validate(siteId, coordinates);
       return result;
-    } catch (err: any) {
-      return { valid: false, errors: [err.message], warnings: [] };
+    } catch (err: unknown) {
+      const error = err instanceof Error ? err : new Error(String(err));
+      return { valid: false, errors: [error.message], warnings: [] };
     }
   }, []);
 
   const exportGeojson = useCallback(async (siteId: string) => {
     try {
       return await entryPointApi.exportGeojson(siteId);
-    } catch (err: any) {
-      setError(err.message);
-      throw err;
+    } catch (err: unknown) {
+      const error = err instanceof Error ? err : new Error(String(err));
+      setError(error.message);
+      throw error;
     }
   }, []);
 

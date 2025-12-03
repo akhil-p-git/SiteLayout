@@ -451,9 +451,9 @@ export function AssetPlacementProvider({ children, onValidate }: AssetPlacementP
   const loadAssetsFromApi = useCallback(async (layoutId: string) => {
     try {
       const data = await assetApi.listByLayout(layoutId);
-      const apiAssets = (data.data || []).map((a: any) => ({
+      const apiAssets = (data.data || []).map((a: Record<string, unknown>) => ({
         ...a,
-        position: { x: a.geometry.coordinates[0][0][0], y: a.geometry.coordinates[0][0][1] },
+        position: { x: (a.geometry as Record<string, unknown>).coordinates[0][0][0], y: (a.geometry as Record<string, unknown>).coordinates[0][0][1] },
         isSelected: false,
       }));
       dispatch({ type: 'SET_ASSETS', payload: apiAssets });

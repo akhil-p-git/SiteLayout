@@ -260,7 +260,7 @@ export function Map({
       setDraw(null);
       setIsLoaded(false);
     };
-  }, []);
+  }, [viewState, setMap, setDraw, setIsLoaded, setViewState, setSelectedFeatureId, onFeatureCreate, onFeatureUpdate, onFeatureDelete, onFeatureSelect]);
 
   // Update drawing mode
   useEffect(() => {

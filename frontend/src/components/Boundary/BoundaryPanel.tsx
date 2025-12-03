@@ -15,24 +15,6 @@ interface BoundaryPanelProps {
   onBoundaryChange?: (boundary: SiteBoundary | null) => void;
 }
 
-// Calculate area of a polygon in square meters (approximate)
-function calculateArea(geometry: Polygon | MultiPolygon): number {
-  // Simple approximation using shoelace formula
-  // For production, use turf.js or similar
-  if (geometry.type === 'Polygon') {
-    const coords = geometry.coordinates[0];
-    let area = 0;
-    for (let i = 0; i < coords.length - 1; i++) {
-      area += coords[i][0] * coords[i + 1][1];
-      area -= coords[i + 1][0] * coords[i][1];
-    }
-    // Convert from degrees to approximate square meters
-    // This is a rough approximation - use turf for accuracy
-    return Math.abs(area / 2) * 111319.9 * 111319.9;
-  }
-  return 0;
-}
-
 function formatArea(areaM2: number): string {
   if (areaM2 >= 4046.86) {
     // Convert to acres
@@ -53,10 +35,13 @@ export function BoundaryPanel({ siteId, onBoundaryChange }: BoundaryPanelProps) 
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        setBoundary(parsed);
-        onBoundaryChange?.(parsed);
-      } catch (e) {
-        console.error('Failed to parse saved boundary:', e);
+        // Use queueMicrotask to avoid setState in effect
+        queueMicrotask(() => {
+          setBoundary(parsed);
+          onBoundaryChange?.(parsed);
+        });
+      } catch (_e) {
+        console.error('Failed to parse saved boundary:', _e);
       }
     }
   }, [siteId, onBoundaryChange]);
@@ -74,19 +59,6 @@ export function BoundaryPanel({ siteId, onBoundaryChange }: BoundaryPanelProps) 
     setIsDrawing(true);
     setDrawingMode('draw_polygon');
   }, [setDrawingMode]);
-
-  const handleSaveBoundary = useCallback((geometry: Polygon | MultiPolygon) => {
-    const newBoundary: SiteBoundary = {
-      id: `boundary_${Date.now()}`,
-      name: 'Site Boundary',
-      geometry,
-      area: calculateArea(geometry),
-    };
-    setBoundary(newBoundary);
-    onBoundaryChange?.(newBoundary);
-    setIsDrawing(false);
-    setDrawingMode('simple_select');
-  }, [onBoundaryChange, setDrawingMode]);
 
   const handleDeleteBoundary = useCallback(() => {
     if (boundary && draw) {

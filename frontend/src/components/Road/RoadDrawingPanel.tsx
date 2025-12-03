@@ -19,7 +19,7 @@ export const RoadDrawingPanel: React.FC<{ layoutId: string }> = ({ layoutId }) =
       await createRoad(layoutId, formData);
       setFormData({ name: '', type: 'primary', coordinates: [] });
       setShowForm(false);
-    } catch (err) {
+    } catch {
       alert('Failed to create road');
     }
   };
@@ -28,7 +28,7 @@ export const RoadDrawingPanel: React.FC<{ layoutId: string }> = ({ layoutId }) =
     if (confirm('Delete this road?')) {
       try {
         await deleteRoad(id);
-      } catch (err) {
+      } catch {
         alert('Failed to delete road');
       }
     }
@@ -61,7 +61,7 @@ export const RoadDrawingPanel: React.FC<{ layoutId: string }> = ({ layoutId }) =
           />
           <select
             value={formData.type}
-            onChange={(e) => setFormData({ ...formData, type: e.target.value as any })}
+            onChange={(e) => setFormData({ ...formData, type: e.target.value as 'primary' | 'secondary' | 'access' })}
             className="w-full px-2 py-1 border rounded"
           >
             <option>primary</option>

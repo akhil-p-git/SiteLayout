@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import { roadApi } from '../api/siteLayoutApi';
 
@@ -43,11 +44,11 @@ interface RoadContextType {
   loading: boolean;
   error: string | null;
   loadRoads: (layoutId: string) => Promise<void>;
-  createRoad: (layoutId: string, data: any) => Promise<Road>;
-  updateRoad: (id: string, data: any) => Promise<Road>;
+  createRoad: (layoutId: string, data: Record<string, unknown>) => Promise<Road>;
+  updateRoad: (id: string, data: Record<string, unknown>) => Promise<Road>;
   deleteRoad: (id: string) => Promise<void>;
   selectRoad: (road: Road | null) => void;
-  validateRoad: (data: any) => Promise<void>;
+  validateRoad: (data: Record<string, unknown>) => Promise<void>;
 }
 
 const RoadContext = createContext<RoadContextType | undefined>(undefined);
@@ -64,37 +65,40 @@ export const RoadProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const data = await roadApi.listByLayout(layoutId);
       setRoads(data.data || []);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      const error = err instanceof Error ? err : new Error(String(err));
+      setError(error.message);
     } finally {
       setLoading(false);
     }
   }, []);
 
-  const createRoad = useCallback(async (layoutId: string, data: any) => {
+  const createRoad = useCallback(async (layoutId: string, data: Record<string, unknown>) => {
     setLoading(true);
     try {
       const road = await roadApi.create(layoutId, data);
       setRoads((prev) => [...prev, road]);
       return road;
-    } catch (err: any) {
-      setError(err.message);
-      throw err;
+    } catch (err: unknown) {
+      const error = err instanceof Error ? err : new Error(String(err));
+      setError(error.message);
+      throw error;
     } finally {
       setLoading(false);
     }
   }, []);
 
-  const updateRoad = useCallback(async (id: string, data: any) => {
+  const updateRoad = useCallback(async (id: string, data: Record<string, unknown>) => {
     setLoading(true);
     try {
       const road = await roadApi.update(id, data);
       setRoads((prev) => prev.map((r) => (r.id === id ? road : r)));
       if (selectedRoad?.id === id) setSelectedRoad(road);
       return road;
-    } catch (err: any) {
-      setError(err.message);
-      throw err;
+    } catch (err: unknown) {
+      const error = err instanceof Error ? err : new Error(String(err));
+      setError(error.message);
+      throw error;
     } finally {
       setLoading(false);
     }
@@ -106,21 +110,23 @@ export const RoadProvider: React.FC<{ children: React.ReactNode }> = ({ children
       await roadApi.delete(id);
       setRoads((prev) => prev.filter((r) => r.id !== id));
       if (selectedRoad?.id === id) setSelectedRoad(null);
-    } catch (err: any) {
-      setError(err.message);
-      throw err;
+    } catch (err: unknown) {
+      const error = err instanceof Error ? err : new Error(String(err));
+      setError(error.message);
+      throw error;
     } finally {
       setLoading(false);
     }
   }, [selectedRoad]);
 
-  const validateRoad = useCallback(async (data: any) => {
+  const validateRoad = useCallback(async (data: Record<string, unknown>) => {
     try {
       await roadApi.validate(data);
       setError(null);
-    } catch (err: any) {
-      setError(err.message);
-      throw err;
+    } catch (err: unknown) {
+      const error = err instanceof Error ? err : new Error(String(err));
+      setError(error.message);
+      throw error;
     }
   }, []);
 

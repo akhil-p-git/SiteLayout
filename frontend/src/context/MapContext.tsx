@@ -8,11 +8,13 @@ import type {
   LayerVisibility,
   TerrainOverlayType,
   DrawingMode,
+  MapboxDrawInstance,
 } from '../types/map';
 
 // Initial state
 const initialState: MapContextState = {
   map: null,
+  draw: null,
   isLoaded: false,
   viewState: {
     longitude: -98.5795,
@@ -41,6 +43,7 @@ const initialState: MapContextState = {
 // Action types
 type MapAction =
   | { type: 'SET_MAP'; payload: MapboxMap | null }
+  | { type: 'SET_DRAW'; payload: MapboxDrawInstance | null }
   | { type: 'SET_IS_LOADED'; payload: boolean }
   | { type: 'SET_VIEW_STATE'; payload: Partial<MapViewState> }
   | { type: 'TOGGLE_LAYER'; payload: keyof LayerVisibility }
@@ -55,6 +58,8 @@ function mapReducer(state: MapContextState, action: MapAction): MapContextState 
   switch (action.type) {
     case 'SET_MAP':
       return { ...state, map: action.payload };
+    case 'SET_DRAW':
+      return { ...state, draw: action.payload };
     case 'SET_IS_LOADED':
       return { ...state, isLoaded: action.payload };
     case 'SET_VIEW_STATE':
@@ -107,6 +112,10 @@ export function MapProvider({ children, initialViewState }: MapProviderProps) {
 
   const setMap = useCallback((map: MapboxMap | null) => {
     dispatch({ type: 'SET_MAP', payload: map });
+  }, []);
+
+  const setDraw = useCallback((draw: MapboxDrawInstance | null) => {
+    dispatch({ type: 'SET_DRAW', payload: draw });
   }, []);
 
   const setIsLoaded = useCallback((loaded: boolean) => {
@@ -162,9 +171,22 @@ export function MapProvider({ children, initialViewState }: MapProviderProps) {
     [state.map]
   );
 
+  const deleteSelectedFeatures = useCallback((): string[] => {
+    if (state.draw) {
+      const selectedIds = state.draw.getSelectedIds();
+      if (selectedIds.length > 0) {
+        state.draw.delete(selectedIds);
+        dispatch({ type: 'SET_SELECTED_FEATURE_ID', payload: null });
+        return selectedIds;
+      }
+    }
+    return [];
+  }, [state.draw]);
+
   const value: MapContextValue = {
     ...state,
     setMap,
+    setDraw,
     setIsLoaded,
     setViewState,
     toggleLayer,
@@ -174,6 +196,7 @@ export function MapProvider({ children, initialViewState }: MapProviderProps) {
     setSelectedFeatureId,
     flyTo,
     fitBounds,
+    deleteSelectedFeatures,
   };
 
   return <MapContext.Provider value={value}>{children}</MapContext.Provider>;

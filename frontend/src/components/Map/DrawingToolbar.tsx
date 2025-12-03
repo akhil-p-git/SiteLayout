@@ -1,3 +1,4 @@
+import { createPortal } from 'react-dom';
 import { useMapContext } from '../../context/MapContext';
 import type { DrawingMode } from '../../types/map';
 import './DrawingToolbar.css';
@@ -45,7 +46,14 @@ export function DrawingToolbar({
   onDelete,
   vertical = false,
 }: DrawingToolbarProps) {
-  const { isLoaded, selectedFeatureId, setDrawingMode } = useMapContext();
+  const { isLoaded, selectedFeatureId, setDrawingMode, isDrawing, deleteSelectedFeatures } = useMapContext();
+
+  const handleDelete = () => {
+    const deletedIds = deleteSelectedFeatures();
+    if (deletedIds.length > 0 && onDelete) {
+      onDelete();
+    }
+  };
 
   if (!isLoaded) {
     return null;
@@ -56,7 +64,7 @@ export function DrawingToolbar({
   };
 
   return (
-    <div className={`drawing-toolbar ${vertical ? 'vertical' : ''} ${className}`}>
+    <div className={`drawing-toolbar ${vertical ? 'vertical' : ''} ${className} ${isDrawing ? 'is-drawing' : ''}`}>
       <div className="toolbar-section">
         <ToolButton
           mode="simple_select"
@@ -114,7 +122,7 @@ export function DrawingToolbar({
       <div className="toolbar-section">
         <button
           className="tool-button danger"
-          onClick={onDelete}
+          onClick={handleDelete}
           disabled={!selectedFeatureId}
           title="Delete selected feature (Delete)"
           aria-label="Delete"
@@ -163,11 +171,12 @@ function DrawingHelp() {
     static: '',
   };
 
-  return (
+  return createPortal(
     <div className="drawing-help">
       <span className="drawing-help-text">{helpText[drawingMode]}</span>
       <span className="drawing-help-hint">Press Escape to cancel</span>
-    </div>
+    </div>,
+    document.body
   );
 }
 

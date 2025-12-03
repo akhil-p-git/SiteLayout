@@ -5,7 +5,12 @@ import { LayerControls } from './LayerControls';
 import { DrawingToolbar } from './DrawingToolbar';
 import { TerrainOverlay } from './TerrainOverlay';
 import { ElevationProfile } from './ElevationProfile';
+import { ExclusionZonePanel } from '../ExclusionZone/ExclusionZonePanel';
+import { ZoneForm } from '../ExclusionZone/ZoneForm';
+import { BoundaryPanel, type SiteBoundary } from '../Boundary/BoundaryPanel';
+import { HabitatOverlay } from '../Habitat';
 import type { MapViewState, ElevationProfilePoint } from '../../types/map';
+import type { ExclusionZone } from '../../types/exclusionZone';
 import './MapView.css';
 
 interface MapViewProps {
@@ -33,6 +38,14 @@ export function MapView({
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [elevationData, setElevationData] = useState<ElevationProfilePoint[]>([]);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<'layers' | 'boundary' | 'zones' | 'habitat'>('layers');
+  const [showZoneForm, setShowZoneForm] = useState(false);
+  const [editingZone, setEditingZone] = useState<ExclusionZone | null>(null);
+  const [drawnGeometry, setDrawnGeometry] = useState<GeoJSON.Polygon | null>(null);
+  const [siteBoundary, setSiteBoundary] = useState<SiteBoundary | null>(null);
+
+  // Demo site ID for testing - in production this would come from route/context
+  const DEMO_SITE_ID = 'demo-site-001';
 
   const handleFeatureCreate = useCallback(
     (feature: GeoJSON.Feature) => {
@@ -50,19 +63,41 @@ export function MapView({
         setIsProfileOpen(true);
       }
 
-      // Pass polygon features to exclusion zone handler
-      if (feature.geometry.type === 'Polygon' || feature.geometry.type === 'MultiPolygon') {
-        const handler = (window as { __exclusionZoneFeatureHandler?: (f: GeoJSON.Feature) => void })
-          .__exclusionZoneFeatureHandler;
-        if (handler) {
-          handler(feature);
+      // Pass polygon features based on active tab
+      if (feature.geometry.type === 'Polygon') {
+        // If on boundary tab, the BoundaryPanel handles it via its own state
+        // Otherwise, open zone form
+        if (activeTab !== 'boundary') {
+          setDrawnGeometry(feature.geometry as GeoJSON.Polygon);
+          setShowZoneForm(true);
+          setActiveTab('zones');
         }
       }
 
       onFeatureCreate?.(feature);
     },
-    [onFeatureCreate]
+    [onFeatureCreate, activeTab]
   );
+
+  const handleZoneCreate = useCallback(() => {
+    setEditingZone(null);
+    setShowZoneForm(true);
+  }, []);
+
+  const handleZoneEdit = useCallback((zone: ExclusionZone) => {
+    setEditingZone(zone);
+    setShowZoneForm(true);
+  }, []);
+
+  const handleZoneFormClose = useCallback(() => {
+    setShowZoneForm(false);
+    setEditingZone(null);
+    setDrawnGeometry(null);
+  }, []);
+
+  const handleBoundaryChange = useCallback((boundary: SiteBoundary | null) => {
+    setSiteBoundary(boundary);
+  }, []);
 
   const handleDelete = useCallback(() => {
     // Delete is handled by the Map component via keyboard
@@ -118,13 +153,38 @@ export function MapView({
           )}
         </div>
 
-        {/* Sidebar with layer controls */}
+        {/* Sidebar with layer controls and zones */}
         {showControls && (
           <div
             className={`map-view-sidebar ${isSidebarOpen ? 'open' : ''} ${isMobileMenuOpen ? 'mobile-open' : ''}`}
           >
             <div className="sidebar-header">
-              <h2>Map Controls</h2>
+              <div className="sidebar-tabs">
+                <button
+                  className={`sidebar-tab ${activeTab === 'layers' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('layers')}
+                >
+                  Layers
+                </button>
+                <button
+                  className={`sidebar-tab ${activeTab === 'boundary' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('boundary')}
+                >
+                  Boundary
+                </button>
+                <button
+                  className={`sidebar-tab ${activeTab === 'zones' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('zones')}
+                >
+                  Zones
+                </button>
+                <button
+                  className={`sidebar-tab ${activeTab === 'habitat' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('habitat')}
+                >
+                  Habitat
+                </button>
+              </div>
               <button
                 className="sidebar-close"
                 onClick={() => {
@@ -139,7 +199,36 @@ export function MapView({
                 </svg>
               </button>
             </div>
-            <LayerControls />
+            {activeTab === 'layers' && <LayerControls />}
+            {activeTab === 'boundary' && (
+              <BoundaryPanel
+                siteId={DEMO_SITE_ID}
+                onBoundaryChange={handleBoundaryChange}
+              />
+            )}
+            {activeTab === 'habitat' && (
+              <HabitatOverlay
+                siteId={DEMO_SITE_ID}
+                boundaryGeometry={siteBoundary?.geometry}
+              />
+            )}
+            {activeTab === 'zones' && (
+              showZoneForm ? (
+                <ZoneForm
+                  siteId={DEMO_SITE_ID}
+                  zone={editingZone || undefined}
+                  geometry={drawnGeometry || undefined}
+                  onSave={handleZoneFormClose}
+                  onCancel={handleZoneFormClose}
+                />
+              ) : (
+                <ExclusionZonePanel
+                  siteId={DEMO_SITE_ID}
+                  onZoneCreate={handleZoneCreate}
+                  onZoneEdit={handleZoneEdit}
+                />
+              )
+            )}
           </div>
         )}
 

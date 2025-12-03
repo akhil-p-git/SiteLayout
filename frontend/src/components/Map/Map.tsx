@@ -31,6 +31,7 @@ export function Map({
 
   const {
     setMap,
+    setDraw,
     setIsLoaded,
     setViewState,
     viewState,
@@ -165,11 +166,36 @@ export function Map({
             'circle-stroke-width': 1,
           },
         },
+        // Standalone Point - inactive (entry points, markers)
+        {
+          id: 'gl-draw-point-inactive',
+          type: 'circle',
+          filter: ['all', ['==', 'active', 'false'], ['==', '$type', 'Point'], ['==', 'meta', 'feature']],
+          paint: {
+            'circle-radius': 8,
+            'circle-color': '#f59e0b',
+            'circle-stroke-color': '#ffffff',
+            'circle-stroke-width': 2,
+          },
+        },
+        // Standalone Point - active
+        {
+          id: 'gl-draw-point-active',
+          type: 'circle',
+          filter: ['all', ['==', 'active', 'true'], ['==', '$type', 'Point'], ['==', 'meta', 'feature']],
+          paint: {
+            'circle-radius': 10,
+            'circle-color': '#ea580c',
+            'circle-stroke-color': '#ffffff',
+            'circle-stroke-width': 3,
+          },
+        },
       ],
     });
 
     map.addControl(draw as unknown as mapboxgl.IControl);
     drawRef.current = draw;
+    setDraw(draw as unknown as import('../../types/map').MapboxDrawInstance);
 
     // Map load event
     map.on('load', () => {
@@ -231,6 +257,7 @@ export function Map({
       mapRef.current = null;
       drawRef.current = null;
       setMap(null);
+      setDraw(null);
       setIsLoaded(false);
     };
   }, []);

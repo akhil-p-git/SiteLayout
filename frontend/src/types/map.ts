@@ -91,9 +91,19 @@ export interface ElevationProfilePoint {
   latitude: number;
 }
 
+// MapboxDraw type (simplified for our needs)
+export interface MapboxDrawInstance {
+  getSelectedIds: () => string[];
+  delete: (ids: string[]) => void;
+  changeMode: (mode: string) => void;
+  getAll: () => GeoJSON.FeatureCollection;
+  add: (feature: GeoJSON.Feature | GeoJSON.FeatureCollection) => string[];
+}
+
 // Map context state
 export interface MapContextState {
   map: MapboxMap | null;
+  draw: MapboxDrawInstance | null;
   isLoaded: boolean;
   viewState: MapViewState;
   layerVisibility: LayerVisibility;
@@ -106,6 +116,7 @@ export interface MapContextState {
 // Map context actions
 export interface MapContextActions {
   setMap: (map: MapboxMap | null) => void;
+  setDraw: (draw: MapboxDrawInstance | null) => void;
   setIsLoaded: (loaded: boolean) => void;
   setViewState: (viewState: Partial<MapViewState>) => void;
   toggleLayer: (layer: keyof LayerVisibility) => void;
@@ -115,6 +126,7 @@ export interface MapContextActions {
   setSelectedFeatureId: (id: string | null) => void;
   flyTo: (center: [number, number], zoom?: number) => void;
   fitBounds: (bounds: LngLatBoundsLike, padding?: number) => void;
+  deleteSelectedFeatures: () => string[];
 }
 
 // Combined map context

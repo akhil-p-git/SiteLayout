@@ -1,0 +1,210 @@
+.boundary-panel {
+  padding: 16px;
+}
+
+.boundary-panel-header h3 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.boundary-help {
+  margin: 0 0 16px 0;
+  font-size: 13px;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+/* Boundary card */
+.boundary-card {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.boundary-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.boundary-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #3b82f6;
+  border-radius: 8px;
+}
+
+.boundary-icon svg {
+  width: 24px;
+  height: 24px;
+  color: white;
+}
+
+.boundary-card-title {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.boundary-card-title strong {
+  font-size: 14px;
+  color: #1f2937;
+}
+
+.boundary-area {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.boundary-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* Buttons */
+.boundary-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.boundary-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.boundary-btn-primary {
+  background: #3b82f6;
+  color: white;
+}
+
+.boundary-btn-primary:hover {
+  background: #2563eb;
+}
+
+.boundary-btn-edit {
+  flex: 1;
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.boundary-btn-edit:hover {
+  background: #e5e7eb;
+}
+
+.boundary-btn-delete {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.boundary-btn-delete:hover {
+  background: #fee2e2;
+}
+
+.boundary-btn-cancel {
+  width: 100%;
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.boundary-btn-cancel:hover {
+  background: #e5e7eb;
+}
+
+/* Empty state */
+.boundary-empty {
+  text-align: center;
+  padding: 24px 16px;
+}
+
+.boundary-empty-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f3f4f6;
+  border-radius: 50%;
+}
+
+.boundary-empty-icon svg {
+  width: 32px;
+  height: 32px;
+  color: #9ca3af;
+}
+
+.boundary-empty p {
+  margin: 0 0 16px 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* Drawing state */
+.boundary-drawing {
+  padding: 16px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+}
+
+.boundary-drawing-message {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.drawing-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #3b82f6;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+}
+
+.drawing-icon svg {
+  width: 24px;
+  height: 24px;
+  color: white;
+}
+
+.boundary-drawing-message p {
+  margin: 0;
+  color: #1e40af;
+  font-size: 14px;
+}
+
+.drawing-hint {
+  margin-top: 4px !important;
+  font-size: 12px !important;
+  color: #6b7280 !important;
+}

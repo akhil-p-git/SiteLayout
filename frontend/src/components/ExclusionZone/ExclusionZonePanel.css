@@ -1,7 +1,7 @@
 .exclusion-zone-panel {
-  background: var(--bg-primary, #fff);
-  border: 1px solid var(--border-color, #e0e0e0);
-  border-radius: 8px;
+  background: #ffffff;
+  border: none;
+  border-radius: 0;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -27,14 +27,14 @@
   font-size: 0.8rem;
   font-weight: 500;
   color: white;
-  background: var(--primary-color, #3b82f6);
+  background: #3b82f6;
   border: none;
   border-radius: 4px;
   cursor: pointer;
 }
 
 .btn-add-zone:hover {
-  background: var(--primary-hover, #2563eb);
+  background: #2563eb;
 }
 
 /* Summary */
@@ -127,15 +127,15 @@
 .empty-state button {
   padding: 0.5rem 1rem;
   font-size: 0.875rem;
-  color: var(--primary-color, #3b82f6);
+  color: #3b82f6;
   background: none;
-  border: 1px solid var(--primary-color, #3b82f6);
+  border: 1px solid #3b82f6;
   border-radius: 4px;
   cursor: pointer;
 }
 
 .empty-state button:hover {
-  background: var(--primary-color, #3b82f6);
+  background: #3b82f6;
   color: white;
 }
 
@@ -153,13 +153,13 @@
 }
 
 .zone-item:hover {
-  border-color: var(--primary-color, #3b82f6);
-  background: var(--bg-hover, #f0f7ff);
+  border-color: #3b82f6;
+  background: #f0f7ff;
 }
 
 .zone-item.selected {
-  border-color: var(--primary-color, #3b82f6);
-  background: var(--bg-selected, #e0efff);
+  border-color: #3b82f6;
+  background: #e0efff;
 }
 
 .zone-item.inactive {

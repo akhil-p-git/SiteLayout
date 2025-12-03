@@ -12,6 +12,7 @@ import uploadRoutes from './routes/upload';
 import exclusionZoneRoutes from './routes/exclusionZone';
 import constraintRoutes from './routes/constraint';
 import exportRoutes from './routes/export';
+import habitatRoutes from './routes/habitat';
 
 dotenv.config();
 
@@ -79,6 +80,9 @@ app.use('/api/v1/constraints', constraintRoutes);
 
 // Export routes
 app.use('/api/v1/export', exportRoutes);
+
+// Habitat overlay routes (USFWS/NWI)
+app.use('/api/v1/habitat', habitatRoutes);
 
 // Placeholder routes (to be implemented)
 app.use('/api/v1/projects', (_req, res) => {

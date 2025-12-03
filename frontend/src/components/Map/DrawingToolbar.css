@@ -112,7 +112,7 @@
 /* Drawing help */
 .drawing-help {
   position: fixed;
-  bottom: 24px;
+  bottom: 12px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -170,4 +170,20 @@
   .drawing-help-text {
     font-size: 12px;
   }
+}
+
+/* Hide toolbar when drawing active */
+.drawing-toolbar.is-drawing {
+  background: transparent;
+  box-shadow: none;
+  pointer-events: none;
+}
+
+.drawing-toolbar.is-drawing .toolbar-section,
+.drawing-toolbar.is-drawing .toolbar-divider {
+  display: none;
+}
+
+.drawing-toolbar.is-drawing .drawing-help {
+  pointer-events: auto;
 }

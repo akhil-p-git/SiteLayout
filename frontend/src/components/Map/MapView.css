@@ -114,6 +114,47 @@
   color: #6b7280;
 }
 
+/* Sidebar tabs */
+.sidebar-tabs {
+  display: flex;
+  gap: 2px;
+  width: 100%;
+}
+
+.sidebar-tab {
+  padding: 6px 4px;
+  border: none;
+  border-radius: 6px;
+  flex: 1;
+  background: transparent;
+  font-size: 12px;
+  font-weight: 500;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.sidebar-tab:hover {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.sidebar-tab.active {
+  background: #3b82f6;
+  color: white;
+}
+
+.sidebar-tab.active:hover {
+  background: #2563eb;
+}
+
 /* Elevation profile panel */
 .map-view-profile {
   position: absolute;

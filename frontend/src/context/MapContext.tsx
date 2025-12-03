@@ -1,5 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
-import React, { createContext, useContext, useReducer, useCallback, ReactNode } from 'react';
+import { createContext, useContext, useReducer, useCallback } from 'react';
+import type { ReactNode } from 'react';
 import type { Map as MapboxMap, LngLatBoundsLike } from 'mapbox-gl';
 import type {
   MapContextValue,

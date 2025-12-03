@@ -123,9 +123,8 @@ const HabitatOverlay: React.FC<HabitatOverlayProps> = ({ siteId, boundaryGeometr
     return null;
   }
 
-  const { impactScore, criticalHabitats, wetlands, requiredPermits } = habitatData.impactScore
-    ? { ...habitatData, requiredPermits: habitatData.impactScore.requiredPermits }
-    : { impactScore: null, criticalHabitats: [], wetlands: [], requiredPermits: [] };
+  // habitatData is used directly in render - these destructured values are for potential future use
+  void habitatData;
 
   return (
     <div className="habitat-overlay">

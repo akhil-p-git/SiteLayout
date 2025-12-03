@@ -1,12 +1,12 @@
 /* eslint-disable react-refresh/only-export-components */
-import React, {
+import {
   createContext,
   useContext,
   useReducer,
   useCallback,
   useEffect,
-  ReactNode,
 } from 'react';
+import type { ReactNode } from 'react';
 import type {
   AuthState,
   User,
